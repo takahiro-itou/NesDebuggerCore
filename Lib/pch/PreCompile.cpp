@@ -1,9 +1,9 @@
 ﻿//  -*-  coding: utf-8-with-signature;  mode: c++  -*-  //
 /*************************************************************************
 **                                                                      **
-**                      ---  Library Project.  ---                      **
+**                  ----   NES Debugger Project   ----                  **
 **                                                                      **
-**          Copyright (C), 2016-2024, Takahiro Itou                     **
+**          Copyright (C), 2026-2026, Takahiro Itou                     **
 **          All Rights Reserved.                                        **
 **                                                                      **
 **          License: (See COPYING or LICENSE files)                     **
@@ -18,4 +18,4 @@
 **      @file       pch/PreCompile.h
 **/
 
-#include    "Sample/pch/PreCompile.h"
+#include    "NesDbg/pch/PreCompile.h"

@@ -25,7 +25,7 @@
 #if defined( SAMPLE_USE_PRE_CONFIGURED_MSVC )
 #    include    "NesDbg/.Config/PreConfigSample.msvc.h"
 #else
-#    include    "Sample/.Config/ConfiguredSample.h"
+#    include    "NesDbg/.Config/ConfiguredSample.h"
 #endif
 
 SAMPLE_NAMESPACE_BEGIN
