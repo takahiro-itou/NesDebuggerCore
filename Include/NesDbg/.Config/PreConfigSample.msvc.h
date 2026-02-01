@@ -1,9 +1,9 @@
 ﻿//  -*-  coding: utf-8-with-signature;  mode: c++  -*-  //
 /*************************************************************************
 **                                                                      **
-**                      ---  Library Project.  ---                      **
+**                  ----   NES Debugger Project   ----                  **
 **                                                                      **
-**          Copyright (C), 2016-2024, Takahiro Itou                     **
+**          Copyright (C), 2026-2026, Takahiro Itou                     **
 **          All Rights Reserved.                                        **
 **                                                                      **
 **          License: (See COPYING or LICENSE files)                     **
@@ -18,8 +18,8 @@
 **      @file       .Config/ConfiguredSample.h.in
 **/
 
-#if !defined( SAMPLE_CONFIG_INCLUDED_CONFIGURED_SAMPLE_H )
-#    define   SAMPLE_CONFIG_INCLUDED_CONFIGURED_SAMPLE_H
+#if !defined( NESDBG_CONFIG_INCLUDED_CONFIGURED_SAMPLE_H )
+#    define   NESDBG_CONFIG_INCLUDED_CONFIGURED_SAMPLE_H
 
 //========================================================================
 //

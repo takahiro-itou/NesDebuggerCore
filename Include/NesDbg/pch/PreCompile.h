@@ -1,9 +1,9 @@
 ﻿//  -*-  coding: utf-8-with-signature;  mode: c++  -*-  //
 /*************************************************************************
 **                                                                      **
-**                      ---  Library Project.  ---                      **
+**                  ----   NES Debugger Project   ----                  **
 **                                                                      **
-**          Copyright (C), 2016-2024, Takahiro Itou                     **
+**          Copyright (C), 2026-2026, Takahiro Itou                     **
 **          All Rights Reserved.                                        **
 **                                                                      **
 **          License: (See COPYING or LICENSE files)                     **
@@ -18,11 +18,11 @@
 **      @file       pch/PreCompile.h
 **/
 
-#if !defined( SAMPLE_PCH_INCLUDED_PRE_COMPILE_H )
-#    define   SAMPLE_PCH_INCLUDED_PRE_COMPILE_H
+#if !defined( NESDBG_PCH_INCLUDED_PRE_COMPILE_H )
+#    define   NESDBG_PCH_INCLUDED_PRE_COMPILE_H
 
-#if !defined( SAMPLE_COMMON_INCLUDED_SAMPLE_SETTINGS_H )
-#    include    "Sample/Common/SampleSettings.h"
+#if !defined( NESDBG_COMMON_INCLUDED_SAMPLE_SETTINGS_H )
+#    include    "NesDbg/Common/SampleSettings.h"
 #endif
 
 

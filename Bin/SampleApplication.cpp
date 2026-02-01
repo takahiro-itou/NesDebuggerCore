@@ -18,7 +18,7 @@
 **      @file       Bin/SampleApplication.cpp
 **/
 
-#include    "Sample/Common/SampleDocument.h"
+#include    "NesDbg/Common/SampleDocument.h"
 
 #include    <iostream>
 

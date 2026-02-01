@@ -1,9 +1,9 @@
 ﻿//  -*-  coding: utf-8-with-signature;  mode: c++  -*-  //
 /*************************************************************************
 **                                                                      **
-**                      ---  Library Project.  ---                      **
+**                  ----   NES Debugger Project   ----                  **
 **                                                                      **
-**          Copyright (C), 2016-2024, Takahiro Itou                     **
+**          Copyright (C), 2026-2026, Takahiro Itou                     **
 **          All Rights Reserved.                                        **
 **                                                                      **
 **          License: (See COPYING or LICENSE files)                     **
@@ -18,12 +18,12 @@
 **      @file       Common/SampleSettings.h
 **/
 
-#if !defined( SAMPLE_COMMON_INCLUDED_SAMPLE_SETTINGS_H )
-#    define   SAMPLE_COMMON_INCLUDED_SAMPLE_SETTINGS_H
+#if !defined( NESDBG_COMMON_INCLUDED_SAMPLE_SETTINGS_H )
+#    define   NESDBG_COMMON_INCLUDED_SAMPLE_SETTINGS_H
 
 //  スクリプトによる設定値が書き込まれたヘッダを読み込む。  //
 #if defined( SAMPLE_USE_PRE_CONFIGURED_MSVC )
-#    include    "Sample/.Config/PreConfigSample.msvc.h"
+#    include    "NesDbg/.Config/PreConfigSample.msvc.h"
 #else
 #    include    "Sample/.Config/ConfiguredSample.h"
 #endif

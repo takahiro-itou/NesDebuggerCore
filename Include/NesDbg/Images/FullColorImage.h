@@ -1,9 +1,9 @@
 ﻿//  -*-  coding: utf-8-with-signature;  mode: c++  -*-  //
 /*************************************************************************
 **                                                                      **
-**                  ---   Graphics Test Project.   ---                  **
+**                  ----   NES Debugger Project   ----                  **
 **                                                                      **
-**          Copyright (C), 2025-2025, Takahiro Itou                     **
+**          Copyright (C), 2026-2026, Takahiro Itou                     **
 **          All Rights Reserved.                                        **
 **                                                                      **
 **          License: (See COPYING or LICENSE files)                     **
@@ -18,10 +18,10 @@
 **      @file       Images/FullColorImage.h
 **/
 
-#if !defined( SAMPLE_IMAGES_INCLUDED_FULL_COLOR_IMAGE_H )
-#    define   SAMPLE_IMAGES_INCLUDED_FULL_COLOR_IMAGE_H
+#if !defined( NESDBG_IMAGES_INCLUDED_FULL_COLOR_IMAGE_H )
+#    define   NESDBG_IMAGES_INCLUDED_FULL_COLOR_IMAGE_H
 
-#include    "Sample/Common/SampleSettings.h"
+#include    "NesDbg/Common/SampleSettings.h"
 
 
 SAMPLE_NAMESPACE_BEGIN

@@ -1,9 +1,9 @@
 ﻿//  -*-  coding: utf-8-with-signature;  mode: c++  -*-  //
 /*************************************************************************
 **                                                                      **
-**                      ---  Library Project.  ---                      **
+**                  ----   NES Debugger Project   ----                  **
 **                                                                      **
-**          Copyright (C), 2016-2024, Takahiro Itou                     **
+**          Copyright (C), 2026-2026, Takahiro Itou                     **
 **          All Rights Reserved.                                        **
 **                                                                      **
 **          License: (See COPYING or LICENSE files)                     **
@@ -18,7 +18,7 @@
 **      @file       Common/SampleDocument.cpp
 **/
 
-#include    "Sample/Common/SampleDocument.h"
+#include    "NesDbg/Common/SampleDocument.h"
 
 
 SAMPLE_NAMESPACE_BEGIN
