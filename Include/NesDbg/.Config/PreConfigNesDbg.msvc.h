@@ -15,11 +15,11 @@
 /**
 **      スクリプトによる設定値が書き込まれるヘッダファイル。
 **
-**      @file       .Config/ConfiguredSample.h.in
+**      @file       .Config/ConfiguredNesDbg.h.in
 **/
 
-#if !defined( NESDBG_CONFIG_INCLUDED_CONFIGURED_SAMPLE_H )
-#    define   NESDBG_CONFIG_INCLUDED_CONFIGURED_SAMPLE_H
+#if !defined( NESDBG_CONFIG_INCLUDED_CONFIGURED_NESDBG_H )
+#    define   NESDBG_CONFIG_INCLUDED_CONFIGURED_NESDBG_H
 
 //========================================================================
 //
@@ -30,17 +30,22 @@
 **    スクリプトによって設定された名前空間。
 **/
 
-#define     SAMPLE_CNF_NS                   Sample
+#define     NESDBG_CNF_NS                   Sample
 
 /**
 **    名前空間。
 **/
 
-#define     SAMPLE_NAMESPACE                SAMPLE_CNF_NS
+#define     NESDBG_NAMESPACE                NESDBG_CNF_NS
 
-#define     SAMPLE_NAMESPACE_BEGIN          namespace  SAMPLE_CNF_NS  {
+#define     NESDBG_NAMESPACE_BEGIN          namespace  NESDBG_CNF_NS  {
 
-#define     SAMPLE_NAMESPACE_END            }
+#define     NESDBG_NAMESPACE_END            }
+
+#define     SAMPLE_NAMESPACE                NESDBG_NAMESPACE
+#define     SAMPLE_NAMESPACE_BEGIN          NESDBG_NAMESPACE_BEGIN
+#define     SAMPLE_NAMESPACE_END            NESDBG_NAMESPACE_END
+
 
 //========================================================================
 //
@@ -53,13 +58,13 @@
 //
 
 #if ( 0 )
-#    define     SAMPLE_ENABLE_CONSTEXPR             1
+#    define     NESDBG_ENABLE_CONSTEXPR             1
 #else
-#    undef      SAMPLE_ENABLE_CONSTEXPR
+#    undef      NESDBG_ENABLE_CONSTEXPR
 #endif
 
 #if !defined( CONSTEXPR_VAR ) && !defined( CONSTEXPR_FUNC )
-#    if ( SAMPLE_ENABLE_CONSTEXPR )
+#    if ( NESDBG_ENABLE_CONSTEXPR )
 #        define     CONSTEXPR_VAR       constexpr
 #        define     CONSTEXPR_FUNC      constexpr
 #    else
@@ -74,12 +79,12 @@
 //
 
 #if ( 1 )
-#    define     SAMPLE_ENABLE_NULLPTR               1
+#    define     NESDBG_ENABLE_NULLPTR               1
 #else
 #    if !defined( nullptr )
 #        define     nullptr     NULL
 #    endif
-#    undef      SAMPLE_ENABLE_NULLPTR
+#    undef      NESDBG_ENABLE_NULLPTR
 #endif
 
 //----------------------------------------------------------------
@@ -88,12 +93,12 @@
 //
 
 #if ( 1 )
-#    define     SAMPLE_ENABLE_OVERRIDE              1
+#    define     NESDBG_ENABLE_OVERRIDE              1
 #else
 #    if !defined( override )
 #        define     override
 #    endif
-#    undef      SAMPLE_ENABLE_OVERRIDE
+#    undef      NESDBG_ENABLE_OVERRIDE
 #endif
 
 //----------------------------------------------------------------
@@ -102,9 +107,9 @@
 //
 
 #if ( 0 )
-#    define     SAMPLE_ENABLE_STATIC_ASSERT         1
+#    define     NESDBG_ENABLE_STATIC_ASSERT         1
 #else
-#    undef      SAMPLE_ENABLE_STATIC_ASSERT
+#    undef      NESDBG_ENABLE_STATIC_ASSERT
 #endif
 
 //----------------------------------------------------------------
@@ -113,9 +118,9 @@
 //
 
 #if ( 0 )
-#    define     SAMPLE_ENABLE_RVALUEREF             1
+#    define     NESDBG_ENABLE_RVALUEREF             1
 #else
-#    undef      SAMPLE_ENABLE_RVALUEREF
+#    undef      NESDBG_ENABLE_RVALUEREF
 #endif
 
 //----------------------------------------------------------------
@@ -124,9 +129,9 @@
 //
 
 #if ( 0 )
-#    define     SAMPLE_ERROR_PESSIMIZING_MOVE       1
+#    define     NESDBG_ERROR_PESSIMIZING_MOVE       1
 #else
-#    undef      SAMPLE_ERROR_PESSIMIZING_MOVE
+#    undef      NESDBG_ERROR_PESSIMIZING_MOVE
 #endif
 
 //----------------------------------------------------------------
@@ -135,9 +140,9 @@
 //
 
 #if ( 0 )
-#    define     SAMPLE_ENABLE_COPYCTOR_DEFAULT      1
+#    define     NESDBG_ENABLE_COPYCTOR_DEFAULT      1
 #else
-#    undef      SAMPLE_ENABLE_COPYCTOR_DEFAULT
+#    undef      NESDBG_ENABLE_COPYCTOR_DEFAULT
 #endif
 
 //----------------------------------------------------------------
@@ -146,9 +151,9 @@
 //
 
 #if ( 0 )
-#    define     SAMPLE_ENABLE_COPYCTOR_DELETE       1
+#    define     NESDBG_ENABLE_COPYCTOR_DELETE       1
 #else
-#    undef      SAMPLE_ENABLE_COPYCTOR_DELETE
+#    undef      NESDBG_ENABLE_COPYCTOR_DELETE
 #endif
 
 //----------------------------------------------------------------
@@ -157,9 +162,9 @@
 //
 
 #if ( 0 )
-#    define     SAMPLE_ENABLE_COPYOPEQ_DEFAULT      1
+#    define     NESDBG_ENABLE_COPYOPEQ_DEFAULT      1
 #else
-#    undef      SAMPLE_ENABLE_COPYOPEQ_DEFAULT
+#    undef      NESDBG_ENABLE_COPYOPEQ_DEFAULT
 #endif
 
 //----------------------------------------------------------------
@@ -168,9 +173,9 @@
 //
 
 #if ( 0 )
-#    define     SAMPLE_ENABLE_COPYOPEQ_DELETE       1
+#    define     NESDBG_ENABLE_COPYOPEQ_DELETE       1
 #else
-#    undef      SAMPLE_ENABLE_COPYOPEQ_DELETE
+#    undef      NESDBG_ENABLE_COPYOPEQ_DELETE
 #endif
 
 //----------------------------------------------------------------
@@ -179,9 +184,9 @@
 //
 
 #if ( 0 )
-#    define     SAMPLE_ENABLE_MOVECTOR_DECLARE      1
+#    define     NESDBG_ENABLE_MOVECTOR_DECLARE      1
 #else
-#    undef      SAMPLE_ENABLE_MOVECTOR_DECLARE
+#    undef      NESDBG_ENABLE_MOVECTOR_DECLARE
 #endif
 
 //----------------------------------------------------------------
@@ -190,9 +195,9 @@
 //
 
 #if ( 0 )
-#    define     SAMPLE_ENABLE_MOVECTOR_DEFAULT      1
+#    define     NESDBG_ENABLE_MOVECTOR_DEFAULT      1
 #else
-#    undef      SAMPLE_ENABLE_MOVECTOR_DEFAULT
+#    undef      NESDBG_ENABLE_MOVECTOR_DEFAULT
 #endif
 
 //----------------------------------------------------------------
@@ -201,9 +206,9 @@
 //
 
 #if ( 0 )
-#    define     SAMPLE_ENABLE_MOVECTOR_DELETE       1
+#    define     NESDBG_ENABLE_MOVECTOR_DELETE       1
 #else
-#    undef      SAMPLE_ENABLE_MOVECTOR_DELETE
+#    undef      NESDBG_ENABLE_MOVECTOR_DELETE
 #endif
 
 //----------------------------------------------------------------
@@ -212,9 +217,9 @@
 //
 
 #if ( 0 )
-#    define     SAMPLE_ENABLE_MOVEOPEQ_DECLARE      1
+#    define     NESDBG_ENABLE_MOVEOPEQ_DECLARE      1
 #else
-#    undef      SAMPLE_ENABLE_MOVEOPEQ_DECLARE
+#    undef      NESDBG_ENABLE_MOVEOPEQ_DECLARE
 #endif
 
 //----------------------------------------------------------------
@@ -223,9 +228,9 @@
 //
 
 #if ( 0 )
-#    define     SAMPLE_ENABLE_MOVEOPEQ_DEFAULT      1
+#    define     NESDBG_ENABLE_MOVEOPEQ_DEFAULT      1
 #else
-#    undef      SAMPLE_ENABLE_MOVEOPEQ_DEFAULT
+#    undef      NESDBG_ENABLE_MOVEOPEQ_DEFAULT
 #endif
 
 //----------------------------------------------------------------
@@ -234,9 +239,9 @@
 //
 
 #if ( 0 )
-#    define     SAMPLE_ENABLE_MOVEOPEQ_DELETE       1
+#    define     NESDBG_ENABLE_MOVEOPEQ_DELETE       1
 #else
-#    undef      SAMPLE_ENABLE_MOVEOPEQ_DELETE
+#    undef      NESDBG_ENABLE_MOVEOPEQ_DELETE
 #endif
 
 #endif

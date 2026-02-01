@@ -13,33 +13,29 @@
 *************************************************************************/
 
 /**
-**      An Implementation of Test Case 'SampleDocument'.
+**      An Implementation of Test Case 'NesDbgProject'.
 **
-**      @file       Common/Tests/SampleDocumentTest.cpp
+**      @file       Common/Tests/NesDbgProjectTest.cpp
 **/
 
 #include    "TestDriver.h"
-#include    "NesDbg/Common/SampleDocument.h"
+#include    "NesDbg/Common/NesDbgProject.h"
 
 
-SAMPLE_NAMESPACE_BEGIN
-namespace  Common  {
+NESDBG_NAMESPACE_BEGIN
 
 //========================================================================
 //
-//    SampleDocumentTest  class.
+//    NesDbgProjectTest  class.
 //
 /**
-**    クラス SampleDocument の単体テスト。
+**    クラス NesDbgProject の単体テスト。
 **/
 
-class  SampleDocumentTest : public  TestFixture
+class  NesDbgProjectTest : public  TestFixture
 {
-    CPPUNIT_TEST_SUITE(SampleDocumentTest);
-    CPPUNIT_TEST(testCtor);
-    CPPUNIT_TEST(testCountAlphabet1);
-    CPPUNIT_TEST(testCountAlphabet2);
-    CPPUNIT_TEST(testCountAlphabet3);
+    CPPUNIT_TEST_SUITE(NesDbgProjectTest);
+    CPPUNIT_TEST(testNameSpace);
     CPPUNIT_TEST_SUITE_END();
 
 public:
@@ -47,65 +43,22 @@ public:
     virtual  void   tearDown()  override    { }
 
 private:
-    void  testCtor();
-    void  testCountAlphabet1();
-    void  testCountAlphabet2();
-    void  testCountAlphabet3();
-
+    void  testNameSpace();
 };
 
-CPPUNIT_TEST_SUITE_REGISTRATION( SampleDocumentTest );
+CPPUNIT_TEST_SUITE_REGISTRATION( NesDbgProjectTest );
 
 //========================================================================
 //
 //    Tests.
 //
 
-void  SampleDocumentTest::testCtor()
+void  NesDbgProjectTest::testNameSpace()
 {
-    SampleDocument  testee;
-
     return;
 }
 
-void  SampleDocumentTest::testCountAlphabet1()
-{
-    SampleDocument  testee;
-
-    testee.setMessage("abcXYZ123");
-    CPPUNIT_ASSERT_EQUAL( 6, testee.countAlphabet() );
-
-    testee.setMessage("123");
-    CPPUNIT_ASSERT_EQUAL( 0, testee.countAlphabet() );
-
-    testee.setMessage("abc");
-    CPPUNIT_ASSERT_EQUAL( 3, testee.countAlphabet() );
-
-    return;
-}
-
-void  SampleDocumentTest::testCountAlphabet2()
-{
-    SampleDocument  testee;
-
-    testee.setMessage("");
-    CPPUNIT_ASSERT_EQUAL( 0, testee.countAlphabet() );
-
-    return;
-}
-
-
-void  SampleDocumentTest::testCountAlphabet3()
-{
-    SampleDocument  testee;
-
-    CPPUNIT_ASSERT_EQUAL( 0, testee.countAlphabet() );
-
-    return;
-}
-
-}   //  End of namespace  Common
-SAMPLE_NAMESPACE_END
+NESDBG_NAMESPACE_END
 
 //========================================================================
 //

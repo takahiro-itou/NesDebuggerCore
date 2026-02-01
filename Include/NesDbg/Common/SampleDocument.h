@@ -26,7 +26,7 @@
 #endif
 
 
-SAMPLE_NAMESPACE_BEGIN
+NESDBG_NAMESPACE_BEGIN
 namespace  Common  {
 
 //========================================================================
@@ -140,6 +140,6 @@ public:
 };
 
 }   //  End of namespace  Common
-SAMPLE_NAMESPACE_END
+NESDBG_NAMESPACE_END
 
 #endif

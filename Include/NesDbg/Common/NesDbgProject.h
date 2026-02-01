@@ -18,17 +18,17 @@
 **      @file       Common/NesDbgProject.h
 **/
 
-#if !defined( NESDBG_COMMON_INCLUDED_NES_DBG_PROJECT_H )
-#    define   NESDBG_COMMON_INCLUDED_NES_DBG_PROJECT_H
+#if !defined( NESDBG_COMMON_INCLUDED_NESDBG_PROJECT_H )
+#    define   NESDBG_COMMON_INCLUDED_NESDBG_PROJECT_H
 
 //  スクリプトによる設定値が書き込まれたヘッダを読み込む。  //
-#if defined( SAMPLE_USE_PRE_CONFIGURED_MSVC )
+#if defined( NESDBG_USE_PRE_CONFIGURED_MSVC )
 #    include    "NesDbg/.Config/PreConfigNesDbg.msvc.h"
 #else
 #    include    "NesDbg/.Config/ConfiguredNesDbg.h"
 #endif
 
-SAMPLE_NAMESPACE_BEGIN
+NESDBG_NAMESPACE_BEGIN
 
 /**
 **    ダミーの型宣言。
@@ -36,6 +36,6 @@ SAMPLE_NAMESPACE_BEGIN
 
 typedef     int     CommonType;
 
-SAMPLE_NAMESPACE_END
+NESDBG_NAMESPACE_END
 
 #endif

@@ -21,7 +21,7 @@
 #include    "NesDbg/Images/FullColorImage.h"
 
 
-SAMPLE_NAMESPACE_BEGIN
+NESDBG_NAMESPACE_BEGIN
 namespace  Images  {
 
 namespace  {
@@ -170,4 +170,4 @@ FullColorImage::fillRectangle(
 //
 
 }   //  End of namespace  Images
-SAMPLE_NAMESPACE_END
+NESDBG_NAMESPACE_END

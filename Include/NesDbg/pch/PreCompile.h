@@ -21,24 +21,24 @@
 #if !defined( NESDBG_PCH_INCLUDED_PRE_COMPILE_H )
 #    define   NESDBG_PCH_INCLUDED_PRE_COMPILE_H
 
-#if !defined( NESDBG_COMMON_INCLUDED_NES_DBG_PROJECT_H )
+#if !defined( NESDBG_COMMON_INCLUDED_NESDBG_PROJECT_H )
 #    include    "NesDbg/Common/NesDbgProject.h"
 #endif
 
 
-#if !defined( SAMPLE_SYS_INCLUDED_STDDEF_H )
+#if !defined( NESDBG_SYS_INCLUDED_STDDEF_H )
 #    include    <stddef.h>
-#    define   SAMPLE_SYS_INCLUDED_STDDEF_H
+#    define   NESDBG_SYS_INCLUDED_STDDEF_H
 #endif
 
-#if !defined( SAMPLE_SYS_INCLUDED_STDINT_H )
+#if !defined( NESDBG_SYS_INCLUDED_STDINT_H )
 #    include    <stdint.h>
-#    define   SAMPLE_SYS_INCLUDED_STDINT_H
+#    define   NESDBG_SYS_INCLUDED_STDINT_H
 #endif
 
-#if !defined( SAMPLE_SYS_INCLUDED_STRING )
+#if !defined( NESDBG_SYS_INCLUDED_STRING )
 #    include    <string>
-#    define   SAMPLE_SYS_INCLUDED_STRING
+#    define   NESDBG_SYS_INCLUDED_STRING
 #endif
 
 #endif

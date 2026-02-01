@@ -49,7 +49,7 @@ Include (${common_cmake_dir}/DefaultBuildOptions.cmake)
 ##    Project Name Space.
 ##
 
-set(SAMPLE_CNF_NAMESPACE    Sample)
+set(NESDBG_CNF_NAMESPACE    Sample)
 
 
 ##----------------------------------------------------------------
