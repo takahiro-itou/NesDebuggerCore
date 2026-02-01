@@ -15,7 +15,5 @@ add_subdirectory(Tests)
 add_subdirectory(.Config)
 
 add_subdirectory(Common)
-add_subdirectory(Bar)
-add_subdirectory(Foo)
 add_subdirectory(Images)
 
