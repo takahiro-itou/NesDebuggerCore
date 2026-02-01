@@ -42,10 +42,6 @@
 
 #define     NESDBG_NAMESPACE_END            }
 
-#define     SAMPLE_NAMESPACE                NESDBG_NAMESPACE
-#define     SAMPLE_NAMESPACE_BEGIN          NESDBG_NAMESPACE_BEGIN
-#define     SAMPLE_NAMESPACE_END            NESDBG_NAMESPACE_END
-
 
 //========================================================================
 //
