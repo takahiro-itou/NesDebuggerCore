@@ -1,0 +1,67 @@
+
+name : CI for AutoMake
+
+jobs :
+  build :
+    runs-on : ubuntu-latest
+
+    strategy :
+      fail-fast : false
+
+      matrix :
+        build-type   : [ release, debug ]
+        with-cppunit : [ no, tools/cppunit ]
+
+    steps :
+      - name : Checkout
+        uses : actions/checkout@v4
+        with :
+          submodules : recursive
+
+      - name : Install CppUnit
+        id   : install-cppunit
+        uses : takahiro-itou/install-cppunit-action@v1.1.0
+        with :
+          install-prefix : "${{ matrix.with-cppunit }}"
+
+      - name : Run bootstrap
+        run  : |
+          pwd
+          autoconf --version
+          ./bootstrap.sh
+          ls -aR
+        shell : bash
+
+      - name : Run configrue
+        run  : |
+          mkdir -p build
+          cd build
+          ../run-autoconf-${{ matrix.build-type }}  \
+            --with-cppunit=${cppunit_dir}
+        env :
+          cppunit_dir : ${{ steps.install-cppunit.outputs.real-install-dir }}
+        shell : bash
+
+      - name : Build
+        run  : cd build && make
+        shell : bash
+
+      - name : Run Test
+        run  : cd build && make check
+        shell : bash
+
+      - name : make distcheck
+        run  : |
+          cd build
+          env DISTCHECK_CONFIGURE_FLAGS="--with-cppunit=${cppunit_dir}"  \
+            make distcheck
+        env :
+          cppunit_dir : ${{ steps.install-cppunit.outputs.real-install-dir }}
+        shell : bash
+
+on :
+  push :
+    branches : [ "master", "develop" ]
+  pull_request :
+    branches : [ "master", "develop" ]
+  workflow_dispatch :

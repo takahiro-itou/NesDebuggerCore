@@ -1,0 +1,6 @@
+
+/*  Linker Script.  */
+INPUT( AS_NEEDED(Foo/libsampleFoo.static.a) )
+
+INPUT( AS_NEEDED(-lsampleBar) )
+

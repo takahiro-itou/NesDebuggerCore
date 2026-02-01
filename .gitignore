@@ -1,0 +1,13 @@
+
+/.hg/
+
+Makefile
+Makefile.in
+Config.h.in
+
+/.Config/
+/.M4/InitAutoMake.m4
+/aclocal.m4
+/autom4te.cache/
+/configure
+

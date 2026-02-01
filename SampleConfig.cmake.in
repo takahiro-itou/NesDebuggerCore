@@ -1,0 +1,49 @@
+
+##----------------------------------------------------------------
+##
+##    外部から参照するためのコンフィグレーションファイル。
+##
+##----------------------------------------------------------------
+
+##----------------------------------------------------------------
+##
+##    @todo
+##    ここにモジュールのディレクトリ名を列挙する。
+##
+
+set(@project_name@_module_dirs_list
+        .Config  Common  Foo  Bar
+)
+
+##----------------------------------------------------------------
+
+
+##  カレントディレクトリの名前を取得する。
+
+get_filename_component(@project_name@_root_dir
+        "${CMAKE_CURRENT_LIST_FILE}"  DIRECTORY)
+
+##  ライブラリファイルが格納されるトップディレクトリ。
+
+set(@project_name@_libtop_dir
+        "${@project_name@_root_dir}/@libtop_dir_name@"
+)
+
+message("Searching Modules From : ${@project_name@_libtop_dir}")
+
+##  対象のディレクトリ名。
+set(@project_name@_target_dir
+    "${@project_name@_libtop_dir}/*"
+)
+message("Searching Config Files : ${@project_name@_target_dir}")
+
+##  対象ディレクトリからエクスポートファイルを検索する。
+file(GLOB   @project_name@_module_export_files
+        "${@project_name@_target_dir}/@project_name@-*-Export.cmake"
+)
+
+##  検索で見つかったファイルをインクルードする。
+ForEach (@project_name@_file  ${@project_name@_module_export_files})
+    message("Loading Module Config : ${@project_name@_file}")
+    Include (${@project_name@_file})
+EndForEach ()
