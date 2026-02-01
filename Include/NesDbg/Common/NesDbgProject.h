@@ -15,17 +15,17 @@
 /**
 **      プロジェクトの設定。
 **
-**      @file       Common/SampleSettings.h
+**      @file       Common/NesDbgProject.h
 **/
 
-#if !defined( NESDBG_COMMON_INCLUDED_SAMPLE_SETTINGS_H )
-#    define   NESDBG_COMMON_INCLUDED_SAMPLE_SETTINGS_H
+#if !defined( NESDBG_COMMON_INCLUDED_NES_DBG_PROJECT_H )
+#    define   NESDBG_COMMON_INCLUDED_NES_DBG_PROJECT_H
 
 //  スクリプトによる設定値が書き込まれたヘッダを読み込む。  //
 #if defined( SAMPLE_USE_PRE_CONFIGURED_MSVC )
-#    include    "NesDbg/.Config/PreConfigSample.msvc.h"
+#    include    "NesDbg/.Config/PreConfigNesDbg.msvc.h"
 #else
-#    include    "NesDbg/.Config/ConfiguredSample.h"
+#    include    "NesDbg/.Config/ConfiguredNesDbg.h"
 #endif
 
 SAMPLE_NAMESPACE_BEGIN

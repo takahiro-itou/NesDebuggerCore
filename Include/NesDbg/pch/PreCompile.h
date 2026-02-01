@@ -21,8 +21,8 @@
 #if !defined( NESDBG_PCH_INCLUDED_PRE_COMPILE_H )
 #    define   NESDBG_PCH_INCLUDED_PRE_COMPILE_H
 
-#if !defined( NESDBG_COMMON_INCLUDED_SAMPLE_SETTINGS_H )
-#    include    "NesDbg/Common/SampleSettings.h"
+#if !defined( NESDBG_COMMON_INCLUDED_NES_DBG_PROJECT_H )
+#    include    "NesDbg/Common/NesDbgProject.h"
 #endif
 
 

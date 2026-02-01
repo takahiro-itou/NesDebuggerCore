@@ -16,10 +16,10 @@ dnl   パッケージの情報を指定する。
 dnl
 
 AC_INIT(
-    [Sample],
+    [NesDbg],
     [0.0.0],
     [BUG-REPORT-ADDRESS],
-    [Sample])
+    [NesDbg])
 
 dnl
 dnl   ツールの出力ディレクトリを指定する。
@@ -164,7 +164,7 @@ AC_CONFIG_FILES([
 ])
 
 AC_CONFIG_FILES([
-    Include/NesDbg/.Config/ConfiguredSample.h
+    Include/NesDbg/.Config/ConfiguredNesDbg.h
 ])
 
 dnl

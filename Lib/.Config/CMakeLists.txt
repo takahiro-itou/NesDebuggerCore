@@ -19,7 +19,7 @@ set(library_source_files
 )
 
 set(inclib_header_files
-        ${inclib_binary_dir}/ConfiguredSample.h
+        ${inclib_binary_dir}/ConfiguredNesDbg.h
 )
 
 ##----------------------------------------------------------------
