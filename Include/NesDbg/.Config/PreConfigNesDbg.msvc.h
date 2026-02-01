@@ -30,7 +30,7 @@
 **    スクリプトによって設定された名前空間。
 **/
 
-#define     NESDBG_CNF_NS                   Sample
+#define     NESDBG_CNF_NS                   NesDbg
 
 /**
 **    名前空間。

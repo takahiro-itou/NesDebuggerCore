@@ -58,7 +58,7 @@ dnl
 dnl   Project Name Space.
 dnl
 
-NESDBG_CNF_NAMESPACE=Sample
+NESDBG_CNF_NAMESPACE=NesDbg
 AC_SUBST(NESDBG_CNF_NAMESPACE)
 
 
