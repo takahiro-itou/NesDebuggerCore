@@ -45,4 +45,4 @@ dist_noinst_DATA        =  \
 ##
 
 SampleApplication_SOURCES   =  SampleApplication.cpp
-SampleApplication_LDADD     =  -lsampleFoo
+SampleApplication_LDADD     =  -lsampleCommon

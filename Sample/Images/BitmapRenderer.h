@@ -1,9 +1,9 @@
 ﻿//  -*-  coding: utf-8-with-signature;  mode: c++  -*-  //
 /*************************************************************************
 **                                                                      **
-**                  ---   Graphics Test Project.   ---                  **
+**                  ----   NES Debugger Project   ----                  **
 **                                                                      **
-**          Copyright (C), 2025-2025, Takahiro Itou                     **
+**          Copyright (C), 2026-2026, Takahiro Itou                     **
 **          All Rights Reserved.                                        **
 **                                                                      **
 **          License: (See COPYING or LICENSE files)                     **
@@ -20,18 +20,18 @@
 
 #pragma once
 
-#if !defined( SAMPLE_IMAGES_INCLUDED_BITMAP_RENDERER_H )
-#    define   SAMPLE_IMAGES_INCLUDED_BITMAP_RENDERER_H
+#if !defined( NESDBG_IMAGES_INCLUDED_BITMAP_RENDERER_H )
+#    define   NESDBG_IMAGES_INCLUDED_BITMAP_RENDERER_H
 
-#include    "Sample/Common/SampleSettings.h"
+#include    "NesDbg/Common/NesDbgProject.h"
 
-#if !defined( SAMPLE_SYS_INCLUDED_WINDOWS_H )
+#if !defined( NESDBG_SYS_INCLUDED_WINDOWS_H )
 #    include    <windows.h>
-#    define   SAMPLE_SYS_INCLUDED_WINDOWS_H
+#    define   NESDBG_SYS_INCLUDED_WINDOWS_H
 #endif
 
 
-SAMPLE_NAMESPACE_BEGIN
+NESDBG_NAMESPACE_BEGIN
 namespace  Images  {
 
 //========================================================================
@@ -221,6 +221,6 @@ public:
 };
 
 }   //  End of namespace  Images
-SAMPLE_NAMESPACE_END
+NESDBG_NAMESPACE_END
 
 #endif

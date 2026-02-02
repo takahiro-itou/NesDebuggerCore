@@ -1,9 +1,9 @@
 ﻿//  -*-  coding: utf-8-with-signature;  mode: c++  -*-  //
 /*************************************************************************
 **                                                                      **
-**                      ---  Library Project.  ---                      **
+**                  ----   NES Debugger Project   ----                  **
 **                                                                      **
-**          Copyright (C), 2016-2024, Takahiro Itou                     **
+**          Copyright (C), 2026-2026, Takahiro Itou                     **
 **          All Rights Reserved.                                        **
 **                                                                      **
 **          License: (See COPYING or LICENSE files)                     **
@@ -13,28 +13,28 @@
 *************************************************************************/
 
 /**
-**      An Implementation of Test Case 'SampleSettings'.
+**      An Implementation of Test Case 'NesDbgProject'.
 **
-**      @file       Common/Tests/SampleSettingsTest.cpp
+**      @file       Common/Tests/NesDbgProjectTest.cpp
 **/
 
 #include    "TestDriver.h"
-#include    "Sample/Common/SampleSettings.h"
+#include    "NesDbg/Common/NesDbgProject.h"
 
 
-SAMPLE_NAMESPACE_BEGIN
+NESDBG_NAMESPACE_BEGIN
 
 //========================================================================
 //
-//    SampleSettingsTest  class.
+//    NesDbgProjectTest  class.
 //
 /**
-**    クラス SampleSettings の単体テスト。
+**    クラス NesDbgProject の単体テスト。
 **/
 
-class  SampleSettingsTest : public  TestFixture
+class  NesDbgProjectTest : public  TestFixture
 {
-    CPPUNIT_TEST_SUITE(SampleSettingsTest);
+    CPPUNIT_TEST_SUITE(NesDbgProjectTest);
     CPPUNIT_TEST(testNameSpace);
     CPPUNIT_TEST_SUITE_END();
 
@@ -46,19 +46,19 @@ private:
     void  testNameSpace();
 };
 
-CPPUNIT_TEST_SUITE_REGISTRATION( SampleSettingsTest );
+CPPUNIT_TEST_SUITE_REGISTRATION( NesDbgProjectTest );
 
 //========================================================================
 //
 //    Tests.
 //
 
-void  SampleSettingsTest::testNameSpace()
+void  NesDbgProjectTest::testNameSpace()
 {
     return;
 }
 
-SAMPLE_NAMESPACE_END
+NESDBG_NAMESPACE_END
 
 //========================================================================
 //

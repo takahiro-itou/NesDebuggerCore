@@ -16,10 +16,10 @@ dnl   パッケージの情報を指定する。
 dnl
 
 AC_INIT(
-    [Sample],
+    [NesDbg],
     [0.0.0],
     [BUG-REPORT-ADDRESS],
-    [Sample])
+    [NesDbg])
 
 dnl
 dnl   ツールの出力ディレクトリを指定する。
@@ -58,8 +58,8 @@ dnl
 dnl   Project Name Space.
 dnl
 
-SAMPLE_CNF_NAMESPACE=Sample
-AC_SUBST(SAMPLE_CNF_NAMESPACE)
+NESDBG_CNF_NAMESPACE=NesDbg
+AC_SUBST(NESDBG_CNF_NAMESPACE)
 
 
 dnl ----------------------------------------------------------------
@@ -72,7 +72,7 @@ m4_include([.M4/ConfigDirectory.m4])
 myac_customize_library_dir([Lib])
 myac_customize_binary_dir([Bin])
 myac_customize_include_dir(
-    [Include], [Sample], [.Config], [Config.h])
+    [Include], [NesDbg], [.Config], [Config.h])
 
 
 dnl ----------------------------------------------------------------
@@ -158,15 +158,13 @@ AC_CONFIG_FILES([
     Bin/Makefile
     Lib/Makefile
     Lib/.Config/Makefile
-    Lib/Bar/Makefile
     Lib/Common/Makefile
-    Lib/Foo/Makefile
     Lib/Images/Makefile
     Lib/pch/Makefile
 ])
 
 AC_CONFIG_FILES([
-    Include/Sample/.Config/ConfiguredSample.h
+    Include/NesDbg/.Config/ConfiguredNesDbg.h
 ])
 
 dnl
@@ -174,9 +172,7 @@ dnl   Test Festures.
 dnl
 
 AC_CONFIG_FILES([
-    Lib/Bar/Tests/Makefile
     Lib/Common/Tests/Makefile
-    Lib/Foo/Tests/Makefile
     Lib/Images/Tests/Makefile
 ])
 

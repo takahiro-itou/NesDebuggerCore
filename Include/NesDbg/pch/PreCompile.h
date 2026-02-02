@@ -1,9 +1,9 @@
 ﻿//  -*-  coding: utf-8-with-signature;  mode: c++  -*-  //
 /*************************************************************************
 **                                                                      **
-**                      ---  Library Project.  ---                      **
+**                  ----   NES Debugger Project   ----                  **
 **                                                                      **
-**          Copyright (C), 2016-2024, Takahiro Itou                     **
+**          Copyright (C), 2026-2026, Takahiro Itou                     **
 **          All Rights Reserved.                                        **
 **                                                                      **
 **          License: (See COPYING or LICENSE files)                     **
@@ -18,27 +18,27 @@
 **      @file       pch/PreCompile.h
 **/
 
-#if !defined( SAMPLE_PCH_INCLUDED_PRE_COMPILE_H )
-#    define   SAMPLE_PCH_INCLUDED_PRE_COMPILE_H
+#if !defined( NESDBG_PCH_INCLUDED_PRE_COMPILE_H )
+#    define   NESDBG_PCH_INCLUDED_PRE_COMPILE_H
 
-#if !defined( SAMPLE_COMMON_INCLUDED_SAMPLE_SETTINGS_H )
-#    include    "Sample/Common/SampleSettings.h"
+#if !defined( NESDBG_COMMON_INCLUDED_NESDBG_PROJECT_H )
+#    include    "NesDbg/Common/NesDbgProject.h"
 #endif
 
 
-#if !defined( SAMPLE_SYS_INCLUDED_STDDEF_H )
+#if !defined( NESDBG_SYS_INCLUDED_STDDEF_H )
 #    include    <stddef.h>
-#    define   SAMPLE_SYS_INCLUDED_STDDEF_H
+#    define   NESDBG_SYS_INCLUDED_STDDEF_H
 #endif
 
-#if !defined( SAMPLE_SYS_INCLUDED_STDINT_H )
+#if !defined( NESDBG_SYS_INCLUDED_STDINT_H )
 #    include    <stdint.h>
-#    define   SAMPLE_SYS_INCLUDED_STDINT_H
+#    define   NESDBG_SYS_INCLUDED_STDINT_H
 #endif
 
-#if !defined( SAMPLE_SYS_INCLUDED_STRING )
+#if !defined( NESDBG_SYS_INCLUDED_STRING )
 #    include    <string>
-#    define   SAMPLE_SYS_INCLUDED_STRING
+#    define   NESDBG_SYS_INCLUDED_STRING
 #endif
 
 #endif

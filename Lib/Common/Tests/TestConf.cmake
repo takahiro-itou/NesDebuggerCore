@@ -4,12 +4,8 @@
 ##    テストの設定。
 ##
 
-add_test(NAME   SampleDocumentTest
-    COMMAND  $<TARGET_FILE:SampleDocumentTest>
-)
-
-add_test(NAME   SampleSettingsTest
-    COMMAND  $<TARGET_FILE:SampleSettingsTest>
+add_test(NAME   NesDbgProjectTest
+    COMMAND  $<TARGET_FILE:NesDbgProjectTest>
 )
 
 ##----------------------------------------------------------------
@@ -17,5 +13,4 @@ add_test(NAME   SampleSettingsTest
 ##    テストプログラムのビルド。
 ##
 
-add_executable(SampleDocumentTest       SampleDocumentTest.cpp)
-add_executable(SampleSettingsTest       SampleSettingsTest.cpp)
+add_executable(NesDbgProjectTest        NesDbgProjectTest.cpp)

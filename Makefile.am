@@ -13,5 +13,5 @@ DIST_SUBDIRS    =  .M4  .CMake  $(SUBDIRS)
 dist_noinst_DATA        =  \
         CMakeLists.txt          \
         Doxyfile                \
-        SampleConfig.cmake.in
+        NesDbgConfig.cmake.in
 
