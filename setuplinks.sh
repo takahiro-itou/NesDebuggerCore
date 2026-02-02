@@ -65,7 +65,7 @@ if [ -d  Lib/${testcommondir}/Tests ] ; then
       &&  ${LN_S}  ../../Tests/.TestsCommon/CMakeLists.txt)
 fi
 
-for  dir  in  Bar  Common  Foo  Images  ; do
+for  dir  in  Common  Images  ; do
     if [ -d Lib/${dir}/Tests ] ; then
         (cd  Lib/${dir}/Tests          \
           &&  ${RM_F}  Makefile.am     \

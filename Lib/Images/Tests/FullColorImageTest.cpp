@@ -1,9 +1,9 @@
 ﻿//  -*-  coding: utf-8-with-signature;  mode: c++  -*-  //
 /*************************************************************************
 **                                                                      **
-**                      ---  Library Project.  ---                      **
+**                  ----   NES Debugger Project   ----                  **
 **                                                                      **
-**          Copyright (C), 2016-2024, Takahiro Itou                     **
+**          Copyright (C), 2026-2026, Takahiro Itou                     **
 **          All Rights Reserved.                                        **
 **                                                                      **
 **          License: (See COPYING or LICENSE files)                     **
@@ -19,10 +19,10 @@
 **/
 
 #include    "TestDriver.h"
-#include    "Sample/Images/FullColorImage.h"
+#include    "NesDbg/Images/FullColorImage.h"
 
 
-SAMPLE_NAMESPACE_BEGIN
+NESDBG_NAMESPACE_BEGIN
 namespace  Images  {
 
 //========================================================================
@@ -62,7 +62,7 @@ void  FullColorImageTest::testCtor()
 }
 
 }   //  End of namespace  Images
-SAMPLE_NAMESPACE_END
+NESDBG_NAMESPACE_END
 
 //========================================================================
 //

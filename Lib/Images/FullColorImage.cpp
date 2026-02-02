@@ -1,9 +1,9 @@
 ﻿//  -*-  coding: utf-8-with-signature;  mode: c++  -*-  //
 /*************************************************************************
 **                                                                      **
-**                  ---   Graphics Test Project.   ---                  **
+**                  ----   NES Debugger Project   ----                  **
 **                                                                      **
-**          Copyright (C), 2025-2025, Takahiro Itou                     **
+**          Copyright (C), 2026-2026, Takahiro Itou                     **
 **          All Rights Reserved.                                        **
 **                                                                      **
 **          License: (See COPYING or LICENSE files)                     **
@@ -18,10 +18,10 @@
 **      @file       Images/FullColorImage.cpp
 **/
 
-#include    "Sample/Images/FullColorImage.h"
+#include    "NesDbg/Images/FullColorImage.h"
 
 
-SAMPLE_NAMESPACE_BEGIN
+NESDBG_NAMESPACE_BEGIN
 namespace  Images  {
 
 namespace  {
@@ -170,4 +170,4 @@ FullColorImage::fillRectangle(
 //
 
 }   //  End of namespace  Images
-SAMPLE_NAMESPACE_END
+NESDBG_NAMESPACE_END

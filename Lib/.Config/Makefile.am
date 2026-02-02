@@ -39,7 +39,7 @@ inclib_header_files         +=  \
         ${extra_library_header_files}
 
 inclib_nodist_header_files  +=  \
-        ${inclib_binary_dir}/ConfiguredSample.h
+        ${inclib_binary_dir}/ConfiguredNesDbg.h
 
 library_install_srcfiles    +=  \
         ${library_inline_files}

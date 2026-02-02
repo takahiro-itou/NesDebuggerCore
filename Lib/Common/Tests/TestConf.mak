@@ -5,8 +5,7 @@
 
 extra_tests             =
 TESTS                   =  \
-        SampleDocumentTest      \
-        SampleSettingsTest      \
+        NesDbgProjectTest       \
         ${extra_tests}
 
 ##
@@ -32,5 +31,4 @@ test_ldflags_common         +=
 ##    Test Programs.
 ##
 
-SampleDocumentTest_SOURCES      =  SampleDocumentTest.cpp
-SampleSettingsTest_SOURCES      =  SampleSettingsTest.cpp
+NesDbgProjectTest_SOURCES       =  NesDbgProjectTest.cpp
