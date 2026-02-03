@@ -18,6 +18,8 @@
 **      @file       Images/BitmapRenderer.cpp
 **/
 
+#include    "NesDbg/pch/PreCompile.h"
+
 #include    "WinAPI/Images/BitmapRenderer.h"
 
 
