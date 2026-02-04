@@ -18,7 +18,9 @@
 **      @file       Images/BitmapRenderer.cpp
 **/
 
-#include    "Sample/Images/BitmapRenderer.h"
+#include    "NesDbg/pch/PreCompile.h"
+
+#include    "WinAPI/Images/BitmapRenderer.h"
 
 
 NESDBG_NAMESPACE_BEGIN

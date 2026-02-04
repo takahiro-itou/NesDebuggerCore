@@ -18,6 +18,8 @@
 **      @file       Common/SampleDocument.cpp
 **/
 
+#include    "NesDbg/pch/PreCompile.h"
+
 #include    "NesDbg/Common/SampleDocument.h"
 
 
