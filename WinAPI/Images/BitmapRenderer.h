@@ -23,7 +23,9 @@
 #if !defined( NESDBG_IMAGES_INCLUDED_BITMAP_RENDERER_H )
 #    define   NESDBG_IMAGES_INCLUDED_BITMAP_RENDERER_H
 
-#include    "NesDbg/Common/NesDbgProject.h"
+#if !defined( NESDBG_COMMON_INCLUDED_NESDBG_PROJECT_H )
+#    include    "NesDbg/Common/NesDbgProject.h"
+#endif
 
 #if !defined( NESDBG_SYS_INCLUDED_WINDOWS_H )
 #    include    <windows.h>

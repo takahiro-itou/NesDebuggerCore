@@ -26,6 +26,14 @@
 #endif
 
 
+#if defined( WIN32 )
+#    if !defined( NESDBG_SYS_INCLUDED_WINDOWS_H )
+#        include    <windows.h>
+#        define   NESDBG_SYS_INCLUDED_WINDOWS_H
+#    endif
+#endif  /* defined( WIN32 ) */
+
+
 #if !defined( NESDBG_SYS_INCLUDED_STDDEF_H )
 #    include    <stddef.h>
 #    define   NESDBG_SYS_INCLUDED_STDDEF_H

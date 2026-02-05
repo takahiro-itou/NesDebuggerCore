@@ -18,6 +18,8 @@
 **      @file       Images/FullColorImage.cpp
 **/
 
+#include    "NesDbg/pch/PreCompile.h"
+
 #include    "NesDbg/Images/FullColorImage.h"
 
 

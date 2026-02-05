@@ -70,21 +70,29 @@
     <ClCompile>
       <SDLCheck>true</SDLCheck>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>NesDbg\pch\PreCompile.h</PrecompiledHeaderFile>
     </ClCompile>
     <Link>
+      <AdditionalDependencies>
+      </AdditionalDependencies>
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
   </ItemDefinitionGroup>
 
   <ItemGroup>
+    <ClCompile Include="Lib\pch\PreCompile.cpp">
+      <PrecompiledHeader>Create</PrecompiledHeader>
+    </ClCompile>
     <ClCompile Include="Lib\Common\SampleDocument.cpp" />
     <ClCompile Include="Lib\Images\FullColorImage.cpp" />
-    <ClCompile Include="Sample\Images\BitmapRenderer.cpp" />
+    <ClCompile Include="WinAPI\Images\BitmapRenderer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Include\NesDbg\Common\NesDbgProject.h" />
     <ClInclude Include="Include\NesDbg\Images\FullColorImage.h" />
-    <ClInclude Include="Sample\Images\BitmapRenderer.h" />
+    <ClInclude Include="Include\NesDbg\pch\PreCompile.h" />
+    <ClInclude Include="WinAPI\Images\BitmapRenderer.h" />
   </ItemGroup>
 
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
