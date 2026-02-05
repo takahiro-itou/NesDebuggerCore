@@ -3,7 +3,7 @@
 ##    List of Directories.
 ##
 
-SUBLIBS                 =  Common  Images
+SUBLIBS                 =  Common  Images  NesMan
 
 SUBDIRS                 =  pch  Tests  .Config  $(SUBLIBS)  .
 
