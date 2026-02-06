@@ -5,6 +5,7 @@
 
 extra_tests             =
 TESTS                   =  \
+        NesManagerTest          \
         ${extra_tests}
 
 ##
@@ -29,4 +30,6 @@ test_ldflags_common         +=
 ##
 ##    Test Programs.
 ##
+
+NesManagerTest_SOURCES      =  NesManagerTest.cpp
 
