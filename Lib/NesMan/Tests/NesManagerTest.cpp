@@ -56,6 +56,8 @@ CPPUNIT_TEST_SUITE_REGISTRATION( NesManagerTest );
 
 void  NesManagerTest::testCtor()
 {
+    NesManager  testee;
+
     return;
 }
 
