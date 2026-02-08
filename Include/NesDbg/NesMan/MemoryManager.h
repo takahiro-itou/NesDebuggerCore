@@ -13,13 +13,13 @@
 *************************************************************************/
 
 /**
-**      An Interface of NesManager class.
+**      An Interface of MemoryManager class.
 **
-**      @file       NesMan/NesManager.h
+**      @file       NesMan/MemoryManager.h
 **/
 
-#if !defined( NESDBG_NESMAN_INCLUDED_NES_MANAGER_H )
-#    define   NESDBG_NESMAN_INCLUDED_NES_MANAGER_H
+#if !defined( NESDBG_NESMAN_INCLUDED_MEMORY_MANAGER_H )
+#    define   NESDBG_NESMAN_INCLUDED_MEMORY_MANAGER_H
 
 #if !defined( NESDBG_PCH_INCLUDED_PRE_COMPILE_H )
 #    include    "NesDbg/pch/PreCompile.h"
@@ -31,10 +31,10 @@ namespace  NesMan  {
 
 //========================================================================
 //
-//    NesManager  class.
+//    MemoryManager  class.
 //
 
-class  NesManager
+class  MemoryManager
 {
 
 //========================================================================
@@ -53,14 +53,14 @@ public:
     **  （デフォルトコンストラクタ）。
     **
     **/
-    NesManager();
+    MemoryManager();
 
     //----------------------------------------------------------------
     /**   インスタンスを破棄する
     **  （デストラクタ）。
     **
     **/
-    virtual  ~NesManager();
+    virtual  ~MemoryManager();
 
 //========================================================================
 //
@@ -112,12 +112,12 @@ public:
 //    Other Features.
 //
 private:
-    typedef     NesManager      This;
-    NesManager          (const  This  &);
+    typedef     MemoryManager       This;
+    MemoryManager       (const  This  &);
     This &  operator =  (const  This  &);
 public:
     //  テストクラス。  //
-    friend  class   NesManagerTest;
+    friend  class   MemoryManagerTest;
 };
 
 }   //  End of namespace  NesMan

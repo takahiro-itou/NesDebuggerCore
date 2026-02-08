@@ -13,13 +13,13 @@
 *************************************************************************/
 
 /**
-**      An Interface of NesManager class.
+**      An Interface of BaseCpuCore class.
 **
-**      @file       NesMan/NesManager.h
+**      @file       NesMan/BaseCpuCore.h
 **/
 
-#if !defined( NESDBG_NESMAN_INCLUDED_NES_MANAGER_H )
-#    define   NESDBG_NESMAN_INCLUDED_NES_MANAGER_H
+#if !defined( NESDBG_NESMAN_INCLUDED_BASE_CPU_CORE_H )
+#    define   NESDBG_NESMAN_INCLUDED_BASE_CPU_CORE_H
 
 #if !defined( NESDBG_PCH_INCLUDED_PRE_COMPILE_H )
 #    include    "NesDbg/pch/PreCompile.h"
@@ -31,10 +31,10 @@ namespace  NesMan  {
 
 //========================================================================
 //
-//    NesManager  class.
+//    BaseCpuCore  class.
 //
 
-class  NesManager
+class  BaseCpuCore
 {
 
 //========================================================================
@@ -53,14 +53,14 @@ public:
     **  （デフォルトコンストラクタ）。
     **
     **/
-    NesManager();
+    BaseCpuCore();
 
     //----------------------------------------------------------------
     /**   インスタンスを破棄する
     **  （デストラクタ）。
     **
     **/
-    virtual  ~NesManager();
+    virtual  ~BaseCpuCore();
 
 //========================================================================
 //
@@ -112,12 +112,12 @@ public:
 //    Other Features.
 //
 private:
-    typedef     NesManager      This;
-    NesManager          (const  This  &);
+    typedef     BaseCpuCore     This;
+    BaseCpuCore         (const  This  &);
     This &  operator =  (const  This  &);
 public:
     //  テストクラス。  //
-    friend  class   NesManagerTest;
+    friend  class   BaseCpuCoreTest;
 };
 
 }   //  End of namespace  NesMan

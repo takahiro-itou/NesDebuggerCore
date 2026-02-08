@@ -13,54 +13,50 @@
 *************************************************************************/
 
 /**
-**      An Interface of NesManager class.
+**      An Implementation of MemoryManager class.
 **
-**      @file       NesMan/NesManager.h
+**      @file       NesMan/MemoryManager.cpp
 **/
 
-#if !defined( NESDBG_NESMAN_INCLUDED_NES_MANAGER_H )
-#    define   NESDBG_NESMAN_INCLUDED_NES_MANAGER_H
+#include    "NesDbg/pch/PreCompile.h"
 
-#if !defined( NESDBG_PCH_INCLUDED_PRE_COMPILE_H )
-#    include    "NesDbg/pch/PreCompile.h"
-#endif
+#include    "NesDbg/NesMan/MemoryManager.h"
 
 
 NESDBG_NAMESPACE_BEGIN
 namespace  NesMan  {
 
-//========================================================================
-//
-//    NesManager  class.
-//
+namespace  {
 
-class  NesManager
-{
+}   //  End of (Unnamed) namespace.
+
 
 //========================================================================
 //
-//    Internal Type Definitions.
+//    MemoryManager  class.
 //
 
 //========================================================================
 //
 //    Constructor(s) and Destructor.
 //
-public:
 
-    //----------------------------------------------------------------
-    /**   インスタンスを初期化する
-    **  （デフォルトコンストラクタ）。
-    **
-    **/
-    NesManager();
+//----------------------------------------------------------------
+//    インスタンスを初期化する
+//  （デフォルトコンストラクタ）。
 
-    //----------------------------------------------------------------
-    /**   インスタンスを破棄する
-    **  （デストラクタ）。
-    **
-    **/
-    virtual  ~NesManager();
+MemoryManager::MemoryManager()
+{
+}
+
+//----------------------------------------------------------------
+//    インスタンスを破棄する
+//  （デストラクタ）。
+//
+
+MemoryManager::~MemoryManager()
+{
+}
 
 //========================================================================
 //
@@ -102,25 +98,5 @@ public:
 //    For Internal Use Only.
 //
 
-//========================================================================
-//
-//    Member Variables.
-//
-
-//========================================================================
-//
-//    Other Features.
-//
-private:
-    typedef     NesManager      This;
-    NesManager          (const  This  &);
-    This &  operator =  (const  This  &);
-public:
-    //  テストクラス。  //
-    friend  class   NesManagerTest;
-};
-
 }   //  End of namespace  NesMan
 NESDBG_NAMESPACE_END
-
-#endif
