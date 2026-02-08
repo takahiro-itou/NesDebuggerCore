@@ -25,9 +25,19 @@
 #    include    "NesDbg/pch/PreCompile.h"
 #endif
 
+#if !defined( NESDBG_SYS_STL_INCLUDED_IOSFWD )
+#    include    <iosfwd>
+#    define   NESDBG_SYS_STL_INCLUDED_IOSFWD
+#endif
+
 
 NESDBG_NAMESPACE_BEGIN
 namespace  NesMan  {
+
+//  クラスの前方宣言。  //
+class   NesManager;
+class   MemoryManager;
+
 
 //========================================================================
 //
@@ -53,7 +63,9 @@ public:
     **  （デフォルトコンストラクタ）。
     **
     **/
-    BaseDisCpu();
+    BaseDisCpu(
+            NesManager    & manNes,
+            MemoryManager & manMem);
 
     //----------------------------------------------------------------
     /**   インスタンスを破棄する
@@ -76,6 +88,20 @@ public:
 //
 //    Public Member Functions (Pure Virtual Functions).
 //
+public:
+
+    //----------------------------------------------------------------
+    /**   ニーモニックを表示する。
+    **
+    **  @param [in,out] outStr    出力ストリーム
+    **  @param [in]     gmAddr    ゲスト上のアドレス
+    **  @param [in]     opeCode   オペコード
+    **/
+    virtual  std::ostream  &
+    writeMnemonic(
+            std::ostream       &outStr,
+            GuestMemoryAddress  gmAddr,
+            const  OpeCode      opeCode)  const  = 0;
 
 //========================================================================
 //
@@ -106,6 +132,13 @@ public:
 //
 //    Member Variables.
 //
+protected:
+
+    NesManager  &           m_manNes;
+
+    /**  メモリマネージャ。     **/
+    MemoryManager  &        m_manMem;
+
 
 //========================================================================
 //

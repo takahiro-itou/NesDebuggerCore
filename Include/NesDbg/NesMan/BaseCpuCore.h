@@ -153,9 +153,6 @@ protected:
 
     NesManager  &           m_manNes;
 
-    /**  メモリマネージャ。     **/
-    MemoryManager  &        m_manMem;
-
 #if !defined( NESDBG_USE_GLOBALS )
     /**   レジスタ。        **/
     RegBank                 mog_cpuRegs;
@@ -163,6 +160,9 @@ protected:
     /**   カウンタ関連。    **/
     CounterInfo             mog_cpuInfo;
 #endif
+
+    /**  メモリマネージャ。     **/
+    MemoryManager  &        m_manMem;
 
 
 //========================================================================

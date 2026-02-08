@@ -43,9 +43,12 @@ namespace  {
 
 //----------------------------------------------------------------
 //    インスタンスを初期化する
-//  （デフォルトコンストラクタ）。
+//  （コンストラクタ）。
 
-Dis6502::Dis6502()
+Dis6502::Dis6502(
+        NesManager    & manNes,
+        MemoryManager & manMem)
+    : Super(manNes, manMem)
 {
 }
 

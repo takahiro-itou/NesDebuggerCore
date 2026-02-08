@@ -45,7 +45,11 @@ namespace  {
 //    インスタンスを初期化する
 //  （デフォルトコンストラクタ）。
 
-BaseDisCpu::BaseDisCpu()
+BaseDisCpu::BaseDisCpu(
+        NesManager    & manNes,
+        MemoryManager & manMem)
+    : m_manNes(manNes),
+      m_manMem(manMem)
 {
 }
 

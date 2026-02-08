@@ -49,12 +49,12 @@ namespace  {
 BaseCpuCore::BaseCpuCore(
         NesManager    & manNes,
         MemoryManager & manMem)
-    : m_manNes(manNes)
-    , m_manMem(manMem)
+    : m_manNes(manNes),
 #if !defined( NESDBG_USE_GLOBALS )
-    , mog_cpuRegs()
-    , mog_cpuInfo()
+      mog_cpuRegs(),
+      mog_cpuInfo(),
 #endif
+      m_manMem(manMem)
 {
 }
 
