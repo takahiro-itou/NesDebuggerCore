@@ -47,6 +47,7 @@ dist_noinst_header_files    +=  \
 inclib_header_files         +=  \
         ${inclib_source_dir}/BaseCpuCore.h      \
         ${inclib_source_dir}/BaseDisCpu.h       \
+        ${inclib_source_dir}/CpuUtils.h         \
         ${inclib_source_dir}/MemoryManager.h    \
         ${inclib_source_dir}/NesManager.h       \
         ${extra_library_header_files}

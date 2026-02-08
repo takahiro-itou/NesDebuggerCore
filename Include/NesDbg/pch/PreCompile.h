@@ -35,6 +35,11 @@
 #    define   NESDBG_SYS_INCLUDED_CSTDINT
 #endif
 
+#if !defined( NESDBG_SYS_STL_INCLUDED_IOSFWD )
+#    include    <iosfwd>
+#    define   NESDBG_SYS_STL_INCLUDED_IOSFWD
+#endif
+
 #if !defined( NESDBG_SYS_INCLUDED_STDDEF_H )
 #    include    <stddef.h>
 #    define   NESDBG_SYS_INCLUDED_STDDEF_H

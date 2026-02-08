@@ -43,9 +43,13 @@ namespace  {
 
 //----------------------------------------------------------------
 //    インスタンスを初期化する
-//  （デフォルトコンストラクタ）。
+//  （コンストラクタ）。
+//
 
-Cpu6502::Cpu6502()
+Cpu6502::Cpu6502(
+        NesManager    & manNes,
+        MemoryManager & manMem)
+    : Super(manNes, manMem)
 {
 }
 

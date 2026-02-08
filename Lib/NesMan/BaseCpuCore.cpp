@@ -43,9 +43,18 @@ namespace  {
 
 //----------------------------------------------------------------
 //    インスタンスを初期化する
-//  （デフォルトコンストラクタ）。
+//  （コンストラクタ）。
+//
 
-BaseCpuCore::BaseCpuCore()
+BaseCpuCore::BaseCpuCore(
+        NesManager    & manNes,
+        MemoryManager & manMem)
+    : m_manNes(manNes)
+    , m_manMem(manMem)
+#if !defined( NESDBG_USE_GLOBALS )
+    , mog_cpuRegs()
+    , mog_cpuInfo()
+#endif
 {
 }
 

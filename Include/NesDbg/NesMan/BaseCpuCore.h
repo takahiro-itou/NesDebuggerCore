@@ -21,13 +21,32 @@
 #if !defined( NESDBG_NESMAN_INCLUDED_BASE_CPU_CORE_H )
 #    define   NESDBG_NESMAN_INCLUDED_BASE_CPU_CORE_H
 
-#if !defined( NESDBG_PCH_INCLUDED_PRE_COMPILE_H )
-#    include    "NesDbg/pch/PreCompile.h"
+#if !defined( NESDBG_NESMAN_INCLUDED_CPU_UTILS_H )
+#    include    "CpuUtils.h"
+#endif
+
+#if !defined( NESDBG_SYS_STL_INCLUDED_IOSFWD )
+#    include    <iosfwd>
+#    define   NESDBG_SYS_STL_INCLUDED_IOSFWD
 #endif
 
 
 NESDBG_NAMESPACE_BEGIN
 namespace  NesMan  {
+
+//  クラスの前方宣言。  //
+class   NesManager;
+class   MemoryManager;
+
+
+#if defined( NESDBG_USE_GLOBALS )
+
+extern  RegBank             mog_cpuRegs;
+
+extern  CounterInfo         mog_cpuInfo;
+
+#endif
+
 
 //========================================================================
 //
@@ -50,10 +69,12 @@ public:
 
     //----------------------------------------------------------------
     /**   インスタンスを初期化する
-    **  （デフォルトコンストラクタ）。
+    **  （コンストラクタ）。
     **
     **/
-    BaseCpuCore();
+    BaseCpuCore(
+            NesManager    & manNes,
+            MemoryManager & manMem);
 
     //----------------------------------------------------------------
     /**   インスタンスを破棄する
@@ -91,6 +112,28 @@ public:
 //
 //    Accessors.
 //
+public:
+
+    //----------------------------------------------------------------
+    /**   現在のクロック数を取得する。
+    **
+    **/
+    const   ClockCount
+    getCpuTotalTicks()  const
+    {
+        return ( mog_cpuInfo.totalClocks );
+    }
+
+    //----------------------------------------------------------------
+    /**   プログラムカウンタを取得する。
+    **
+    **/
+    const   GuestMemoryAddress
+    getNextPC()  const
+    {
+        return ( mog_cpuRegs.PC );
+    }
+
 
 //========================================================================
 //
@@ -106,6 +149,21 @@ public:
 //
 //    Member Variables.
 //
+protected:
+
+    NesManager  &           m_manNes;
+
+    /**  メモリマネージャ。     **/
+    MemoryManager  &        m_manMem;
+
+#if !defined( NESDBG_USE_GLOBALS )
+    /**   レジスタ。        **/
+    RegBank                 mog_cpuRegs;
+
+    /**   カウンタ関連。    **/
+    CounterInfo             mog_cpuInfo;
+#endif
+
 
 //========================================================================
 //
