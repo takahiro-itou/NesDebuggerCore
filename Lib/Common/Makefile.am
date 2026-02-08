@@ -36,8 +36,10 @@ dist_noinst_header_files    +=  \
         ${extra_noinst_header_files}
 
 inclib_header_files         +=  \
-        ${inclib_source_dir}/SampleDocument.h  \
         ${inclib_source_dir}/NesDbgProject.h   \
+        ${inclib_source_dir}/NesDbgTypes.h     \
+        ${inclib_source_dir}/NesDbgUtils.h     \
+        ${inclib_source_dir}/SampleDocument.h  \
         ${extra_library_header_files}
 
 inclib_nodist_header_files  +=

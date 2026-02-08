@@ -19,7 +19,9 @@ set(library_source_files
 )
 
 set(inclib_header_files
-        ${inclib_source_dir}/LibraryProjectSettings.h
+        ${inclib_source_dir}/NesDbgProject.h
+        ${inclib_source_dir}/NesDbgTypes.h
+        ${inclib_source_dir}/NesDbgUtils.h
         ${inclib_source_dir}/SampleDocument.h
 )
 
