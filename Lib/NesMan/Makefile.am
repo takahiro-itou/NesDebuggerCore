@@ -3,6 +3,8 @@
 ##    ライブラリのビルドとインストール。
 ##
 
+AUTOMAKE_OPTIONS    =  subdir-objects
+
 ##
 ##    List of Directories.
 ##
@@ -23,7 +25,12 @@ extra_noinst_data_files     =
 extra_noinst_header_files   =
 
 library_source_files        +=  \
-        NesManager.cpp                 \
+        BaseCpuCore.cpp                 \
+        BaseDisCpu.cpp                  \
+        MemoryManager.cpp               \
+        NesManager.cpp                  \
+        Cpu6502/Cpu6502.cpp             \
+        Cpu6502/Dis6502.cpp             \
         ${extra_library_source_files}
 
 library_instantiations      +=
@@ -33,9 +40,14 @@ dist_noinst_data_files      +=  \
         ${extra_noinst_data_files}
 
 dist_noinst_header_files    +=  \
+        Cpu6502/Cpu6502.h               \
+        Cpu6502/Dis6502.h               \
         ${extra_noinst_header_files}
 
 inclib_header_files         +=  \
+        ${inclib_source_dir}/BaseCpuCore.h      \
+        ${inclib_source_dir}/BaseDisCpu.h       \
+        ${inclib_source_dir}/MemoryManager.h    \
         ${inclib_source_dir}/NesManager.h       \
         ${extra_library_header_files}
 

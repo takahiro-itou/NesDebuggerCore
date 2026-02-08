@@ -22,7 +22,7 @@
 #    define   NESDBG_NESMAN_CPU6502_INCLUDED_CPU_6502_H
 
 #if !defined( NESDBG_NESMAN_INCLUDED_BASE_CPU_CORE_H )
-#    include    "NesDbg/NesMan/BaseCoreCpu.h"
+#    include    "NesDbg/NesMan/BaseCpuCore.h"
 #endif
 
 
