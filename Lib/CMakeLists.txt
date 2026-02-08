@@ -16,4 +16,5 @@ add_subdirectory(.Config)
 
 add_subdirectory(Common)
 add_subdirectory(Images)
+add_subdirectory(NesMan)
 
