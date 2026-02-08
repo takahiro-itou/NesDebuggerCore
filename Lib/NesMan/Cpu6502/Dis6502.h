@@ -54,12 +54,10 @@ public:
 
     //----------------------------------------------------------------
     /**   インスタンスを初期化する
-    **  （コンストラクタ）。
+    **  （デフォルトコンストラクタ）。
     **
     **/
-    Dis6502(
-            NesManager    & manNes,
-            MemoryManager & manMem);
+    Dis6502();
 
     //----------------------------------------------------------------
     /**   インスタンスを破棄する
@@ -72,6 +70,18 @@ public:
 //
 //    Public Member Functions (Implement Pure Virtual).
 //
+public:
+
+    //----------------------------------------------------------------
+    /**   ニーモニックを表示する。
+    **
+    **  @param [in,out] outStr    出力ストリーム
+    **  @param [in]     gmAddr    ゲスト上のアドレス
+    **/
+    virtual  std::ostream  &
+    writeMnemonic(
+            std::ostream       &outStr,
+            GuestMemoryAddress  gmAddr)  const override;
 
 //========================================================================
 //

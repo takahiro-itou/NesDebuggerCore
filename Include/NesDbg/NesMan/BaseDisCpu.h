@@ -63,9 +63,7 @@ public:
     **  （デフォルトコンストラクタ）。
     **
     **/
-    BaseDisCpu(
-            NesManager    & manNes,
-            MemoryManager & manMem);
+    BaseDisCpu();
 
     //----------------------------------------------------------------
     /**   インスタンスを破棄する
@@ -95,13 +93,11 @@ public:
     **
     **  @param [in,out] outStr    出力ストリーム
     **  @param [in]     gmAddr    ゲスト上のアドレス
-    **  @param [in]     opeCode   オペコード
     **/
     virtual  std::ostream  &
     writeMnemonic(
             std::ostream       &outStr,
-            GuestMemoryAddress  gmAddr,
-            const  OpeCode      opeCode)  const  = 0;
+            GuestMemoryAddress  gmAddr)  const = 0;
 
 //========================================================================
 //
@@ -117,6 +113,31 @@ public:
 //
 //    Accessors.
 //
+public:
+
+    //----------------------------------------------------------------
+    /**   メモリマネージャを設定する。
+    **
+    **  @param [in] manMem
+    **/
+    void
+    setMemoryManager(
+            const  MemoryManager  & manMem)
+    {
+        this->m_pManMem = &manMem;
+    }
+
+    //----------------------------------------------------------------
+    /**   デバッガマネージャを設定する。
+    **
+    **  @param [in] manNes
+    **/
+    void
+    setNesDbgManager(
+            const  NesManager & manNes)
+    {
+        this->m_pManNes = &manNes;
+    }
 
 //========================================================================
 //
@@ -134,10 +155,10 @@ public:
 //
 protected:
 
-    NesManager  &           m_manNes;
+    const  NesManager  *        m_pManNes;
 
     /**  メモリマネージャ。     **/
-    MemoryManager  &        m_manMem;
+    const   MemoryManager  *    m_pManMem;
 
 
 //========================================================================

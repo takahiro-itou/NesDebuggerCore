@@ -33,6 +33,9 @@ namespace  NesMan  {
 
 namespace  {
 
+//  特に内部状態を持たないクラスなのでグローバル変数でも良い。  //
+Dis6502     g_disCpu6502;
+
 }   //  End of (Unnamed) namespace.
 
 
@@ -54,10 +57,13 @@ NesManager::NesManager()
     : m_manMem(),
       m_cpuCur (nullptr),
       m_cpu6502(nullptr),
-      m_disCur (nullptr)
+      m_disCur (&g_disCpu6502)
 {
     this->m_cpu6502 = new Cpu6502(*this, this->m_manMem);
     this->m_cpuCur  = this->m_cpu6502;
+
+    g_disCpu6502.setNesDbgManager(*this);
+    g_disCpu6502.setMemoryManager(this->m_manMem);
 }
 
 //----------------------------------------------------------------
@@ -175,8 +181,7 @@ NesManager::writeMnemonic(
         std::ostream       &outStr,
         GuestMemoryAddress  gmAddr)  const
 {
-    //  return  this->m_disCur->writeMnemonic(outStr, gmAddr);
-    return ( outStr );
+    return  this->m_disCur->writeMnemonic(outStr, gmAddr);
 }
 
 //========================================================================

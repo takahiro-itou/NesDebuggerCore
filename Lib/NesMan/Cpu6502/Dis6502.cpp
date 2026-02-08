@@ -43,12 +43,10 @@ namespace  {
 
 //----------------------------------------------------------------
 //    インスタンスを初期化する
-//  （コンストラクタ）。
+//  （デフォルトコンストラクタ）。
+//
 
-Dis6502::Dis6502(
-        NesManager    & manNes,
-        MemoryManager & manMem)
-    : Super(manNes, manMem)
+Dis6502::Dis6502()
 {
 }
 
@@ -65,6 +63,18 @@ Dis6502::~Dis6502()
 //
 //    Public Member Functions (Implement Pure Virtual).
 //
+
+//----------------------------------------------------------------
+//    ニーモニックを表示する。
+//
+
+std::ostream  &
+Dis6502::writeMnemonic(
+        std::ostream       &outStr,
+        GuestMemoryAddress  gmAddr)  const
+{
+    return ( outStr );
+}
 
 //========================================================================
 //
