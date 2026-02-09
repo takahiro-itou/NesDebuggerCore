@@ -39,7 +39,8 @@ class  NesManagerTest : public  TestFixture
 {
     CPPUNIT_TEST_SUITE(NesManagerTest);
     CPPUNIT_TEST(testCtor);
-    CPPUNIT_TEST(testOpenRomFile);
+    CPPUNIT_TEST(testOpenRomFileError);
+    CPPUNIT_TEST(testOpenRomFileValid);
     CPPUNIT_TEST_SUITE_END();
 
 public:
