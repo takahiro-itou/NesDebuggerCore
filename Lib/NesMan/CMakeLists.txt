@@ -4,7 +4,7 @@
 ##    モジュールの設定。
 ##
 
-set(module_title        "Common")
+set(module_title        "NesMan")
 
 Include (${common_cmake_dir}/BuildCommon/ConfigModule.cmake)
 Include (${common_cmake_dir}/BuildCommon/ConfigTarget.cmake)
@@ -15,14 +15,20 @@ Include (${common_cmake_dir}/BuildCommon/ConfigTarget.cmake)
 ##
 
 set(library_source_files
-       SampleDocument.cpp
+        BaseCpuCore.cpp
+        BaseDisCpu.cpp
+        MemoryManager.cpp
+        NesManager.cpp
+        Cpu6502/Cpu6502.cpp
+        Cpu6502/Dis6502.cpp
 )
 
 set(inclib_header_files
-        ${inclib_source_dir}/NesDbgProject.h
-        ${inclib_source_dir}/NesDbgTypes.h
-        ${inclib_source_dir}/NesDbgUtils.h
-        ${inclib_source_dir}/SampleDocument.h
+        ${inclib_source_dir}/BaseCpuCore.h
+        ${inclib_source_dir}/BaseDisCpu.h
+        ${inclib_source_dir}/CpuUtils.h
+        ${inclib_source_dir}/MemoryManager.h
+        ${inclib_source_dir}/NesManger.h
 )
 
 ##----------------------------------------------------------------

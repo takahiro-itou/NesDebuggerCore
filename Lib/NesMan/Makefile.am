@@ -3,11 +3,13 @@
 ##    ライブラリのビルドとインストール。
 ##
 
+AUTOMAKE_OPTIONS    =  subdir-objects
+
 ##
 ##    List of Directories.
 ##
 
-module_dir_name     =  Common
+module_dir_name     =  NesMan
 SUBDIRS             =  .  Tests
 
 include  $(top_srcdir)/.M4/BuildCommon/DirList.inc
@@ -23,7 +25,12 @@ extra_noinst_data_files     =
 extra_noinst_header_files   =
 
 library_source_files        +=  \
-        SampleDocument.cpp             \
+        BaseCpuCore.cpp                 \
+        BaseDisCpu.cpp                  \
+        MemoryManager.cpp               \
+        NesManager.cpp                  \
+        Cpu6502/Cpu6502.cpp             \
+        Cpu6502/Dis6502.cpp             \
         ${extra_library_source_files}
 
 library_instantiations      +=
@@ -33,13 +40,16 @@ dist_noinst_data_files      +=  \
         ${extra_noinst_data_files}
 
 dist_noinst_header_files    +=  \
+        Cpu6502/Cpu6502.h               \
+        Cpu6502/Dis6502.h               \
         ${extra_noinst_header_files}
 
 inclib_header_files         +=  \
-        ${inclib_source_dir}/NesDbgProject.h   \
-        ${inclib_source_dir}/NesDbgTypes.h     \
-        ${inclib_source_dir}/NesDbgUtils.h     \
-        ${inclib_source_dir}/SampleDocument.h  \
+        ${inclib_source_dir}/BaseCpuCore.h      \
+        ${inclib_source_dir}/BaseDisCpu.h       \
+        ${inclib_source_dir}/CpuUtils.h         \
+        ${inclib_source_dir}/MemoryManager.h    \
+        ${inclib_source_dir}/NesManager.h       \
         ${extra_library_header_files}
 
 inclib_nodist_header_files  +=
@@ -55,7 +65,7 @@ library_compile_srcfiles    +=  \
 ##    List of Libraries.
 ##
 
-static_libraries_list   +=  libsampleCommon.static.a
+static_libraries_list   +=  libnesdbgNesMan.static.a
 shared_libraries_list   +=
 
 ##
@@ -72,4 +82,5 @@ include  $(top_srcdir)/.M4/BuildCommon/Install.inc
 ##    Build Libraries.
 ##
 
-libsampleCommon_static_a_SOURCES    =  ${library_source_files}
+libnesdbgNesMan_static_a_SOURCES    =  ${library_source_files}
+
