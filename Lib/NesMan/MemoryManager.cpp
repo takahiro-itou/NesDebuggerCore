@@ -78,10 +78,51 @@ MemoryManager::~MemoryManager()
 //    Public Member Functions (Virtual Functions).
 //
 
+//----------------------------------------------------------------
+//    メモリを確保する。
+//
+
+LpWriteBuf
+MemoryManager::allocateMemory()
+{
+    return ( nullptr );
+}
+
+//----------------------------------------------------------------
+//    メモリマップを構築する。
+//
+
+ErrCode
+MemoryManager::buildMemoryTable()
+{
+    return ( ErrCode::FAILURE );
+}
+
+//----------------------------------------------------------------
+//    メモリを解放する。
+//
+
+ErrCode
+MemoryManager::releaseMemory()
+{
+    return ( ErrCode::FAILURE );
+}
+
 //========================================================================
 //
 //    Public Member Functions.
 //
+
+//----------------------------------------------------------------
+//    メモリアドレスを計算する。
+//
+
+LpWriteBuf
+MemoryManager::getMemoryAddress(
+        const   GuestMemoryAddress  gmAddr)  const
+{
+    return ( nullptr );
+}
 
 //========================================================================
 //

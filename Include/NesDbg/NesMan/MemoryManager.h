@@ -81,11 +81,63 @@ public:
 //
 //    Public Member Functions (Virtual Functions).
 //
+public:
+
+    //----------------------------------------------------------------
+    /**   メモリを確保する。
+    **
+    **  @return     確保した領域の先頭を返す。
+    **/
+    virtual  LpWriteBuf
+    allocateMemory();
+
+    //----------------------------------------------------------------
+    /**   メモリマップを構築する。
+    **
+    **/
+    virtual  ErrCode
+    buildMemoryTable();
+
+    //----------------------------------------------------------------
+    /**   メモリを解放する。
+    **
+    **  @return     エラーコードを返す。
+    **      -   異常終了の場合は、
+    **          エラーの種類を示す非ゼロ値を返す。
+    **      -   正常終了の場合は、ゼロを返す。
+    **/
+    virtual  ErrCode
+    releaseMemory();
 
 //========================================================================
 //
 //    Public Member Functions.
 //
+public:
+
+    //----------------------------------------------------------------
+    /**   メモリアドレスを計算する。
+    **
+    **    ゲストのアドレスに対応するホストのアドレスを計算する。
+    **
+    **  @param [in] gmAddr    ゲストのメモリアドレス。
+    **/
+    LpWriteBuf
+    getMemoryAddress(
+            const   GuestMemoryAddress  gmAddr)  const;
+
+    //----------------------------------------------------------------
+    /**   メモリの内容を読みだす。
+    **
+    **/
+    template  <typename  T>
+    inline  const  T
+    readMemory(
+            const   GuestMemoryAddress  gmAddr)  const
+    {
+        const T  *  ptr = static_cast<const T *>(getMemoryAddress(gmAddr));
+        return ( *ptr );
+    }
 
 //========================================================================
 //
@@ -106,6 +158,22 @@ public:
 //
 //    Member Variables.
 //
+private:
+
+    /**   PRG ROM のバンク数。  **/
+    size_t          m_numPrgBanks;
+
+    /**   CHR ROM のバンク数。  **/
+    size_t          m_numChrBanks;
+
+    /**   イメージの全内容。    **/
+    LpWriteBuf      m_pRomImg;
+
+    /**   PRG ROM Bank(s).      **/
+    LpcByteReadBuf  m_pPrgRom;
+
+    /**   PPU ROM Bank(s).      **/
+    LpcByteReadBuf  m_ChrRom;
 
 //========================================================================
 //
