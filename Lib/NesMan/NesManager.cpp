@@ -26,6 +26,8 @@
 #include    "Cpu6502/Dis6502.h"
 
 #include    <ostream>
+#include    <stdio.h>
+#include    <sys/stat.h>
 
 
 NESDBG_NAMESPACE_BEGIN
@@ -157,7 +159,43 @@ ErrCode
 NesManager::openRomFile(
         const   char *  szFileName)
 {
-    return ( ErrCode::FILE_IO_ERROR );
+    struct stat stbuf;
+
+    //  ファイルの情報を取得する。  //
+    int rc  = stat(szFileName, &stbuf);
+    if ( rc < 0 ) {
+        perror("open rom file");
+        return ( ErrCode::FILE_OPEN_ERROR );
+    }
+
+    //  ファイルサイズが 0x10 (16)  バイト未満の時は、  //
+    //  必要なヘッダが存在していないのでエラーにする。  //
+    if ( stbuf.st_size < 16 ) {
+        return ( ErrCode::FILE_IO_ERROR );
+    }
+
+#if 0
+    //  メモリの各領域を確保して、テーブルに保管する。  //
+    this->m_manMem.allocateMemory();
+    this->m_manMem.buildMemoryTable();
+
+    //  ROM の内容を読み込む。  **/
+    const   size_t  cbRead  = (stbuf.st_size < MEM_SIZE_ROM ?
+                               stbuf.st_size : MEM_SIZE_ROM);
+    FILE *  fp  = fopen(szFileName, "rb");
+    if ( fp == nullptr ) {
+        this->closeInstance();
+        return ( ErrCode::FILE_IO_ERROR );
+    }
+
+    LpByteWriteBuf  memRom  = this->m_manMem.getHostAddressOfGuestRom();
+    size_t  retRead = fread(memRom, sizeof(uint8_t), cbRead, fp);
+    GBDEBUGGER_UNUSED_VAR(retRead);
+
+    fclose(fp);
+#endif
+
+    return ( ErrCode::SUCCESS );
 }
 
 //----------------------------------------------------------------
