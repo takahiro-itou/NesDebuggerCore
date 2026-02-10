@@ -58,6 +58,12 @@ enum class  InstExecResult
     **    正常に実行されたが、ブレークポイントにヒットした。
     **/
     SUCCESS_BREAKPOINT  = 2,
+
+    /**
+    **    正常に実行されたが、次の命令が未定義命令のため、
+    **  それを実行する手前でいったん停止した。
+    **/
+    BEFORE_UNDEFINED    = 3,
 };
 
 

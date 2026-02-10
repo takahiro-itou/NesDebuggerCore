@@ -67,6 +67,16 @@ Cpu6502::~Cpu6502()
 //    Public Member Functions (Implement Pure Virtual).
 //
 
+//----------------------------------------------------------------
+//    現在の命令を実行する。
+//
+
+InstExecResult
+Cpu6502::executeNextInst()
+{
+    return ( InstExecResult::UNDEFINED_OPECODE );
+}
+
 //========================================================================
 //
 //    Public Member Functions (Overrides).

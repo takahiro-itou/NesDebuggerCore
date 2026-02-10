@@ -21,6 +21,10 @@
 #include    "NesDbg/pch/PreCompile.h"
 
 #include    "NesDbg/NesMan/BaseCpuCore.h"
+#include    "NesDbg/NesMan/MemoryManager.h"
+
+#include    <cstring>
+#include    <ostream>
 
 
 NESDBG_NAMESPACE_BEGIN
@@ -86,6 +90,49 @@ BaseCpuCore::~BaseCpuCore()
 //
 //    Public Member Functions (Virtual Functions).
 //
+
+//----------------------------------------------------------------
+//    レジスタをリセットする。
+//
+
+ErrCode
+BaseCpuCore::doHardReset()
+{
+    return ( ErrCode::FAILURE );
+}
+
+//----------------------------------------------------------------
+//    レジスタの内容をコピーする。
+//
+
+ErrCode
+BaseCpuCore::getRegisters(
+        RegBank  &copyBuf)  const
+{
+    return ( ErrCode::FAILURE );
+}
+
+//----------------------------------------------------------------
+//    レジスタの内容をダンプする。
+//
+
+std::ostream  &
+BaseCpuCore::printRegisters(
+        std::ostream  & outStr)  const
+{
+    return ( outStr );
+}
+
+//----------------------------------------------------------------
+//    レジスタの内容を設定する。
+//
+
+ErrCode
+BaseCpuCore::setRegisters(
+        const  RegBank  &cpuRegs)
+{
+    return ( ErrCode::FAILURE );
+}
 
 //========================================================================
 //
