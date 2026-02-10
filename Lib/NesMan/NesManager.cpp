@@ -184,21 +184,16 @@ NesManager::openRomFile(
 
     size_t  retRead = fread(roHead, sizeof(BtByte), 16, fp);
 
-#if 0
     //  メモリの各領域を確保して、テーブルに保管する。  //
-    this->m_manMem.allocateMemory(
-
+    LpWriteBuf  memRom  =
+            this->m_manMem.allocateMemory(roHead[4], roHead[5]);
     this->m_manMem.buildMemoryTable();
 
     //  ROM の内容を読み込む。  **/
-    const   size_t  cbRead  = (stbuf.st_size < MEM_SIZE_ROM ?
-                               stbuf.st_size : MEM_SIZE_ROM);
-    LpByteWriteBuf  memRom  = this->m_manMem.getHostAddressOfGuestRom();
-    size_t  retRead = fread(memRom, sizeof(uint8_t), cbRead, fp);
-    GBDEBUGGER_UNUSED_VAR(retRead);
+    const   size_t  cbRead  = (stbuf.st_size - 16);
+    retRead = fread(memRom, sizeof(BtByte), cbRead, fp);
 
     fclose(fp);
-#endif
 
     return ( ErrCode::SUCCESS );
 }
