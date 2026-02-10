@@ -98,7 +98,19 @@ BaseCpuCore::~BaseCpuCore()
 ErrCode
 BaseCpuCore::doHardReset()
 {
-    return ( ErrCode::FAILURE );
+    mog_cpuRegs.PC  = this->m_manMem.readMemory<BtWord>(0xFFFC);
+    mog_cpuRegs.A   = 0;
+    mog_cpuRegs.X   = 0;
+    mog_cpuRegs.Y   = 0;
+    mog_cpuRegs.S   = 0xFF;
+    mog_cpuRegs.P   = 0;
+
+    mog_cpuInfo.totalCycles = 7;
+    mog_cpuInfo.numOpeCodes = 0;
+    mog_cpuInfo.clockCycles = 7;
+    mog_cpuInfo.remainClock = 0;
+
+    return ( ErrCode::SUCCESS );
 }
 
 //----------------------------------------------------------------
