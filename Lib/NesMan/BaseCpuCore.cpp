@@ -133,6 +133,25 @@ std::ostream  &
 BaseCpuCore::printRegisters(
         std::ostream  & outStr)  const
 {
+    char    buf[256];
+
+    sprintf(buf, "A: %02x   X: %02x   Y: %02x\n",
+            mog_cpuRegs.A,
+            mog_cpuRegs.X,
+            mog_cpuRegs.Y);
+    outStr  <<  buf;
+
+    sprintf(buf, "S: %02x   P: %02x   PC: %04x\n",
+            mog_cpuRegs.S,
+            mog_cpuRegs.P,
+            mog_cpuRegs.PC);
+    outStr  <<  buf;
+
+    sprintf(buf, "Cycles: %ld\tInstructions: %ld\n",
+            mog_cpuInfo.totalCycles,
+            mog_cpuInfo.numOpeCodes);
+    outStr  <<  buf;
+
     return ( outStr );
 }
 
