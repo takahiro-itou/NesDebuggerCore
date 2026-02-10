@@ -201,6 +201,9 @@ private:
     /**   PPU ROM Bank(s).      **/
     LpcByteReadBuf  m_pChrRom;
 
+    LpByteWriteBuf  m_memCPU;
+    LpByteWriteBuf  m_memPPU;
+
     LpByteWriteBuf  m_memRAM;
     LpByteWriteBuf  m_memIOM;
     LpByteWriteBuf  m_memROM;

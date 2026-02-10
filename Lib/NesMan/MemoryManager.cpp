@@ -99,6 +99,9 @@ MemoryManager::allocateMemory(
     this->m_vRomBuf.clear();
     this->m_vRomBuf.resize(numPrgBanks * 0x4000 + numChrBanks * 8192);
 
+    this->m_memCPU  = new BtByte [65536];
+    this->m_memPPU  = new BtByte [65536];
+
     this->m_pRomImg = &(this->m_vRomBuf[0]);
     return ( this->m_pRomImg );
 }
@@ -110,7 +113,10 @@ MemoryManager::allocateMemory(
 ErrCode
 MemoryManager::buildMemoryTable()
 {
-    return ( ErrCode::FAILURE );
+    this->m_memRAM  = this->m_memCPU + 0;
+    this->m_memROM  = pointer_cast<LpByteWriteBuf>(this->m_pRomImg);
+
+    return ( ErrCode::SUCCESS );
 }
 
 //----------------------------------------------------------------
@@ -120,7 +126,12 @@ MemoryManager::buildMemoryTable()
 ErrCode
 MemoryManager::releaseMemory()
 {
-    return ( ErrCode::FAILURE );
+    delete []   this->m_memCPU;     this->m_memCPU  = nullptr;
+    delete []   this->m_memPPU;     this->m_memPPU  = nullptr;
+
+    this->m_vRomBuf.clear();
+
+    return ( ErrCode::SUCCESS );
 }
 
 //========================================================================
