@@ -147,8 +147,10 @@ LpWriteBuf
 MemoryManager::getMemoryAddress(
         const   GuestMemoryAddress  gmAddr)  const
 {
-    LpByteWriteBuf  address = static_cast<LpByteWriteBuf>(this->m_pRomImg);
-    return ( address + gmAddr );
+    if ( gmAddr >= 0x8000 ) {
+        return ( this->m_memROM + (gmAddr & 0x7FFF) );
+    }
+    return ( this->m_memCPU + (gmAddr & 0x7FFF) );
 }
 
 //========================================================================
