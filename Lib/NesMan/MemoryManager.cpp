@@ -136,7 +136,8 @@ LpWriteBuf
 MemoryManager::getMemoryAddress(
         const   GuestMemoryAddress  gmAddr)  const
 {
-    return ( nullptr );
+    LpByteWriteBuf  address = static_cast<LpByteWriteBuf>(this->m_pRomImg);
+    return ( address + gmAddr );
 }
 
 //========================================================================
