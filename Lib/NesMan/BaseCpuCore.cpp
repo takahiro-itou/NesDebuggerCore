@@ -121,7 +121,8 @@ ErrCode
 BaseCpuCore::getRegisters(
         RegBank  &copyBuf)  const
 {
-    return ( ErrCode::FAILURE );
+    memcpy(&copyBuf, &mog_cpuRegs, sizeof(copyBuf));
+    return ( ErrCode::SUCCESS );
 }
 
 //----------------------------------------------------------------
@@ -143,7 +144,8 @@ ErrCode
 BaseCpuCore::setRegisters(
         const  RegBank  &cpuRegs)
 {
-    return ( ErrCode::FAILURE );
+    memcpy(&mog_cpuRegs, &cpuRegs, sizeof(mog_cpuRegs));
+    return ( ErrCode::SUCCESS );
 }
 
 //========================================================================
