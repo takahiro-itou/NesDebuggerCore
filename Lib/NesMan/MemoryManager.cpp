@@ -87,6 +87,9 @@ MemoryManager::allocateMemory(
         const   size_t  numPrgBanks,
         const   size_t  numChrBanks)
 {
+    this->m_numPrgBanks = numPrgBanks;
+    this->m_numChrBanks = numChrBanks;
+
     this->m_vRomBuf.clear();
     this->m_vRomBuf.resize(numPrgBanks * 0x4000 + numChrBanks * 8192);
 
