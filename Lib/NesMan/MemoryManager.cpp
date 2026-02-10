@@ -46,6 +46,12 @@ namespace  {
 //  （デフォルトコンストラクタ）。
 
 MemoryManager::MemoryManager()
+    : m_numPrgBanks(0),
+      m_numChrBanks(0),
+      m_vRomBuf(),
+      m_pRomImg(nullptr),
+      m_pPrgRom(nullptr),
+      m_pChrRom(nullptr)
 {
 }
 
@@ -78,15 +84,85 @@ MemoryManager::~MemoryManager()
 //    Public Member Functions (Virtual Functions).
 //
 
+//----------------------------------------------------------------
+//    メモリを確保する。
+//
+
+LpWriteBuf
+MemoryManager::allocateMemory(
+        const   size_t  numPrgBanks,
+        const   size_t  numChrBanks)
+{
+    this->m_numPrgBanks = numPrgBanks;
+    this->m_numChrBanks = numChrBanks;
+
+    this->m_vRomBuf.clear();
+    this->m_vRomBuf.resize(numPrgBanks * 0x4000 + numChrBanks * 8192);
+
+    this->m_pRomImg = &(this->m_vRomBuf[0]);
+    return ( this->m_pRomImg );
+}
+
+//----------------------------------------------------------------
+//    メモリマップを構築する。
+//
+
+ErrCode
+MemoryManager::buildMemoryTable()
+{
+    return ( ErrCode::FAILURE );
+}
+
+//----------------------------------------------------------------
+//    メモリを解放する。
+//
+
+ErrCode
+MemoryManager::releaseMemory()
+{
+    return ( ErrCode::FAILURE );
+}
+
 //========================================================================
 //
 //    Public Member Functions.
 //
 
+//----------------------------------------------------------------
+//    メモリアドレスを計算する。
+//
+
+LpWriteBuf
+MemoryManager::getMemoryAddress(
+        const   GuestMemoryAddress  gmAddr)  const
+{
+    return ( nullptr );
+}
+
 //========================================================================
 //
 //    Accessors.
 //
+
+//----------------------------------------------------------------
+//    CHR ROM のバンク数を取得する。
+//
+
+const   size_t
+MemoryManager::getNumChrBanks()  const
+{
+    return ( this->m_numChrBanks );
+}
+
+//----------------------------------------------------------------
+//    PRG ROM のバンク数を取得する。
+//
+
+const   size_t
+MemoryManager::getNumPrgBanks()  const
+{
+    return ( this->m_numPrgBanks );
+}
 
 //========================================================================
 //

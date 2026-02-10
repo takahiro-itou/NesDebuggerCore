@@ -1,5 +1,7 @@
 #! /bin/bash  -x
 
+set  -ue
+
 mkdir  -p  .Config
 
 /usr/bin/env  bash  -x  setuplinks.sh

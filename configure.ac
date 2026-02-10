@@ -176,6 +176,7 @@ AC_CONFIG_FILES([
     Lib/Common/Tests/Makefile
     Lib/Images/Tests/Makefile
     Lib/NesMan/Tests/Makefile
+    Lib/NesMan/Tests/TestConf.h
 ])
 
 dnl

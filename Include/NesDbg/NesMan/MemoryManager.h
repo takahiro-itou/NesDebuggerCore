@@ -25,6 +25,11 @@
 #    include    "NesDbg/pch/PreCompile.h"
 #endif
 
+#if !defined( NESDBG_SYS_STL_INCLUDED_VECTOR )
+#    include    <vector>
+#    define   NESDBG_SYS_STL_INCLUDED_VECTOR
+#endif
+
 
 NESDBG_NAMESPACE_BEGIN
 namespace  NesMan  {
@@ -81,16 +86,87 @@ public:
 //
 //    Public Member Functions (Virtual Functions).
 //
+public:
+
+    //----------------------------------------------------------------
+    /**   メモリを確保する。
+    **
+    **  @return     確保した領域の先頭を返す。
+    **/
+    virtual  LpWriteBuf
+    allocateMemory(
+            const   size_t  numPrgBanks,
+            const   size_t  numChrBanks);
+
+    //----------------------------------------------------------------
+    /**   メモリマップを構築する。
+    **
+    **/
+    virtual  ErrCode
+    buildMemoryTable();
+
+    //----------------------------------------------------------------
+    /**   メモリを解放する。
+    **
+    **  @return     エラーコードを返す。
+    **      -   異常終了の場合は、
+    **          エラーの種類を示す非ゼロ値を返す。
+    **      -   正常終了の場合は、ゼロを返す。
+    **/
+    virtual  ErrCode
+    releaseMemory();
 
 //========================================================================
 //
 //    Public Member Functions.
 //
+public:
+
+    //----------------------------------------------------------------
+    /**   メモリアドレスを計算する。
+    **
+    **    ゲストのアドレスに対応するホストのアドレスを計算する。
+    **
+    **  @param [in] gmAddr    ゲストのメモリアドレス。
+    **/
+    LpWriteBuf
+    getMemoryAddress(
+            const   GuestMemoryAddress  gmAddr)  const;
+
+    //----------------------------------------------------------------
+    /**   メモリの内容を読みだす。
+    **
+    **/
+    template  <typename  T>
+    inline  const  T
+    readMemory(
+            const   GuestMemoryAddress  gmAddr)  const
+    {
+        const T  *  ptr = static_cast<const T *>(getMemoryAddress(gmAddr));
+        return ( *ptr );
+    }
 
 //========================================================================
 //
 //    Accessors.
 //
+public:
+
+    //----------------------------------------------------------------
+    /**   CHR ROM のバンク数を取得する。
+    **
+    **  @return     バンク数を返す。
+    **/
+    const   size_t
+    getNumChrBanks()  const;
+
+    //----------------------------------------------------------------
+    /**   PRG ROM のバンク数を取得する。
+    **
+    **  @return     バンク数を返す。
+    **/
+    const   size_t
+    getNumPrgBanks()  const;
 
 //========================================================================
 //
@@ -106,6 +182,24 @@ public:
 //
 //    Member Variables.
 //
+private:
+
+    /**   PRG ROM のバンク数。  **/
+    size_t          m_numPrgBanks;
+
+    /**   CHR ROM のバンク数。  **/
+    size_t          m_numChrBanks;
+
+    /**   イメージの全内容。    **/
+    std::vector<BtByte>     m_vRomBuf;
+
+    LpWriteBuf      m_pRomImg;
+
+    /**   PRG ROM Bank(s).      **/
+    LpcByteReadBuf  m_pPrgRom;
+
+    /**   PPU ROM Bank(s).      **/
+    LpcByteReadBuf  m_pChrRom;
 
 //========================================================================
 //
