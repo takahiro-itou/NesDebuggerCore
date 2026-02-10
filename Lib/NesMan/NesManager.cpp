@@ -235,6 +235,26 @@ NesManager::writeMnemonic(
 //    Accessors.
 //
 
+//----------------------------------------------------------------
+//    CHR ROM のバンク数を取得する。
+//
+
+const   size_t
+NesManager::getNumChrBanks()  const
+{
+    return  this->m_manMem.getNumChrBanks();
+}
+
+//----------------------------------------------------------------
+//    PRG ROM のバンク数を取得する。
+//
+
+const   size_t
+NesManager::getNumPrgBanks()  const
+{
+    return  this->m_manMem.getNumPrgBanks();
+}
+
 //========================================================================
 //
 //    Protected Member Functions.

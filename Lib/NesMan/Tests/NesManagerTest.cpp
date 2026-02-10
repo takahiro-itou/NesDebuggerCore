@@ -86,8 +86,11 @@ void  NesManagerTest::testOpenRomFileValid()
     ErrCode     retCode;
     NesManager  testee;
 
-    retCode = testee.openRomFile(LIBTOP_SOURCE_DIR "/GbaMan/Tests/hello.nes");
+    retCode = testee.openRomFile(LIBTOP_SOURCE_DIR "/NesMan/Tests/hello.nes");
     CPPUNIT_ASSERT_EQUAL( ErrCode::SUCCESS, retCode );
+
+    CPPUNIT_ASSERT_EQUAL( size_t(2), testee.getNumPrgBanks() );
+    CPPUNIT_ASSERT_EQUAL( size_t(1), testee.getNumChrBanks() );
 
     return;
 }

@@ -135,6 +135,26 @@ MemoryManager::getMemoryAddress(
 //    Accessors.
 //
 
+//----------------------------------------------------------------
+//    CHR ROM のバンク数を取得する。
+//
+
+const   size_t
+MemoryManager::getNumChrBanks()  const
+{
+    return ( this->m_numChrBanks );
+}
+
+//----------------------------------------------------------------
+//    PRG ROM のバンク数を取得する。
+//
+
+const   size_t
+MemoryManager::getNumPrgBanks()  const
+{
+    return ( this->m_numPrgBanks );
+}
+
 //========================================================================
 //
 //    Protected Member Functions.
