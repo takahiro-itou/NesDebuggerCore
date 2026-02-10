@@ -25,6 +25,8 @@
 #include    "Cpu6502/Cpu6502.h"
 #include    "Cpu6502/Dis6502.h"
 
+#include    "NesDbg/Common/NesDbgUtils.h"
+
 #include    <ostream>
 #include    <stdio.h>
 #include    <sys/stat.h>
@@ -192,6 +194,7 @@ NesManager::openRomFile(
     //  ROM の内容を読み込む。  **/
     const   size_t  cbRead  = (stbuf.st_size - 16);
     retRead = fread(memRom, sizeof(BtByte), cbRead, fp);
+    NESDBG_UNUSED_VAR(retRead);
 
     fclose(fp);
 
