@@ -83,9 +83,15 @@ MemoryManager::~MemoryManager()
 //
 
 LpWriteBuf
-MemoryManager::allocateMemory()
+MemoryManager::allocateMemory(
+        const   size_t  numPrgBanks,
+        const   size_t  numChrBanks)
 {
-    return ( nullptr );
+    this->m_vRomBuf.clear();
+    this->m_vRomBuf.resize(numPrgBanks * 0x4000 + numChrBanks * 8192);
+
+    this->m_pRomImg = &(this->m_vRomBuf[0]);
+    return ( this->m_pRomImg );
 }
 
 //----------------------------------------------------------------

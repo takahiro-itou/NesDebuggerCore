@@ -25,6 +25,11 @@
 #    include    "NesDbg/pch/PreCompile.h"
 #endif
 
+#if !defined( NESDBG_SYS_STL_INCLUDED_VECTOR )
+#    include    <vector>
+#    define   NESDBG_SYS_STL_INCLUDED_VECTOR
+#endif
+
 
 NESDBG_NAMESPACE_BEGIN
 namespace  NesMan  {
@@ -89,7 +94,9 @@ public:
     **  @return     確保した領域の先頭を返す。
     **/
     virtual  LpWriteBuf
-    allocateMemory();
+    allocateMemory(
+            const   size_t  numPrgBanks,
+            const   size_t  numChrBanks);
 
     //----------------------------------------------------------------
     /**   メモリマップを構築する。
@@ -167,6 +174,8 @@ private:
     size_t          m_numChrBanks;
 
     /**   イメージの全内容。    **/
+    std::vector<BtByte>     m_vRomBuf;
+
     LpWriteBuf      m_pRomImg;
 
     /**   PRG ROM Bank(s).      **/
