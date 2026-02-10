@@ -134,13 +134,13 @@ NesManager::executeCurrentInst()
 }
 
 //----------------------------------------------------------------
-//    現在のクロック数を取得する。
+//    現在のカウンタ情報を取得する。
 //
 
-uint64_t
-NesManager::getCpuTotalTicks()  const
+const   CounterInfo
+NesManager::getCpuCounters()  const
 {
-    return  this->m_cpuCur->getCpuTotalTicks();
+    return  this->m_cpuCur->getCpuCounters();
 }
 
 //----------------------------------------------------------------

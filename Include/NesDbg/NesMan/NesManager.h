@@ -129,11 +129,11 @@ public:
     executeCurrentInst();
 
     //----------------------------------------------------------------
-    /**   現在のクロック数を取得する。
+    /**   現在のカウンタ情報を取得する。
     **
     **/
-    virtual  uint64_t
-    getCpuTotalTicks()  const;
+    virtual  const  CounterInfo
+    getCpuCounters()  const;
 
     //----------------------------------------------------------------
     /**   プログラムカウンタを取得する。

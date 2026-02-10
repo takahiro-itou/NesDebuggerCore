@@ -115,13 +115,13 @@ public:
 public:
 
     //----------------------------------------------------------------
-    /**   現在のクロック数を取得する。
+    /**   現在のカウンタ情報を取得する。
     **
     **/
-    const   ClockCount
-    getCpuTotalTicks()  const
+    const   CounterInfo
+    getCpuCounters()  const
     {
-        return ( mog_cpuInfo.totalCycles );
+        return ( mog_cpuInfo );
     }
 
     //----------------------------------------------------------------
