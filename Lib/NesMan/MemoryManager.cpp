@@ -46,6 +46,12 @@ namespace  {
 //  （デフォルトコンストラクタ）。
 
 MemoryManager::MemoryManager()
+    : m_numPrgBanks(0),
+      m_numChrBanks(0),
+      m_vRomBuf(),
+      m_pRomImg(nullptr),
+      m_pPrgRom(nullptr),
+      m_pChrRom(nullptr)
 {
 }
 

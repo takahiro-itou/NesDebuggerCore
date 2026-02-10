@@ -199,7 +199,7 @@ private:
     LpcByteReadBuf  m_pPrgRom;
 
     /**   PPU ROM Bank(s).      **/
-    LpcByteReadBuf  m_ChrRom;
+    LpcByteReadBuf  m_pChrRom;
 
 //========================================================================
 //
