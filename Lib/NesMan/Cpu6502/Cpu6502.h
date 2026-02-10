@@ -72,6 +72,14 @@ public:
 //
 //    Public Member Functions (Implement Pure Virtual).
 //
+public:
+
+    //----------------------------------------------------------------
+    /**   現在の命令を実行する。
+    **
+    **/
+    virtual  InstExecResult
+    executeNextInst()  override;
 
 //========================================================================
 //

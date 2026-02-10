@@ -18,25 +18,91 @@
 **      @file       Bin/SampleApplication.cpp
 **/
 
-#include    "NesDbg/Common/SampleDocument.h"
+#include    "NesDbg/NesMan/BaseCpuCore.h"
+#include    "NesDbg/NesMan/NesManager.h"
 
 #include    <iostream>
+#include    <time.h>
+
 
 using   namespace   NESDBG_NAMESPACE;
 
 int  main(int argc, char * argv[])
 {
-    Common::SampleDocument  test;
-    std::string     input;
+    ErrCode retCode = ErrCode::SUCCESS;;
+    NesMan::NesManager  manNes;
 
-    std::cout   <<  "Input:";
-    std::cin    >>  input;
+    if ( argc < 2 ) {
+        std::cerr   <<  "Usage "
+                    <<  argv[0]
+                    <<  " [rom file]"
+                    <<  std::endl;
+        return ( 1 );
+    }
 
-    test.setMessage(input);
-    std::cout   <<  "The number of alphabet in "
-                <<  input
-                <<  " = "
-                <<  test.countAlphabet()
+    if ( (retCode = manNes.openRomFile(argv[1])) != ErrCode::SUCCESS ) {
+        std::cerr   <<  "ERROR : Open ROM "
+                    <<  argv[1] <<  std::endl;
+        return ( 1 );
+    }
+
+    //  ハードリセットを行う。  //
+    manNes.doHardReset();
+
+    //  最初のレジスタをダンプ。    //
+    std::cout   <<  "REGS\n";
+    manNes.printRegisters(std::cout)
+            <<  std::endl;
+
+    NesMan::InstExecResult  ret = NesMan::InstExecResult::SUCCESS_CONTINUE;
+    NesMan::CounterInfo     ci;
+    int     cnt     = 0;
+    clock_t clkSta  = clock();
+    while ( ret != NesMan::InstExecResult::UNDEFINED_OPECODE ) {
+        ret = manNes.executeCurrentInst();
+
+        //  レジスタをダンプ。  //
+        std::cout   <<  "REGS\n";
+        manNes.printRegisters(std::cout)
+                <<  std::endl;
+
+        //  次の命令を逆アセンブル。    //
+        std::cout   <<  "Mnemonic:\t"  <<  cnt  <<  "\n";
+        manNes.writeMnemonic(std::cout, manNes.getNextPC())
+                <<  std::endl;
+
+        ++ cnt;
+        if ( !(cnt & 0x07FFFFFF) ) {
+            ci  = manNes.getCpuCounters();
+            ClockCount  cc  = ci.totalCycles;
+            clock_t clkEnd  = clock();
+            const double elapsed = static_cast<double>(clkEnd - clkSta)
+                    * 1000.0 / CLOCKS_PER_SEC;
+            std::cout   <<  "Instructions: "
+                        <<  ci.numOpeCodes  <<  ", "
+                        <<  elapsed <<  "ms : "
+                        <<  (cnt / elapsed) <<  " kHz\n"
+                        <<  "Clock Counts: "
+                        <<  cc  <<  ", "
+                        <<  elapsed <<  "ms : "
+                        <<  (cc / elapsed)  <<  " kHz"
+                        <<  std::endl;
+        }
+    }
+
+    ci  = manNes.getCpuCounters();
+    ClockCount  cc  = ci.totalCycles;
+    clock_t clkEnd  = clock();
+    const double elapsed = static_cast<double>(clkEnd - clkSta)
+                                * 1000.0 / CLOCKS_PER_SEC;
+    std::cout   <<  "Instructions: "
+                <<  cnt <<  ", "
+                <<  elapsed <<  "ms : "
+                <<  (cnt / elapsed) <<  " kHz\n"
+                <<  "Clock Counts: "
+                <<  cc  <<  ", "
+                <<  elapsed <<  "ms : "
+                <<  (cc / elapsed)  <<  " kHz"
                 <<  std::endl;
     return ( 0 );
 }

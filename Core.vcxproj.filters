@@ -30,7 +30,22 @@
     <ClCompile Include="Lib\Images\FullColorImage.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Lib\NesMan\BaseCpuCore.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Lib\NesMan\BaseDisCpu.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Lib\NesMan\MemoryManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="Lib\NesMan\NesManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Lib\NesMan\Cpu6502\Cpu6502.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Lib\NesMan\Cpu6502\Dis6502.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="WinAPI\Images\BitmapRenderer.cpp">
@@ -44,7 +59,22 @@
     <ClInclude Include="Include\NesDbg\Images\FullColorImage.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Include\NesDbg\NesMan\BaseCpuCore.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\NesDbg\NesMan\BaseDisCpu.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\NesDbg\NesMan\MemoryManager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
     <ClInclude Include="Include\NesDbg\NesMan\NesManager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\NesDbg\NesMan\Cpu6502\Cpu6502.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\NesDbg\NesMan\Cpu6502\Dis6502.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Include\NesDbg\pch\PreCompile.h">

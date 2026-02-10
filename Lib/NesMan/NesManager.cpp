@@ -117,7 +117,7 @@ ErrCode
 NesManager::doHardReset()
 {
     this->m_cpuCur  = this->m_cpu6502;
-    //  this->m_cpuCur->doHardReset();
+    this->m_cpuCur->doHardReset();
 
     return ( ErrCode::SUCCESS );
 }
@@ -129,18 +129,17 @@ NesManager::doHardReset()
 InstExecResult
 NesManager::executeCurrentInst()
 {
-    //  return  this->m_cpuCur->executeNextInst();
-    return ( InstExecResult::UNDEFINED_OPECODE );
+    return  this->m_cpuCur->executeNextInst();
 }
 
 //----------------------------------------------------------------
-//    現在のクロック数を取得する。
+//    現在のカウンタ情報を取得する。
 //
 
-uint64_t
-NesManager::getCpuTotalTicks()  const
+const   CounterInfo
+NesManager::getCpuCounters()  const
 {
-    return  this->m_cpuCur->getCpuTotalTicks();
+    return  this->m_cpuCur->getCpuCounters();
 }
 
 //----------------------------------------------------------------
@@ -178,7 +177,12 @@ NesManager::openRomFile(
     }
 
     //  ファイルを開いてヘッダを読み込む。  //
-    FILE *  fp  = fopen(szFileName, "rb");
+    FILE *  fp  = nullptr;
+#if defined( _MSC_VER ) && defined( WIN32 )
+    fopen_s(&fp, szFileName, "rb");
+#else
+    fp  = fopen(szFileName, "rb");
+#endif
     if ( fp == nullptr ) {
         this->closeInstance();
         return ( ErrCode::FILE_IO_ERROR );
@@ -209,7 +213,7 @@ std::ostream  &
 NesManager::printRegisters(
         std::ostream  & outStr)  const
 {
-    //  return  this->m_cpuCur->printRegisters(outStr);
+    return  this->m_cpuCur->printRegisters(outStr);
     return ( outStr );
 }
 

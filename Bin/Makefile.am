@@ -45,4 +45,5 @@ dist_noinst_DATA        =  \
 ##
 
 SampleApplication_SOURCES   =  SampleApplication.cpp
-SampleApplication_LDADD     =  -lsampleCommon
+SampleApplication_LDADD     =  -lnesdbgNesMan
+
