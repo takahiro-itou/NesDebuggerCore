@@ -178,7 +178,12 @@ NesManager::openRomFile(
     }
 
     //  ファイルを開いてヘッダを読み込む。  //
-    FILE *  fp  = fopen(szFileName, "rb");
+    FILE *  fp  = nullptr;
+#if defined( MSC_VER ) && defined( WIN32 )
+    fopen_s(&fp, szFileName, "rb");
+#else
+    fp  = fopen(szFileName, "rb");
+#endif
     if ( fp == nullptr ) {
         this->closeInstance();
         return ( ErrCode::FILE_IO_ERROR );

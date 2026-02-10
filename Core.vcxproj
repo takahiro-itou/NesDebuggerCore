@@ -86,13 +86,23 @@
     </ClCompile>
     <ClCompile Include="Lib\Common\SampleDocument.cpp" />
     <ClCompile Include="Lib\Images\FullColorImage.cpp" />
+    <ClCompile Include="Lib\NesMan\BaseCpuCore.cpp" />
+    <ClCompile Include="Lib\NesMan\BaseDisCpu.cpp" />
+    <ClCompile Include="Lib\NesMan\MemoryManager.cpp" />
     <ClCompile Include="Lib\NesMan\NesManager.cpp" />
+    <ClCompile Include="Lib\NesMan\Cpu6502\Cpu6502.cpp" />
+    <ClCompile Include="Lib\NesMan\Cpu6502\Dis6502.cpp" />
     <ClCompile Include="WinAPI\Images\BitmapRenderer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Include\NesDbg\Common\NesDbgProject.h" />
     <ClInclude Include="Include\NesDbg\Images\FullColorImage.h" />
+    <ClInclude Include="Include\NesDbg\NesMan\BaseCpuCore.h" />
+    <ClInclude Include="Include\NesDbg\NesMan\BaseDisCpu.h" />
+    <ClInclude Include="Include\NesDbg\NesMan\MemoryManager.h" />
     <ClInclude Include="Include\NesDbg\NesMan\NesManager.h" />
+    <ClInclude Include="Include\NesDbg\NesMan\Cpu6502\Cpu6502.h" />
+    <ClInclude Include="Include\NesDbg\NesMan\Cpu6502\Dis6502.h" />
     <ClInclude Include="Include\NesDbg\pch\PreCompile.h" />
     <ClInclude Include="WinAPI\Images\BitmapRenderer.h" />
   </ItemGroup>
