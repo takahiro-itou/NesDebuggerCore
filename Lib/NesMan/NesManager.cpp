@@ -160,6 +160,7 @@ NesManager::openRomFile(
         const   char *  szFileName)
 {
     struct stat stbuf;
+    BtByte      roHead[16];
 
     //  ファイルの情報を取得する。  //
     int rc  = stat(szFileName, &stbuf);
@@ -174,20 +175,24 @@ NesManager::openRomFile(
         return ( ErrCode::FILE_IO_ERROR );
     }
 
-#if 0
-    //  メモリの各領域を確保して、テーブルに保管する。  //
-    this->m_manMem.allocateMemory();
-    this->m_manMem.buildMemoryTable();
-
-    //  ROM の内容を読み込む。  **/
-    const   size_t  cbRead  = (stbuf.st_size < MEM_SIZE_ROM ?
-                               stbuf.st_size : MEM_SIZE_ROM);
+    //  ファイルを開いてヘッダを読み込む。  //
     FILE *  fp  = fopen(szFileName, "rb");
     if ( fp == nullptr ) {
         this->closeInstance();
         return ( ErrCode::FILE_IO_ERROR );
     }
 
+    size_t  retRead = fread(roHead, sizeof(BtByte), 16, fp);
+
+#if 0
+    //  メモリの各領域を確保して、テーブルに保管する。  //
+    this->m_manMem.allocateMemory(
+
+    this->m_manMem.buildMemoryTable();
+
+    //  ROM の内容を読み込む。  **/
+    const   size_t  cbRead  = (stbuf.st_size < MEM_SIZE_ROM ?
+                               stbuf.st_size : MEM_SIZE_ROM);
     LpByteWriteBuf  memRom  = this->m_manMem.getHostAddressOfGuestRom();
     size_t  retRead = fread(memRom, sizeof(uint8_t), cbRead, fp);
     GBDEBUGGER_UNUSED_VAR(retRead);
