@@ -121,7 +121,7 @@ public:
     const   ClockCount
     getCpuTotalTicks()  const
     {
-        return ( mog_cpuInfo.totalClocks );
+        return ( mog_cpuInfo.totalCycles );
     }
 
     //----------------------------------------------------------------
