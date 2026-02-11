@@ -103,6 +103,7 @@
     <ClInclude Include="Include\NesDbg\NesMan\NesManager.h" />
     <ClInclude Include="Include\NesDbg\NesMan\Cpu6502\Cpu6502.h" />
     <ClInclude Include="Include\NesDbg\NesMan\Cpu6502\Dis6502.h" />
+    <ClInclude Include="Include\NesDbg\NesMan\Cpu6502\InstTable.h" />
     <ClInclude Include="Include\NesDbg\pch\PreCompile.h" />
     <ClInclude Include="WinAPI\Images\BitmapRenderer.h" />
   </ItemGroup>
