@@ -224,9 +224,10 @@ NesManager::printRegisters(
 std::ostream  &
 NesManager::writeMnemonic(
         std::ostream       &outStr,
-        GuestMemoryAddress  gmAddr)  const
+        GuestMemoryAddress  gmAddr,
+        GuestMemoryAddress &gmNext)  const
 {
-    return  this->m_disCur->writeMnemonic(outStr, gmAddr);
+    return  this->m_disCur->writeMnemonic(outStr, gmAddr, gmNext);
 }
 
 //========================================================================
