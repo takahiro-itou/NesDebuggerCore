@@ -21,6 +21,8 @@
 #include    "TestDriver.h"
 #include    "NesDbg/NesMan/NesManager.h"
 
+#include    "TestConf.h"
+
 
 NESDBG_NAMESPACE_BEGIN
 namespace  NesMan  {
@@ -37,6 +39,8 @@ class  NesManagerTest : public  TestFixture
 {
     CPPUNIT_TEST_SUITE(NesManagerTest);
     CPPUNIT_TEST(testCtor);
+    CPPUNIT_TEST(testOpenRomFileError);
+    CPPUNIT_TEST(testOpenRomFileValid);
     CPPUNIT_TEST_SUITE_END();
 
 public:
@@ -45,6 +49,8 @@ public:
 
 private:
     void  testCtor();
+    void  testOpenRomFileError();
+    void  testOpenRomFileValid();
 };
 
 CPPUNIT_TEST_SUITE_REGISTRATION( NesManagerTest );
@@ -57,6 +63,34 @@ CPPUNIT_TEST_SUITE_REGISTRATION( NesManagerTest );
 void  NesManagerTest::testCtor()
 {
     NesManager  testee;
+
+    return;
+}
+
+void  NesManagerTest::testOpenRomFileError()
+{
+    ErrCode     retCode;
+    NesManager  testee;
+
+    retCode = testee.openRomFile("no-such-file");
+    CPPUNIT_ASSERT_EQUAL( ErrCode::FILE_OPEN_ERROR, retCode );
+
+    retCode = testee.openRomFile("/dev/null");
+    CPPUNIT_ASSERT_EQUAL( ErrCode::FILE_IO_ERROR, retCode );
+
+    return;
+}
+
+void  NesManagerTest::testOpenRomFileValid()
+{
+    ErrCode     retCode;
+    NesManager  testee;
+
+    retCode = testee.openRomFile(LIBTOP_SOURCE_DIR "/NesMan/Tests/hello.nes");
+    CPPUNIT_ASSERT_EQUAL( ErrCode::SUCCESS, retCode );
+
+    CPPUNIT_ASSERT_EQUAL( size_t(2), testee.getNumPrgBanks() );
+    CPPUNIT_ASSERT_EQUAL( size_t(1), testee.getNumChrBanks() );
 
     return;
 }

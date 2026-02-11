@@ -14,6 +14,8 @@ TESTS                   =  \
 
 target_testee_library       +=  -lnesdbgNesMan
 
+dist_noinst_data_files      +=  hello.nes
+
 dist_noinst_data_files      +=
 dist_noinst_header_files    +=
 extra_test_drivers          +=

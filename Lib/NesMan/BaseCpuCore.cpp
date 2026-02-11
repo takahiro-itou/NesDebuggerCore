@@ -21,6 +21,10 @@
 #include    "NesDbg/pch/PreCompile.h"
 
 #include    "NesDbg/NesMan/BaseCpuCore.h"
+#include    "NesDbg/NesMan/MemoryManager.h"
+
+#include    <cstring>
+#include    <ostream>
 
 
 NESDBG_NAMESPACE_BEGIN
@@ -86,6 +90,85 @@ BaseCpuCore::~BaseCpuCore()
 //
 //    Public Member Functions (Virtual Functions).
 //
+
+//----------------------------------------------------------------
+//    レジスタをリセットする。
+//
+
+ErrCode
+BaseCpuCore::doHardReset()
+{
+    mog_cpuRegs.PC  = this->m_manMem.readMemory<BtWord>(0xFFFC);
+    mog_cpuRegs.A   = 0;
+    mog_cpuRegs.X   = 0;
+    mog_cpuRegs.Y   = 0;
+    mog_cpuRegs.S   = 0xFF;
+    mog_cpuRegs.P   = 0;
+
+    mog_cpuInfo.totalCycles = 7;
+    mog_cpuInfo.numOpeCodes = 0;
+    mog_cpuInfo.clockCycles = 7;
+    mog_cpuInfo.remainClock = 0;
+
+    return ( ErrCode::SUCCESS );
+}
+
+//----------------------------------------------------------------
+//    レジスタの内容をコピーする。
+//
+
+ErrCode
+BaseCpuCore::getRegisters(
+        RegBank  &copyBuf)  const
+{
+    memcpy(&copyBuf, &mog_cpuRegs, sizeof(copyBuf));
+    return ( ErrCode::SUCCESS );
+}
+
+//----------------------------------------------------------------
+//    レジスタの内容をダンプする。
+//
+
+std::ostream  &
+BaseCpuCore::printRegisters(
+        std::ostream  & outStr)  const
+{
+    char    buf[256];
+
+    snprintf(buf, sizeof(buf),
+            "A: %02x   X: %02x   Y: %02x\n",
+            mog_cpuRegs.A,
+            mog_cpuRegs.X,
+            mog_cpuRegs.Y);
+    outStr  <<  buf;
+
+    snprintf(buf, sizeof(buf),
+            "S: %02x   P: %02x   PC: %04x\n",
+            mog_cpuRegs.S,
+            mog_cpuRegs.P,
+            mog_cpuRegs.PC);
+    outStr  <<  buf;
+
+    snprintf(buf, sizeof(buf),
+            "Cycles: %ld\tInstructions: %ld\n",
+            mog_cpuInfo.totalCycles,
+            mog_cpuInfo.numOpeCodes);
+    outStr  <<  buf;
+
+    return ( outStr );
+}
+
+//----------------------------------------------------------------
+//    レジスタの内容を設定する。
+//
+
+ErrCode
+BaseCpuCore::setRegisters(
+        const  RegBank  &cpuRegs)
+{
+    memcpy(&mog_cpuRegs, &cpuRegs, sizeof(mog_cpuRegs));
+    return ( ErrCode::SUCCESS );
+}
 
 //========================================================================
 //

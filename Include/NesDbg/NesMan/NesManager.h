@@ -129,11 +129,11 @@ public:
     executeCurrentInst();
 
     //----------------------------------------------------------------
-    /**   現在のクロック数を取得する。
+    /**   現在のカウンタ情報を取得する。
     **
     **/
-    virtual  uint64_t
-    getCpuTotalTicks()  const;
+    virtual  const  CounterInfo
+    getCpuCounters()  const;
 
     //----------------------------------------------------------------
     /**   プログラムカウンタを取得する。
@@ -166,12 +166,15 @@ public:
     //----------------------------------------------------------------
     /**   ニーモニックを表示する。
     **
+    **  @param [in,out] outStr    出力ストリーム
+    **  @param [in]     gmAddr    ゲスト上のアドレス
+    **  @param    [out] gmNext    次の命令のアドレス
     **/
     virtual  std::ostream  &
     writeMnemonic(
             std::ostream       &outStr,
-            GuestMemoryAddress  gmAddr)  const;
-
+            GuestMemoryAddress  gmAddr,
+            GuestMemoryAddress &gmNext)  const;
 
 //========================================================================
 //
@@ -182,6 +185,23 @@ public:
 //
 //    Accessors.
 //
+public:
+
+    //----------------------------------------------------------------
+    /**   CHR ROM のバンク数を取得する。
+    **
+    **  @return     バンク数を返す。
+    **/
+    const   size_t
+    getNumChrBanks()  const;
+
+    //----------------------------------------------------------------
+    /**   PRG ROM のバンク数を取得する。
+    **
+    **  @return     バンク数を返す。
+    **/
+    const   size_t
+    getNumPrgBanks()  const;
 
 //========================================================================
 //

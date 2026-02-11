@@ -58,6 +58,12 @@ enum class  InstExecResult
     **    正常に実行されたが、ブレークポイントにヒットした。
     **/
     SUCCESS_BREAKPOINT  = 2,
+
+    /**
+    **    正常に実行されたが、次の命令が未定義命令のため、
+    **  それを実行する手前でいったん停止した。
+    **/
+    BEFORE_UNDEFINED    = 3,
 };
 
 
@@ -68,14 +74,14 @@ enum class  InstExecResult
 
 struct  RegBank
 {
+    /**  プログラムカウンタ。   **/
+    GuestMemoryAddress  PC;
+
     RegType     A;      /**<  A レジスタ。  **/
     RegType     X;      /**<  X レジスタ。  **/
     RegType     Y;      /**<  Y レジスタ。  **/
     RegType     S;      /**<  S レジスタ。  **/
     RegType     P;      /**<  ステータスレジスタ。  **/
-
-    /**  プログラムカウンタ。   **/
-    GuestMemoryAddress  PC;
 };
 
 
@@ -86,8 +92,17 @@ struct  RegBank
 
 struct  CounterInfo
 {
-    ClockCount          totalClocks;
-    ClockCount          clockCounts;
+    /**   実行した命令のサイクル数の合計。  **/
+    ClockCount          totalCycles;
+
+    /**   実行した命令の総数。  **/
+    ClockCount          numOpeCodes;
+
+    /**   最後の VBlank からのサイクル数。  **/
+    ClockCount          clockCycles;
+
+    /**   次の VBlank までの残サイクル数。  **/
+    ClockCount          remainClock;
 };
 
 };

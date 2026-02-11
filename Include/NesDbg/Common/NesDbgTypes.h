@@ -151,7 +151,7 @@ DECLARE_STRICT_TYPE(uint8_t,    RegType);
 **    消費したクロックカウント。
 **/
 
-DECLARE_STRICT_TYPE(uint64_t,   ClockCount);
+DECLARE_STRICT_TYPE(int64_t,    ClockCount);
 
 
 //========================================================================

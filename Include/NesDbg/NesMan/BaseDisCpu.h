@@ -93,16 +93,30 @@ public:
     **
     **  @param [in,out] outStr    出力ストリーム
     **  @param [in]     gmAddr    ゲスト上のアドレス
+    **  @param    [out] gmNext    次の命令のアドレス
     **/
     virtual  std::ostream  &
     writeMnemonic(
             std::ostream       &outStr,
-            GuestMemoryAddress  gmAddr)  const = 0;
+            GuestMemoryAddress  gmAddr,
+            GuestMemoryAddress &gmNext)  const = 0;
 
 //========================================================================
 //
 //    Public Member Functions (Virtual Functions).
 //
+public:
+
+    //----------------------------------------------------------------
+    /**   ニーモニックを表示する。
+    **
+    **  @param [in,out] outStr    出力ストリーム
+    **  @param [in]     gmAddr    ゲスト上のアドレス
+    **/
+    virtual  std::ostream  &
+    writeMnemonic(
+            std::ostream       &outStr,
+            GuestMemoryAddress  gmAddr)  const;
 
 //========================================================================
 //
