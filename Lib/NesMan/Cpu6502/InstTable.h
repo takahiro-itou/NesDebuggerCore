@@ -75,4 +75,8 @@ ClockCount  opCycles[256] = {
     2, 5, 2, 8, 4, 4, 6, 6,  2, 4, 2, 7, 4, 4, 7, 7,    //  0xF0 -- FF  //
 };
 
+
+}   //  End of namespace  NesMan
+NESDBG_NAMESPACE_END
+
 #endif
