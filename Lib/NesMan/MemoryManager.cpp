@@ -51,7 +51,12 @@ MemoryManager::MemoryManager()
       m_vRomBuf(),
       m_pRomImg(nullptr),
       m_pPrgRom(nullptr),
-      m_pChrRom(nullptr)
+      m_pChrRom(nullptr),
+      m_memCPU(nullptr),
+      m_memPPU(nullptr),
+      m_memRAM(nullptr),
+      m_memIOM(nullptr),
+      m_memROM(nullptr)
 {
 }
 
