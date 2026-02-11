@@ -29,6 +29,14 @@ namespace  NesMan  {
 
 namespace  {
 
+CONSTEXPR_VAR   const   MnemonicMap
+dis6502Mnemonics[] = {
+    //  NOP 系  //
+    { 0xFF, 0x82, "DOP" },
+    { 0xFF, 0xC2, "DOP" },
+    { 0xFF, 0xE2, "DOP" },
+};
+
 }   //  End of (Unnamed) namespace.
 
 
