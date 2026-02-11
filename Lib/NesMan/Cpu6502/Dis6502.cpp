@@ -25,6 +25,9 @@
 #include    "Dis6502.h"
 #include    "InstTable.h"
 
+#include    <ostream>
+#include    <sstream>
+
 
 NESDBG_NAMESPACE_BEGIN
 namespace  NesMan  {
@@ -93,7 +96,7 @@ Dis6502::writeMnemonic(
     const uint32_t  opeCode = this->m_pManMem->readMemory<uint32_t>(gmAddr);
     const MnemonicMap *  oc = dis6502Mnemonics;
 
-    const  BtByte   opSize  = g_opeCodeSize[opeCode];
+    const  BtByte   opSize  = g_opeCodeSize[opeCode & 0xFF];
     gmNext  = gmAddr + opSize;
 
     len = snprintf(dst, rem, "%04x:   %02x", gmAddr, (opeCode & 0xFF));
@@ -118,6 +121,7 @@ Dis6502::writeMnemonic(
         break;
     }
 
+    outStr  <<  buf;
     return ( outStr );
 }
 
