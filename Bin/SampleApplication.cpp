@@ -69,8 +69,11 @@ int  main(int argc, char * argv[])
 
         //  次の命令を逆アセンブル。    //
         std::cout   <<  "Mnemonic:\t"  <<  cnt  <<  "\n";
-        manNes.writeMnemonic(std::cout, manNes.getNextPC(), gmNext)
-                <<  std::endl;
+        gmNext  = manNes.getNextPC();
+        for ( int i = 0; i < 8; ++i ) {
+            manNes.writeMnemonic(std::cout, gmNext, gmNext)
+                    <<  std::endl;
+        }
 
         ++ cnt;
         if ( !(cnt & 0x07FFFFFF) ) {
