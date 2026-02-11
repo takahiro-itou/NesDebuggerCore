@@ -20,6 +20,8 @@
 
 #include    "NesDbg/pch/PreCompile.h"
 
+#include    "NesDbg/NesMan/MemoryManager.h"
+
 #include    "Dis6502.h"
 #include    "InstTable.h"
 
@@ -83,6 +85,39 @@ Dis6502::writeMnemonic(
         GuestMemoryAddress  gmAddr,
         GuestMemoryAddress &gmNext)  const
 {
+    char    buf[256] = { 0 };
+    size_t  len = 0;
+    size_t  rem = sizeof(buf) - 1;
+    char *  dst = buf;
+
+    const uint32_t  opeCode = this->m_pManMem->readMemory<uint32_t>(gmAddr);
+    const MnemonicMap *  oc = dis6502Mnemonics;
+
+    const  BtByte   opSize  = g_opeCodeSize[opeCode];
+    gmNext  = gmAddr + opSize;
+
+    len = snprintf(dst, rem, "%04x:   %02x", gmAddr, (opeCode & 0xFF));
+    dst += len;
+    rem -= len;
+
+    uint32_t    ocTemp  = (opeCode >> 8);
+    switch ( opSize ) {
+    case  3:
+        len = snprintf(dst, rem, " %02x", (ocTemp & 0xFF));
+        dst += len;
+        rem -= len;
+        ocTemp  >>= 8;
+        //  no break;
+    case  2:
+        len = snprintf(dst, rem, " %02x", (ocTemp & 0xFF));
+        dst += len;
+        rem -= len;
+        ocTemp  >>= 8;
+        //  no break;
+    default:
+        break;
+    }
+
     return ( outStr );
 }
 
