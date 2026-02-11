@@ -81,6 +81,19 @@ BaseDisCpu::~BaseDisCpu()
 //    Public Member Functions (Virtual Functions).
 //
 
+//----------------------------------------------------------------
+//    ニーモニックを表示する。
+//
+
+std::ostream  &
+BaseDisCpu::writeMnemonic(
+        std::ostream       &outStr,
+        GuestMemoryAddress  gmAddr)  const
+{
+    GuestMemoryAddress  dmy = gmAddr;
+    return  writeMnemonic(outStr, gmAddr, dmy);
+}
+
 //========================================================================
 //
 //    Public Member Functions.

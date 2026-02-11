@@ -56,6 +56,7 @@ int  main(int argc, char * argv[])
 
     NesMan::InstExecResult  ret = NesMan::InstExecResult::SUCCESS_CONTINUE;
     NesMan::CounterInfo     ci;
+    GuestMemoryAddress      gmNext  = 0;
     int     cnt     = 0;
     clock_t clkSta  = clock();
     while ( ret != NesMan::InstExecResult::UNDEFINED_OPECODE ) {
@@ -68,7 +69,7 @@ int  main(int argc, char * argv[])
 
         //  次の命令を逆アセンブル。    //
         std::cout   <<  "Mnemonic:\t"  <<  cnt  <<  "\n";
-        manNes.writeMnemonic(std::cout, manNes.getNextPC())
+        manNes.writeMnemonic(std::cout, manNes.getNextPC(), gmNext)
                 <<  std::endl;
 
         ++ cnt;

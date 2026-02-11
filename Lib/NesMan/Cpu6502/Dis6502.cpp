@@ -21,6 +21,7 @@
 #include    "NesDbg/pch/PreCompile.h"
 
 #include    "Dis6502.h"
+#include    "InstTable.h"
 
 
 NESDBG_NAMESPACE_BEGIN
@@ -71,7 +72,8 @@ Dis6502::~Dis6502()
 std::ostream  &
 Dis6502::writeMnemonic(
         std::ostream       &outStr,
-        GuestMemoryAddress  gmAddr)  const
+        GuestMemoryAddress  gmAddr,
+        GuestMemoryAddress &gmNext)  const
 {
     return ( outStr );
 }
