@@ -126,7 +126,8 @@ enum  AdressingMode
     AM_REL  = 10,
 };
 
-};
+
+}   //  End of namespace  NesMan
 NESDBG_NAMESPACE_END
 
 #endif
