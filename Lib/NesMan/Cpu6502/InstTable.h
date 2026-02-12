@@ -25,6 +25,44 @@
 NESDBG_NAMESPACE_BEGIN
 namespace  NesMan  {
 
+
+//========================================================================
+//
+//    Addressing Mode Table.
+//
+
+namespace  AddressingMode  {
+
+enum  ModeValues
+{
+    AM_IMP  =  0,
+    AM_ACC  =  1,
+    AM_IMM  =  2,
+    AM_ZER  =  3,
+    AM_ZPX  =  4,
+    AM_ZPY  =  5,
+    AM_ABS  =  6,
+    AM_ABX  =  7,
+    AM_ABY  =  8,
+    AM_IDX  =  9,
+    AM_IDY  = 10,
+    AM_REL  = 11,
+    AM_DOP  = 12,
+    AM_TOP  = 13,
+};
+
+CONSTEXPR_VAR
+ModeValues  g_opeCodeAddrs[256] = {
+    //  0x00 -- 0F   //
+    AM_IMP, AM_IDX, AM_IMP, AM_IDX,  AM_ZER, AM_ZER, AM_ZER, AM_ZER,
+    AM_IMP, AM_IMM, AM_ACC, AM_IMM,  AM_ABS, AM_ABS, AM_ABS, AM_ABS,
+    AM_REL, AM_IDY, AM_IMP, AM_IDY,  AM_ZPX, AM_ZPX, AM_ZPX, AM_ZPX,
+    AM_IMP, AM_ABY, AM_DOP, AM_ABY,  AM_ABX, AM_ABX, AM_ABX, AM_ABX,
+};
+
+}   //  End of namespace  AddressingMode
+
+
 //========================================================================
 //
 //    OpeCode Size Table.
