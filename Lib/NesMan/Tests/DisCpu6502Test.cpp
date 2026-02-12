@@ -41,6 +41,8 @@ namespace  NesMan  {
 #define     CLC     "CLC"
 #define     CLD     "CLD"
 #define     CLI     "CLI"
+#define     DEX     "DEX"
+#define     DEY     "DEY"
 #define     EOR     "EOR"
 #define     JMP     "JMP"
 #define     JSR     "JSR"
@@ -57,14 +59,29 @@ namespace  NesMan  {
 #define     SEC     "SEC"
 #define     SED     "SED"
 #define     SEI     "SEI"
+#define     STA     "STA"
+#define     STX     "STX"
+#define     STY     "STY"
+#define     TAX     "TAX"
+#define     TAY     "TAY"
+#define     TSX     "TSX"
+#define     TXA     "TXA"
+#define     TXS     "TXS"
+#define     TYA     "TYA"
 
 #define     ALR     "alr"
 #define     ARR     "arr"
 #define     ANC     "anc"
+#define     ANE     "ane"
 #define     DOP     "nop"
 #define     HLT     "hlt"
 #define     RLA     "rla"
 #define     RRA     "rra"
+#define     SAX     "sax"
+#define     SHA     "sha"
+#define     SHS     "shs"
+#define     SHX     "shx"
+#define     SHY     "shy"
 #define     SLO     "slo"
 #define     SRE     "sre"
 #define     TOP     "nop"
@@ -95,7 +112,13 @@ const  char  *  ops[] = {
     RTS, ADC, HLT, RRA,  DOP, ADC, ROR, RRA,
     PLA, ADC, ROR, ARR,  JMP, ADC, ROR, RRA,
     BVS, ADC, HLT, RRA,  DOP, ADC, ROR, RRA,
-    SED, ADC,UNOP, RRA,  TOP, ADC, ROR, RRA,
+    SEI, ADC,UNOP, RRA,  TOP, ADC, ROR, RRA,
+
+    //  0x80 -- 9F  //
+    DOP, STA, DOP, SAX,  STY, STA, STX, SAX,
+    DEY, DOP, TXA, ANE,  STY, STA, STX, SAX,
+    BCC, STA, HLT, SHA,  STY, STA, STX, SAX,
+    TYA, STA, TXS, SHS,  SHY, STA, SHX, SHA,
 };
 
 
