@@ -72,9 +72,12 @@ namespace  NesMan  {
 #define     UNOP    "nop"
 
 CONSTEXPR_VAR
-const  char  *  ops[128] = {
+const  char  *  ops[] = {
     //  0x00 -- 1F  //
     BRK, ORA, HLT, SLO,  DOP, ORA, ASL, SLO,
+    PHP, ORA, ASL, ANC,  TOP, ORA, ASL, SLO,
+    BPL, ORA, HLT, SLO,  DOP, ORA, ASL, SLO,
+    CLC, ORA,UNOP, SLO,  TOP, ORA, ASL, SLO,
 };
 
 
@@ -112,8 +115,8 @@ void  DisCpu6502Test::testMnemonicMap()
 {
     OpeCode mis = 0;
     char    buf[32];
-
-    for ( OpeCode opeCode = 0; opeCode < 8; ++ opeCode ) {
+    CONSTEXPR_VAR   OpeCode NUM_OPS = sizeof(ops) / sizeof(ops[0]);
+    for ( OpeCode opeCode = 0; opeCode < NUM_OPS; ++ opeCode ) {
         const  std::string  expect  = ops[opeCode];
         const  std::string  actual  = dumpMnemonicMap(opeCode);
         if ( expect != actual ) {
