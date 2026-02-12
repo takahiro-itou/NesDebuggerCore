@@ -217,20 +217,20 @@ Dis6502::writeMnemonic(
     const  BtByte   opSize  = g_opeCodeSize[opeCode & 0x000000FF];
     gmNext  = gmAddr + opSize;
 
-    len = snprintf(dst, rem, "%04x:   %02x", gmAddr, (opeCode & 0xFF));
+    len = snprintf(dst, rem, "%04X:   %02X", gmAddr, (opeCode & 0xFF));
     dst += len;
     rem -= len;
 
     uint32_t    ocTemp  = (opeCode >> 8);
     switch ( opSize ) {
     case  3:
-        len = snprintf(dst, rem, " %02x", (ocTemp & 0xFF));
+        len = snprintf(dst, rem, " %02X", (ocTemp & 0xFF));
         dst += len;
         rem -= len;
         ocTemp  >>= 8;
         //  no break;
     case  2:
-        len = snprintf(dst, rem, " %02x", (ocTemp & 0xFF));
+        len = snprintf(dst, rem, " %02X", (ocTemp & 0xFF));
         dst += len;
         rem -= len;
         ocTemp  >>= 8;

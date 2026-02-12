@@ -105,6 +105,27 @@ struct  CounterInfo
     ClockCount          remainClock;
 };
 
+
+//----------------------------------------------------------------
+/**
+**    アドレッシングモード。
+**/
+
+enum  AdressingMode
+{
+    AM_IMP  =  0,
+    AM_IMM  =  1,
+    AM_ZER  =  2,
+    AM_ZPX  =  3,
+    AM_ZPY  =  4,
+    AM_ABS  =  5,
+    AM_ABX  =  6,
+    AM_ABY  =  7,
+    AM_IDX  =  8,
+    AM_IDY  =  9,
+    AM_REL  = 10,
+};
+
 };
 NESDBG_NAMESPACE_END
 
