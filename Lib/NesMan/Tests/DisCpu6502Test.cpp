@@ -78,6 +78,12 @@ const  char  *  ops[] = {
     PHP, ORA, ASL, ANC,  TOP, ORA, ASL, SLO,
     BPL, ORA, HLT, SLO,  DOP, ORA, ASL, SLO,
     CLC, ORA,UNOP, SLO,  TOP, ORA, ASL, SLO,
+
+    //  0x20 -- 3F  //
+    JSR, AND, HLT, RLA,  BIT, AND, ROL, RLA,
+    PLP, AND, ROL, ANC,  BIT, AND, ROL, RLA,
+    BMI, AND, HLT, RLA,  DOP, AND, ROL, RLA,
+    SEC, AND,UNOP, RLA,  TOP, AND, ROL, RLA,
 };
 
 
