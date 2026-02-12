@@ -84,6 +84,13 @@ const  char  *  ops[] = {
     PLP, AND, ROL, ANC,  BIT, AND, ROL, RLA,
     BMI, AND, HLT, RLA,  DOP, AND, ROL, RLA,
     SEC, AND,UNOP, RLA,  TOP, AND, ROL, RLA,
+
+    //  0x40 -- 5F  //
+    RTI, EOR, HLT, SRE,  DOP, EOR, LSR, SRE,
+    PHA, EOR, LSR, ALR,  JMP, EOR, LSR, SRE,
+    BVC, EOR, HLT, SRE,  DOP, EOR, LSR, SRE,
+    CLI, EOR,UNOP, SRE,  TOP, EOR, LSR, SRE,
+
 };
 
 
