@@ -37,14 +37,14 @@ namespace  {
 CONSTEXPR_VAR   const   MnemonicMap
 dis6502Mnemonics[] = {
     //  NOP 系  //
-    { 0x000000FF, 0x00000082, "DOP" },
-    { 0x000000FF, 0x00000089, "DOP" },
-    { 0x000000FF, 0x000000C2, "DOP" },
-    { 0x000000FF, 0x000000E2, "DOP" },
+    { 0x000000FF, 0x00000082, "nop" },
+    { 0x000000FF, 0x00000089, "nop" },
+    { 0x000000FF, 0x000000C2, "nop" },
+    { 0x000000FF, 0x000000E2, "nop" },
 
     //  HLT 系  //
-    { 0x0000008F, 0x00000002, "HLT" },
-    { 0x0000009F, 0x00000092, "HLT" },
+    { 0x0000008F, 0x00000002, "hlt" },
+    { 0x0000009F, 0x00000092, "hlt" },
 
     //  xxx0 0000   //
     { 0x000000FF, 0x00000000, "BRK" },
@@ -266,6 +266,20 @@ Dis6502::writeMnemonic(
 //
 //    For Internal Use Only.
 //
+
+//========================================================================
+//
+//    For Tests.
+//
+
+const   std::string
+dumpMnemonicMap(
+        const  OpeCode  opeCode)
+{
+    const MnemonicMap *  oc = dis6502Mnemonics;
+    for ( ; (opeCode & oc->mask) != oc->cval; ++ oc );
+    return ( std::string(oc->mnemonic) );
+}
 
 }   //  End of namespace  NesMan
 NESDBG_NAMESPACE_END

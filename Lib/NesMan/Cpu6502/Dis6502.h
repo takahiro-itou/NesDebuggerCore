@@ -138,6 +138,16 @@ public:
     friend  class   Dis6502Test;
 };
 
+
+//========================================================================
+//
+//    For Tests.
+//
+
+const   std::string
+dumpMnemonicMap(
+        const  OpeCode  opeCode);
+
 }   //  End of namespace  NesMan
 NESDBG_NAMESPACE_END
 
