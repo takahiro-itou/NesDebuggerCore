@@ -199,7 +199,7 @@ void  DisCpu6502Test::testMnemonicMap()
         const  std::string  expect  = ops[opeCode];
         const  std::string  actual  = dumpMnemonicMap(opeCode);
         if ( expect != actual ) {
-            snprintf(buf, sizeof(buf), "0x%02x", opeCode);
+            snprintf(buf, sizeof(buf), "0x%02X", opeCode);
             std::cerr   <<  "\nOpeCode = "  <<  buf
                         <<  "\nExpect  = "  <<  expect
                         <<  "\nActual  = "  <<  actual
