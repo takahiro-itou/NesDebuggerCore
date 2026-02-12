@@ -25,6 +25,59 @@
 NESDBG_NAMESPACE_BEGIN
 namespace  NesMan  {
 
+#define     ADC     "ADC"
+#define     AND     "AND"
+#define     ASL     "ASL"
+#define     BCC     "BCC"
+#define     BCS     "BCS"
+#define     BEQ     "BEQ"
+#define     BIT     "BIT"
+#define     BMI     "BMI"
+#define     BNE     "BNE"
+#define     BPL     "BPL"
+#define     BRK     "BRK"
+#define     BVC     "BVC"
+#define     BVS     "BVS"
+#define     CLC     "CLC"
+#define     CLD     "CLD"
+#define     CLI     "CLI"
+#define     EOR     "EOR"
+#define     JMP     "JMP"
+#define     JSR     "JSR"
+#define     LSR     "LSR"
+#define     ORA     "ORA"
+#define     PLA     "PLA"
+#define     PLP     "PLP"
+#define     PHA     "PHA"
+#define     PHP     "PHP"
+#define     ROL     "ROL"
+#define     ROR     "ROR"
+#define     RTI     "RTI"
+#define     RTS     "RTS"
+#define     SEC     "SEC"
+#define     SED     "SED"
+#define     SEI     "SEI"
+
+#define     ALR     "alr"
+#define     ARR     "arr"
+#define     ANC     "anc"
+#define     DOP     "nop"
+#define     HLT     "hlt"
+#define     RLA     "rla"
+#define     RRA     "rra"
+#define     SLO     "slo"
+#define     SRE     "sre"
+#define     TOP     "nop"
+
+#define     UNOP    "nop"
+
+CONSTEXPR_VAR
+const  char  *  ops[128] = {
+    //  0x00 -- 1F  //
+    BRK, ORA, HLT, SLO,  DOP, ORA, ASL, SLO,
+};
+
+
 //========================================================================
 //
 //    DisCpu6502Test  class.
@@ -57,6 +110,24 @@ CPPUNIT_TEST_SUITE_REGISTRATION( DisCpu6502Test );
 
 void  DisCpu6502Test::testMnemonicMap()
 {
+    OpeCode mis = 0;
+    char    buf[32];
+
+    for ( OpeCode opeCode = 0; opeCode < 8; ++ opeCode ) {
+        const  std::string  expect  = ops[opeCode];
+        const  std::string  actual  = dumpMnemonicMap(opeCode);
+        if ( expect != actual ) {
+            snprintf(buf, sizeof(buf), "0x%02x", opeCode);
+            std::cerr   <<  "\nOpeCode = "  <<  buf
+                        <<  "\nExpect  = "  <<  expect
+                        <<  "\nActual  = "  <<  actual
+                        <<  std::endl;
+            ++ mis;
+        }
+    }
+
+    CPPUNIT_ASSERT_EQUAL(OpeCode(0), mis);
+    return;
 }
 
 }   //  End of namespace  NesMan
