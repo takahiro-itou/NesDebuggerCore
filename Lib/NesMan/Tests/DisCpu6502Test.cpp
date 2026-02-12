@@ -58,6 +58,7 @@ namespace  NesMan  {
 #define     LDX     "LDX"
 #define     LDY     "LDY"
 #define     LSR     "LSR"
+#define     NOP     "NOP"
 #define     ORA     "ORA"
 #define     PLA     "PLA"
 #define     PLP     "PLP"
@@ -85,13 +86,16 @@ namespace  NesMan  {
 #define     ARR     "arr"
 #define     ANC     "anc"
 #define     ANE     "ane"
+#define     DCP     "dcp"
 #define     DOP     "nop"
 #define     HLT     "hlt"
+#define     ISB     "isb"
 #define     LAS     "las"
 #define     LAX     "lax"
 #define     RLA     "rla"
 #define     RRA     "rra"
 #define     SAX     "sax"
+#define     SBX     "sbx"
 #define     SHA     "sha"
 #define     SHS     "shs"
 #define     SHX     "shx"
@@ -141,8 +145,10 @@ const  char  *  ops[] = {
     CLV, LDA, TSX, LAS,  LDY, LDA, LDX, LAX,
 
     //  0xC0 -- DF  //
-
-    //  0xE0 -- FF  //
+    CPY, CMP, DOP, DCP,  CPY, CMP, DEC, DCP,
+    INY, CMP, DEX, SBX,  CPY, CMP, DEC, DCP,
+    BNE, CMP, HLT, DCP,  DOP, CMP, DEC, DCP,
+    CLD, CMP,UNOP, DCP,  TOP, CMP, DEC, DCP,
 };
 
 
