@@ -105,6 +105,7 @@ namespace  NesMan  {
 #define     TOP     "nop"
 
 #define     UNOP    "nop"
+#define     USBC    "sbc"
 
 CONSTEXPR_VAR   OpeCode     NUM_OPS = 256;
 
@@ -154,7 +155,7 @@ const  char  *  ops[NUM_OPS] = {
 
     //  0xE0 -- FF  //
     CPX, SBC, DOP, ISB,  CPX, SBC, INC, ISB,
-    INX, SBC, NOP, SBC,  CPX, SBC, INC, ISB,
+    INX, SBC, NOP,USBC,  CPX, SBC, INC, ISB,
     BEQ, SBC, HLT, ISB,  DOP, SBC, INC, ISB,
     SED, SBC,UNOP, ISB,  TOP, SBC, INC, ISB,
 };
