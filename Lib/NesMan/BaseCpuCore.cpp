@@ -57,6 +57,7 @@ BaseCpuCore::BaseCpuCore(
 #if !defined( NESDBG_USE_GLOBALS )
       mog_cpuRegs(),
       mog_cpuInfo(),
+      mog_ctrStep(),
 #endif
       m_manMem(manMem)
 {
