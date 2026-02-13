@@ -25,6 +25,7 @@
 #include    "Dis6502.h"
 #include    "InstTable.h"
 
+#include    <cstring>
 #include    <ostream>
 #include    <sstream>
 
@@ -275,29 +276,31 @@ Dis6502::writeMnemonic(
         * (dst ++)  = ' ';
         ++ len;
     }
-    outStr  <<  buf;
 
     const  char  *  src = oc->mnemonic;
-    len = snprintf(buf, sizeof(buf), "%s", src);
+    len = snprintf(dst, rem, "%s  ", src);
     outStr  <<  buf;
 
     //  オペランドの表示。  //
+    memset(buf, 0, sizeof(buf));
+    dst = buf;
     rem = sizeof(buf) - 1;
+
     switch ( adr ) {
     case  AddressingMode::AM_IMP:
     case  AddressingMode::AM_ACC:
         break;
     case  AddressingMode::AM_IMM:
-        len = writeImmediage(opeCode, buf, rem);
+        len = writeImmediage(opeCode, dst, rem);
         break;
     case  AddressingMode::AM_ZER:
-        len = writeZeroPage(opeCode, buf, rem, ' ', 0);
+        len = writeZeroPage(opeCode, dst, rem, ' ', 0);
         break;
     case  AddressingMode::AM_ZPX:
-        len = writeZeroPage(opeCode, buf, rem, 'X', 0);
+        len = writeZeroPage(opeCode, dst, rem, 'X', 0);
         break;
     case  AddressingMode::AM_ZPY:
-        len = writeZeroPage(opeCode, buf, rem, 'Y', 0);
+        len = writeZeroPage(opeCode, dst, rem, 'Y', 0);
         break;
     default:
         break;
