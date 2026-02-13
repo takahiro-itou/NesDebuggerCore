@@ -48,16 +48,17 @@ enum  ModeValues
     AM_IDY  = 10,
     AM_REL  = 11,
     AM_IND  = 12,
-    AM_KIL  = 13,
-    AM_NOP  = 14,
-    AM_DOP  = 15,
-    AM_TOP  = 16,
+    AM_BRK  = 13,
+    AM_KIL  = 14,
+    AM_NOP  = 15,
+    AM_DOP  = 16,
+    AM_TOP  = 17,
 };
 
 CONSTEXPR_VAR
 ModeValues  g_opeCodeAddrs[256] = {
     //  0x00 -- 0F   //
-    AM_IMP, AM_IDX, AM_KIL, AM_IDX,  AM_ZER, AM_ZER, AM_ZER, AM_ZER,
+    AM_BRK, AM_IDX, AM_KIL, AM_IDX,  AM_ZER, AM_ZER, AM_ZER, AM_ZER,
     AM_IMP, AM_IMM, AM_ACC, AM_IMM,  AM_ABS, AM_ABS, AM_ABS, AM_ABS,
     AM_REL, AM_IDY, AM_KIL, AM_IDY,  AM_DOP, AM_ZPX, AM_ZPX, AM_ZPX,
     AM_IMP, AM_ABY, AM_NOP, AM_ABY,  AM_ABX, AM_ABX, AM_ABX, AM_ABX,

@@ -200,14 +200,14 @@ void  DisCpu6502Test::testAddressing()
     char    buf[32];
     CONSTEXPR_VAR  int  amBytes[] = {
         1, 1, 2, 2, 2, 2,  3, 3, 3,  2, 2, 2, 3,
-        1, 1, 2, 3,
+        2, 1, 1, 2, 3,
     };
 
     for ( OpeCode opeCode = 0; opeCode < NUM_OPS; ++ opeCode ) {
         const   AddressingMode::ModeValues  am
             = AddressingMode::g_opeCodeAddrs[opeCode];
         const   int         expByte = amBytes[am];
-        const   ClockCount  expCycl = 0;
+        //  const   ClockCount  expCycl = 0;
 
         const   int         actByte = g_opeCodeSize[opeCode];
         if ( expByte != actByte ) {
