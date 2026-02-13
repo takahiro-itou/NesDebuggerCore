@@ -13,9 +13,9 @@
 *************************************************************************/
 
 /**
-**      An Implementation of Thumb Instruction Table.
+**      An Implementation of 6502 Instruction Table.
 **
-**      @file       NesMan/Cpu6502/InsTablet.h
+**      @file       NesMan/Cpu6502/InstTablet.h
 **/
 
 #if !defined( NESDBG_NESMAN_CPU6502_INCLUDED_INST_TABLE_H )
