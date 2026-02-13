@@ -122,6 +122,18 @@ public:
 private:
 
     //----------------------------------------------------------------
+    /**   絶対番地オペランドを表示する。
+    **
+    **/
+    inline  size_t
+    writeAbsolute(
+            const  OpeCode  opeCode,
+            char  *  const  dst,
+            const  size_t   remLen,
+            const  char     regName,
+            const  RegType  idxReg)  const;
+
+    //----------------------------------------------------------------
     /**   即値オペランドを表示する。
     **
     **/

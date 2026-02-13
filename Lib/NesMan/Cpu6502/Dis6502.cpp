@@ -273,6 +273,22 @@ Dis6502::writeMnemonic(
     case  AddressingMode::AM_ZPY:
         len = writeZeroPage(opeCode, dst, rem, 'Y', 0);
         break;
+    case  AddressingMode::AM_ABS:
+        len = writeAbsolute(opeCode, dst, rem, ' ', 0);
+        break;
+    case  AddressingMode::AM_ABX:
+        len = writeAbsolute(opeCode, dst, rem, 'X', 0);
+        break;
+    case  AddressingMode::AM_ABY:
+        len = writeAbsolute(opeCode, dst, rem, 'Y', 0);
+        break;
+    case  AddressingMode::AM_IDX:
+    case  AddressingMode::AM_IDY:
+        break;
+    case  AddressingMode::AM_REL:
+        break;
+    case  AddressingMode::AM_IND:
+        break;
     default:
         break;
     }
@@ -315,6 +331,22 @@ Dis6502::writeMnemonic(
 //
 //    For Internal Use Only.
 //
+
+//----------------------------------------------------------------
+//    絶対番地オペランドを表示する。
+//
+
+inline  size_t
+Dis6502::writeAbsolute(
+        const  OpeCode  opeCode,
+        char  *  const  dst,
+        const  size_t   remLen,
+        const  char     regName,
+        const  RegType  idxReg)  const
+{
+    const   GuestMemoryAddress  gmAddr  = (opeCode >> 8) & 0xFFFF;
+    return  snprintf(dst, remLen, "$%04X %c", gmAddr, regName);
+}
 
 //----------------------------------------------------------------
 //    即値
