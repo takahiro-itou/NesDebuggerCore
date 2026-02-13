@@ -21,6 +21,8 @@
 #include    "TestDriver.h"
 #include    "../Cpu6502/Dis6502.h"
 
+#include    "../Cpu6502/InstTable.h"
+
 
 NESDBG_NAMESPACE_BEGIN
 namespace  NesMan  {
@@ -172,6 +174,7 @@ const  char  *  ops[NUM_OPS] = {
 class  DisCpu6502Test : public  TestFixture
 {
     CPPUNIT_TEST_SUITE(DisCpu6502Test);
+    CPPUNIT_TEST(testAddressing);
     CPPUNIT_TEST(testMnemonicMap);
     CPPUNIT_TEST_SUITE_END();
 
@@ -180,7 +183,7 @@ public:
     virtual  void   tearDown()  override    { }
 
 private:
-    void  testCtor();
+    void  testAddressing();
     void  testMnemonicMap();
 };
 
@@ -190,6 +193,35 @@ CPPUNIT_TEST_SUITE_REGISTRATION( DisCpu6502Test );
 //
 //    Tests.
 //
+
+void  DisCpu6502Test::testAddressing()
+{
+    OpeCode mis = 0;
+    char    buf[32];
+    CONSTEXPR_VAR  int  amBytes[] = {
+        1, 1, 2, 2, 2, 2, 3, 3, 3, 2, 2, 1, 2, 3,
+    };
+
+    for ( OpeCode opeCode = 0; opeCode < NUM_OPS; ++ opeCode ) {
+        const   AddressingMode::ModeValues  am
+            = AddressingMode::g_opeCodeAddrs[opeCode];
+        const   int         expByte = amBytes[am];
+        const   ClockCount  expCycl = 0;
+
+        const   int         actByte = g_opeCodeSize[opeCode];
+        if ( expByte != actByte ) {
+            snprintf(buf, sizeof(buf), "0x%02X", opeCode);
+            std::cerr   <<  "\nOpeCode = "  <<  buf
+                        <<  "\nExpect  = "  <<  expByte
+                        <<  "\nActual  = "  <<  actByte
+                        <<  std::endl;
+            ++ mis;
+        }
+    }
+
+    CPPUNIT_ASSERT_EQUAL(OpeCode(0), mis);
+    return;
+}
 
 void  DisCpu6502Test::testMnemonicMap()
 {
