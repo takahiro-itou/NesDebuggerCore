@@ -159,6 +159,35 @@ dis6502Mnemonics[] = {
     { 0x00000000, 0x00000000,  "[ ??? ]" },
 };
 
+//----------------------------------------------------------------
+//    即値
+//
+
+inline  size_t
+writeImmediage(
+        const  OpeCode  opeCode,
+        char  *  const  dst,
+        const  size_t   remLen)
+{
+    return  snprintf(dst, remLen, "#$%02X", (opeCode >> 8) & 0x00FF);
+}
+
+//----------------------------------------------------------------
+//    ゼロページ
+//
+
+inline  size_t
+writeZeroPage(
+        const  OpeCode  opeCode,
+        char  *  const  dst,
+        const  size_t   remLen,
+        const  char     regName,
+        const  RegType  idxReg)
+{
+    const   GuestMemoryAddress  gmAddr  = (opeCode >> 8) & 0x00FF;
+    return  snprintf(dst, remLen, "<$%02X %c", gmAddr, regName);
+}
+
 }   //  End of (Unnamed) namespace.
 
 
@@ -215,6 +244,9 @@ Dis6502::writeMnemonic(
     for ( ; (opeCode & oc->mask) != oc->cval; ++ oc );
 
     const  BtByte   opSize  = g_opeCodeSize[opeCode & 0x000000FF];
+    const  AddressingMode::ModeValues
+        adr = AddressingMode::g_opeCodeAddrs[opeCode & 0x000000FF];
+
     gmNext  = gmAddr + opSize;
 
     len = snprintf(dst, rem, "%04X:   %02X", gmAddr, (opeCode & 0xFF));
@@ -247,6 +279,29 @@ Dis6502::writeMnemonic(
 
     const  char  *  src = oc->mnemonic;
     len = snprintf(buf, sizeof(buf), "%s", src);
+    outStr  <<  buf;
+
+    //  オペランドの表示。  //
+    rem = sizeof(buf) - 1;
+    switch ( adr ) {
+    case  AddressingMode::AM_IMP:
+    case  AddressingMode::AM_ACC:
+        break;
+    case  AddressingMode::AM_IMM:
+        len = writeImmediage(opeCode, buf, rem);
+        break;
+    case  AddressingMode::AM_ZER:
+        len = writeZeroPage(opeCode, buf, rem, ' ', 0);
+        break;
+    case  AddressingMode::AM_ZPX:
+        len = writeZeroPage(opeCode, buf, rem, 'X', 0);
+        break;
+    case  AddressingMode::AM_ZPY:
+        len = writeZeroPage(opeCode, buf, rem, 'Y', 0);
+        break;
+    default:
+        break;
+    }
     outStr  <<  buf  <<  std::endl;
 
     return ( outStr );
