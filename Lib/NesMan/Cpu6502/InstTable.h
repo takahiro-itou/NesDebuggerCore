@@ -47,10 +47,11 @@ enum  ModeValues
     AM_IDX  =  9,
     AM_IDY  = 10,
     AM_REL  = 11,
-    AM_KIL  = 12,
-    AM_NOP  = 13,
-    AM_DOP  = 14,
-    AM_TOP  = 15,
+    AM_IND  = 12,
+    AM_KIL  = 13,
+    AM_NOP  = 14,
+    AM_DOP  = 15,
+    AM_TOP  = 16,
 };
 
 CONSTEXPR_VAR
@@ -72,6 +73,12 @@ ModeValues  g_opeCodeAddrs[256] = {
     AM_IMP, AM_IMM, AM_ACC, AM_IMM,  AM_ABS, AM_ABS, AM_ABS, AM_ABS,
     AM_REL, AM_IDY, AM_KIL, AM_IDY,  AM_DOP, AM_ZPX, AM_ZPX, AM_ZPX,
     AM_IMP, AM_ABY, AM_NOP, AM_ABY,  AM_TOP, AM_ABX, AM_ABX, AM_ABX,
+
+    //  0x60 -- 7F  //
+    AM_IMP, AM_IDX, AM_KIL, AM_IDX,  AM_DOP, AM_ZER, AM_ZER, AM_ZER,
+    AM_IMP, AM_IMM, AM_ACC, AM_IMM,  AM_IND, AM_ABS, AM_ABS, AM_ABS,
+    AM_REL, AM_IDY, AM_KIL, AM_IDY,  AM_DOP, AM_ZPX, AM_ZPX, AM_ZPX,
+    AM_IMP, AM_ABY, AM_NOP, AM_ABY,  AM_ABX, AM_ABX, AM_ABX, AM_ABX,
 };
 
 }   //  End of namespace  AddressingMode

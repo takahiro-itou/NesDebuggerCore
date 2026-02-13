@@ -199,7 +199,8 @@ void  DisCpu6502Test::testAddressing()
     OpeCode mis = 0;
     char    buf[32];
     CONSTEXPR_VAR  int  amBytes[] = {
-        1, 1, 2, 2, 2, 2, 3, 3, 3, 2, 2, 2, 1, 1, 2, 3,
+        1, 1, 2, 2, 2, 2,  3, 3, 3,  2, 2, 2, 3,
+        1, 1, 2, 3,
     };
 
     for ( OpeCode opeCode = 0; opeCode < NUM_OPS; ++ opeCode ) {
