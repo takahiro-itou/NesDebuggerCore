@@ -292,7 +292,7 @@ Dis6502::writeMnemonic(
     default:
         break;
     }
-    outStr  <<  buf  <<  std::endl;
+    outStr  <<  buf;
 
     return ( outStr );
 }

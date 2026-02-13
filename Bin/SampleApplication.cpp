@@ -49,21 +49,30 @@ int  main(int argc, char * argv[])
     //  ハードリセットを行う。  //
     manNes.doHardReset();
 
+    NesMan::InstExecResult  ret = NesMan::InstExecResult::SUCCESS_CONTINUE;
+    NesMan::CounterInfo     ci;
+    GuestMemoryAddress      gmNext  = 0;
+    int     cnt     = 0;
+
     //  最初のレジスタをダンプ。    //
     std::cout   <<  "REGS\n";
     manNes.printRegisters(std::cout)
             <<  std::endl;
 
-    NesMan::InstExecResult  ret = NesMan::InstExecResult::SUCCESS_CONTINUE;
-    NesMan::CounterInfo     ci;
-    GuestMemoryAddress      gmNext  = 0;
-    int     cnt     = 0;
+    //  最初の命令を逆アセンブル。    //
+    std::cout   <<  "Mnemonic:\t"  <<  cnt  <<  "\n";
+    gmNext  = manNes.getNextPC();
+    for ( int i = 0; i < 8; ++i ) {
+        manNes.writeMnemonic(std::cout, gmNext, gmNext)
+                <<  std::endl;
+    }
+
     clock_t clkSta  = clock();
     while ( ret != NesMan::InstExecResult::UNDEFINED_OPECODE ) {
         ret = manNes.executeCurrentInst();
 
         //  レジスタをダンプ。  //
-        std::cout   <<  "REGS\n";
+        std::cout   <<  "\nREGS\n";
         manNes.printRegisters(std::cout)
                 <<  std::endl;
 

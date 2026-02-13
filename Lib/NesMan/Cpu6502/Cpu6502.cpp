@@ -26,6 +26,8 @@
 #include    "InstTable.h"
 #include    "Instructions.inl"
 
+#include    <iostream>
+
 
 NESDBG_NAMESPACE_BEGIN
 namespace  NesMan  {
@@ -102,10 +104,11 @@ Cpu6502::executeNextInst()
         snprintf(buf, sizeof(buf) - 1,
                 "Undefined Instruction %02X at %04X\n",
                  ocInst, oldPC);
+        std::cerr   <<  buf;
         return ( InstExecResult::UNDEFINED_OPECODE );
     }
 
-    return ( InstExecResult::UNDEFINED_OPECODE );
+    return ( ret );
 }
 
 //========================================================================
