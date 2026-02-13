@@ -160,35 +160,6 @@ dis6502Mnemonics[] = {
     { 0x00000000, 0x00000000,  "[ ??? ]" },
 };
 
-//----------------------------------------------------------------
-//    即値
-//
-
-inline  size_t
-writeImmediage(
-        const  OpeCode  opeCode,
-        char  *  const  dst,
-        const  size_t   remLen)
-{
-    return  snprintf(dst, remLen, "#$%02X", (opeCode >> 8) & 0x00FF);
-}
-
-//----------------------------------------------------------------
-//    ゼロページ
-//
-
-inline  size_t
-writeZeroPage(
-        const  OpeCode  opeCode,
-        char  *  const  dst,
-        const  size_t   remLen,
-        const  char     regName,
-        const  RegType  idxReg)
-{
-    const   GuestMemoryAddress  gmAddr  = (opeCode >> 8) & 0x00FF;
-    return  snprintf(dst, remLen, "<$%02X %c", gmAddr, regName);
-}
-
 }   //  End of (Unnamed) namespace.
 
 
@@ -344,6 +315,35 @@ Dis6502::writeMnemonic(
 //
 //    For Internal Use Only.
 //
+
+//----------------------------------------------------------------
+//    即値
+//
+
+inline  size_t
+Dis6502::writeImmediage(
+        const  OpeCode  opeCode,
+        char  *  const  dst,
+        const  size_t   remLen)  const
+{
+    return  snprintf(dst, remLen, "#$%02X", (opeCode >> 8) & 0x00FF);
+}
+
+//----------------------------------------------------------------
+//    ゼロページオペランドを表示する。
+//
+
+inline  size_t
+Dis6502::writeZeroPage(
+        const  OpeCode  opeCode,
+        char  *  const  dst,
+        const  size_t   remLen,
+        const  char     regName,
+        const  RegType  idxReg)  const
+{
+    const   GuestMemoryAddress  gmAddr  = (opeCode >> 8) & 0x00FF;
+    return  snprintf(dst, remLen, "<$%02X %c", gmAddr, regName);
+}
 
 //========================================================================
 //
