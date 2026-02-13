@@ -122,6 +122,25 @@ public:
 //
 //    For Internal Use Only.
 //
+private:
+
+    //----------------------------------------------------------------
+    /**   フラグ操作（クリア）命令。
+    **
+    **/
+    template  <RegType  VAL>
+    inline  InstExecResult
+    clearFlag(
+            const  OpeCode  opeCode);
+
+    //----------------------------------------------------------------
+    /**   フラグ操作（セット）命令。
+    **
+    **/
+    template  <RegType  VAL>
+    inline  InstExecResult
+    setFlag(
+            const  OpeCode  opeCode);
 
 //========================================================================
 //
