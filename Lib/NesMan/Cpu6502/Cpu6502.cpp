@@ -22,6 +22,9 @@
 
 #include    "Cpu6502.h"
 
+#include    "NesDbg/NesMan/MemoryManager.h"
+#include    "InstTable.h"
+
 
 NESDBG_NAMESPACE_BEGIN
 namespace  NesMan  {
@@ -35,6 +38,10 @@ namespace  {
 //
 //    Cpu6502  class.
 //
+
+const   Cpu6502::FnInst
+Cpu6502::s_cpuInstTable[256] = {
+};
 
 //========================================================================
 //
