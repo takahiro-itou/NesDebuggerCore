@@ -79,6 +79,12 @@ ModeValues  g_opeCodeAddrs[256] = {
     AM_IMP, AM_IMM, AM_ACC, AM_IMM,  AM_IND, AM_ABS, AM_ABS, AM_ABS,
     AM_REL, AM_IDY, AM_KIL, AM_IDY,  AM_DOP, AM_ZPX, AM_ZPX, AM_ZPX,
     AM_IMP, AM_ABY, AM_NOP, AM_ABY,  AM_ABX, AM_ABX, AM_ABX, AM_ABX,
+
+    //  0x80 -- 9F  //
+    AM_DOP, AM_IDX, AM_DOP, AM_IDX,  AM_ZER, AM_ZER, AM_ZER, AM_ZER,
+    AM_IMP, AM_DOP, AM_IMP, AM_IMM,  AM_ABS, AM_ABS, AM_ABS, AM_ABS,
+    AM_REL, AM_IDY, AM_KIL, AM_IDY,  AM_ZPX, AM_ZPX, AM_ZPY, AM_ZPY,
+    AM_IMP, AM_ABY, AM_IMP, AM_ABY,  AM_ABX, AM_ABX, AM_ABY, AM_ABY,
 };
 
 }   //  End of namespace  AddressingMode
