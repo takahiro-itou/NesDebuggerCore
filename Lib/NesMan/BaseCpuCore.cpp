@@ -135,23 +135,35 @@ BaseCpuCore::printRegisters(
         std::ostream  & outStr)  const
 {
     char    buf[256];
+    char    flg[10] = "NVRBDIZC)";
+    RegType rP  = mog_cpuRegs.P;
 
     snprintf(buf, sizeof(buf),
-            "A: %02x   X: %02x   Y: %02x\n",
+            "A: %02X   X: %02X   Y: %02X   S: %02X\n",
             mog_cpuRegs.A,
             mog_cpuRegs.X,
-            mog_cpuRegs.Y);
+            mog_cpuRegs.Y,
+            mog_cpuRegs.S);
     outStr  <<  buf;
 
     snprintf(buf, sizeof(buf),
-            "S: %02x   P: %02x   PC: %04x\n",
-            mog_cpuRegs.S,
-            mog_cpuRegs.P,
-            mog_cpuRegs.PC);
+            "PC:  %04X       P: %02X (",
+            mog_cpuRegs.PC, rP);
     outStr  <<  buf;
 
+    flg[9] = 0;
+    char *  pt  = flg + 7;
+    for ( int i = 0; i < 8; ++ i ) {
+        if ( !(rP & 1) ) {
+            *pt = '-';
+        }
+        -- pt;
+        rP >>= 1;
+    }
+    outStr  <<  flg;
+
     snprintf(buf, sizeof(buf),
-            "Cycles: %ld\tInstructions: %ld\n",
+            "\nCycles: %ld\tInstructions: %ld\n",
             mog_cpuInfo.totalCycles,
             mog_cpuInfo.numOpeCodes);
     outStr  <<  buf;
