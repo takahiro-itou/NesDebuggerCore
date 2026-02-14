@@ -93,6 +93,27 @@ inline  InstExecResult
 Cpu6502::execStore(
         const  OpeCode  opeCode)
 {
+    ClockCount      cyc = 0;
+    const  GuestMemoryAddress   gmAddr  = AM().getOperandAddress(
+            opeCode,
+            mog_cpuRegs.X, mog_cpuRegs.Y, mog_cpuRegs.PC,
+            this->m_manMem, cyc, BOOL_FALSE);
+    switch ( REG ) {
+    case  0:
+        this->m_manMem.writeMemory<RegType>(gmAddr, mog_cpuRegs.A);
+        break;
+    case  1:
+        this->m_manMem.writeMemory<RegType>(gmAddr, mog_cpuRegs.X);
+        break;
+    case  2:
+        this->m_manMem.writeMemory<RegType>(gmAddr, mog_cpuRegs.Y);
+        break;
+    }
+
+    //  追加サイクルがあれば加算する。  //
+    //  アドレスがページを跨いだ時等。   //
+    mog_ctrStep.totalCycles += cyc;
+
     return ( InstExecResult::SUCCESS_CONTINUE );
 }
 
@@ -141,7 +162,11 @@ Cpu6502::s_cpuInstTable[256] = {
     nullptr, nullptr, nullptr, nullptr,
 
     //  0x80 -- 8F  //
-    nullptr, nullptr, nullptr, nullptr,  nullptr, nullptr, nullptr, nullptr,
+    nullptr, nullptr, nullptr, nullptr,
+    &Cpu6502::execStore<2, Addres::ZeroPage>,       //  84  STY <$nn
+    &Cpu6502::execStore<0, Addres::ZeroPage>,       //  85  STA <$nn
+    &Cpu6502::execStore<1, Addres::ZeroPage>,       //  86  STX <$nn
+    nullptr,
     nullptr, nullptr, nullptr, nullptr,  nullptr, nullptr, nullptr, nullptr,
 
     //  0x90 -- 9F  //
@@ -153,10 +178,14 @@ Cpu6502::s_cpuInstTable[256] = {
     nullptr,
     &Cpu6502::execLoad<1, Addres::Immediate>,       //  A2  LDX #
     nullptr,                                        //  A3
-    nullptr, nullptr, nullptr, nullptr,
+    &Cpu6502::execLoad<2, Addres::ZeroPage>,        //  A4  LDY <$nn
+    &Cpu6502::execLoad<0, Addres::ZeroPage>,        //  A5  LDA <$nn
+    &Cpu6502::execLoad<1, Addres::ZeroPage>,        //  A6  LDX <$nn
+    nullptr,                                        //  A7
     nullptr,                                        //  A8  TAY
     &Cpu6502::execLoad<0, Addres::Immediate>,       //  A9  LDA #
-    nullptr, nullptr,
+    nullptr,                                        //  AA  TAX
+    nullptr,                                        //  AB
     nullptr, nullptr, nullptr, nullptr,
 
     //  0xB0 -- BF  //
