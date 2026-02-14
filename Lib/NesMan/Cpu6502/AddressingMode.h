@@ -26,72 +26,10 @@ NESDBG_NAMESPACE_BEGIN
 namespace  NesMan  {
 namespace  Addres  {
 
-//========================================================================
-/**
-**    即値オペランド。
-**/
-
-struct  Immediate
-{
-    RegType
-    getOperandValue(
-            const  OpeCode  uOperand,
-            const  RegType  rX,
-            const  RegType  rY,
-            const  RegType  rPC,
-            MemoryManager   &manMem,
-            ClockCount      &addCyc,
-            const  Boolean  flgPeek)  const
-    {
-        return ( uOperand & 0x000000FF );
-    }
-};
-
-
-//========================================================================
-/**
-**    ゼロページオペランド。
-**/
-
-template  <int IDXREG = 0>
-struct  ZeroPage
-{
-    GuestMemoryAddress
-    getTargetAddress(
-            const  OpeCode  uOperand)  const
-    {
-        return ( uOperand & 0x000000FF );
-    }
-
-    GuestMemoryAddress
-    getOperandAddress(
-            const  OpeCode  uOperand,
-            const  RegType  rX,
-            const  RegType  rY,
-            const  RegType  rPC,
-            MemoryManager   &manMem,
-            ClockCount      &addCyc,
-            const  Boolean  flgPeek)  const
-    {
-        addCyc  = 0;
-        return  getTargetAddress(uOperand);
-    }
-
-    RegType
-    getOperandValue(
-            const  OpeCode  uOperand,
-            const  RegType  rX,
-            const  RegType  rY,
-            const  RegType  rPC,
-            MemoryManager   &manMem,
-            ClockCount      &addCyc,
-            const  Boolean  flgPeek)  const
-    {
-        addCyc  = 0;
-        GuestMemoryAddress  gmAddr  = getTargetAddress(uOperand);
-        return  manMem.readMemory<RegType>(gmAddr);
-    }
-
+enum  IndexRegister  {
+    IDX_REG_N   = 0,
+    IDX_REG_X   = 1,
+    IDX_REG_Y   = 2,
 };
 
 
@@ -100,7 +38,7 @@ struct  ZeroPage
 **    アブソリュートオペランド。
 **/
 
-template  <int  IDXREG>
+template  <int IDXREG = IDX_REG_N, typename TMemMan = MemoryManager>
 struct  Absolute
 {
     GuestMemoryAddress
@@ -109,9 +47,8 @@ struct  Absolute
             const  RegType  rX,
             const  RegType  rY,
             const  RegType  rPC,
-            MemoryManager   &manMem,
-            ClockCount      &addCyc,
-            const  Boolean  flgPeek)  const
+            const  TMemMan  &manMem,
+            ClockCount      &addCyc)  const
     {
         return  getTargetAddress(uOperand, rX, rY, addCyc);
     }
@@ -122,13 +59,12 @@ struct  Absolute
             const  RegType  rX,
             const  RegType  rY,
             const  RegType  rPC,
-            MemoryManager   &manMem,
-            ClockCount      &addCyc,
-            const  Boolean  flgPeek)  const
+            const  TMemMan  &manMem,
+            ClockCount      &addCyc)  const
     {
         const   GuestMemoryAddress  gmAddr
             = getTargetAddress(uOperand, rX, rY, addCyc);
-        return  manMem.readMemory<RegType>(gmAddr);
+        return  manMem.template readMemory<RegType>(gmAddr);
     }
 
     GuestMemoryAddress
@@ -155,6 +91,205 @@ struct  Absolute
         const   GuestMemoryAddress  gmAddr  = (uOperand + regIdx) & 0xFFFF;
         addCyc  = ( (regIdx) > (uint8_t)(gmAddr) ) ? 1 : 0;
         return ( gmAddr );
+    }
+
+};
+
+//========================================================================
+/**
+**    即値オペランド。
+**/
+
+template <int IDXREG = IDX_REG_N, typename TMemMan = MemoryManager>
+struct  Immediate
+{
+    RegType
+    getOperandValue(
+            const  OpeCode  uOperand,
+            const  RegType  rX,
+            const  RegType  rY,
+            const  RegType  rPC,
+            const  TMemMan  &manMem,
+            ClockCount      &addCyc)  const
+    {
+        return ( uOperand & 0x000000FF );
+    }
+};
+
+
+//========================================================================
+/**
+**    インデックスインダイレクトオペランド。
+**/
+
+template  <int IDXREG = IDX_REG_N, typename TMemMan = MemoryManager>
+struct  Indirect
+{
+    GuestMemoryAddress
+    getOperandAddress(
+            const  OpeCode  uOperand,
+            const  RegType  rX,
+            const  RegType  rY,
+            const  RegType  rPC,
+            const  TMemMan  &manMem,
+            ClockCount      &addCyc)  const
+    {
+        GuestMemoryAddress  gmAddr;
+        addCyc  = 0;
+
+        //  ゼロページ内でのアクセスなので、        //
+        //  X を加算した繰り上がりは無視される。    //
+        BtByte  tmp = (uOperand & 0x000000FF);
+        switch ( IDXREG ) {
+        case  IDX_REG_X:
+            tmp += rX;
+            break;
+        case  IDX_REG_Y:    //  このモードは実在しない。
+            tmp += rY;
+            break;
+        }
+
+        //  加算した結果のアドレスが境界にある時、  //
+        //  下位アドレスを 0x00FF から読み出し、    //
+        //  上位アドレスは 0x0000 から読み出す。    //
+        //  上位は 0x0100 ではないことに注意する。  //
+        gmAddr  =  manMem.template readMemory<RegType>(tmp);
+        ++ tmp;
+        gmAddr  |= manMem.template readMemory<RegType>(tmp) << 8;
+
+        return ( gmAddr );
+    }
+
+    RegType
+    getOperandValue(
+            const  OpeCode  uOperand,
+            const  RegType  rX,
+            const  RegType  rY,
+            const  RegType  rPC,
+            const  TMemMan  &manMem,
+            ClockCount      &addCyc)  const
+    {
+        GuestMemoryAddress  gmAddr  = getOperandAddress(
+                uOperand, rX, rY, rPC, manMem, addCyc);
+        return  manMem.template readMemory<RegType>(gmAddr);
+    }
+
+};
+
+
+//========================================================================
+/**
+**    インダイレクトインデックスオペランド。
+**/
+
+template  <
+    int IDXREG = IDX_REG_Y, int PCC=1,
+    typename TMemMan = MemoryManager>
+struct  IdxIndY
+{
+    GuestMemoryAddress
+    getOperandAddress(
+            const  OpeCode  uOperand,
+            const  RegType  rX,
+            const  RegType  rY,
+            const  RegType  rPC,
+            const  TMemMan  &manMem,
+            ClockCount      &addCyc)  const
+    {
+        GuestMemoryAddress  rt, gmAddr;
+        addCyc  = 0;
+
+        //  ゼロページ内でのアクセスなので、        //
+        //  オペランドが 0xFF の場合、              //
+        //  下位アドレスを 0x00FF から読み出し、    //
+        //  上位アドレスは 0x0000 から読み出す。    //
+        BtByte  tmp = (uOperand & 0x000000FF);
+        rt  =  manMem.template readMemory<RegType>(tmp);
+        ++ tmp;
+        rt  |= manMem.template readMemory<RegType>(tmp) << 8;
+        gmAddr  = rt;
+
+        switch ( IDXREG ) {
+        case  IDX_REG_Y:
+            gmAddr  += rY;
+            break;
+        case  IDX_REG_X:
+            gmAddr  += rX;
+            break;
+        default:
+            break;
+        }
+
+        //  Page-Cross Check..  //
+        if ( (gmAddr ^ rt) & 0x0100 ) {
+            addCyc  = PCC;
+            gmAddr  ^= 0x0100;
+        }
+
+        //  上で gmAddr のページ境界跨ぎは処理したので  //
+        //  gmAddr & 0xFFFF でも良い筈だが念のため。    //
+        return ( (rt & 0x0000FF00) | (gmAddr & 0x000000FF) );
+    }
+
+    RegType
+    getOperandValue(
+            const  OpeCode  uOperand,
+            const  RegType  rX,
+            const  RegType  rY,
+            const  RegType  rPC,
+            const  TMemMan  &manMem,
+            ClockCount      &addCyc)  const
+    {
+        GuestMemoryAddress  gmAddr  =
+                getOperandAddress(uOperand, rX, rY, rPC, manMem, addCyc);
+        return  manMem.template readMemory<RegType>(gmAddr);
+    }
+
+};
+
+
+//========================================================================
+/**
+**    ゼロページオペランド。
+**/
+
+template  <int IDXREG = IDX_REG_N, typename TMemMan = MemoryManager>
+struct  ZeroPage
+{
+    GuestMemoryAddress
+    getOperandAddress(
+            const  OpeCode  uOperand,
+            const  RegType  rX,
+            const  RegType  rY,
+            const  RegType  rPC,
+            const  TMemMan  &manMem,
+            ClockCount      &addCyc)  const
+    {
+        addCyc  = 0;
+
+        switch ( IDXREG ) {
+        case  IDX_REG_X:
+            return ( (uOperand + rX) & 0x000000FF );
+        case  IDX_REG_Y:
+            return ( (uOperand + rY) & 0x000000FF );
+        }
+
+        return ( uOperand & 0x000000FF );
+    }
+
+    RegType
+    getOperandValue(
+            const  OpeCode  uOperand,
+            const  RegType  rX,
+            const  RegType  rY,
+            const  RegType  rPC,
+            const  TMemMan  &manMem,
+            ClockCount      &addCyc)  const
+    {
+        addCyc  = 0;
+        GuestMemoryAddress  gmAddr  =
+                getOperandAddress(uOperand, rX, rY, rPC, manMem, addCyc);
+        return  manMem.template readMemory<RegType>(gmAddr);
     }
 
 };

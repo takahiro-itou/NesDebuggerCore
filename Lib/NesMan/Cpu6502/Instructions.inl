@@ -63,7 +63,7 @@ Cpu6502::execLoad(
     const  RegType  rOp = AM().getOperandValue(
               opeCode,
               mog_cpuRegs.X, mog_cpuRegs.Y, mog_cpuRegs.PC,
-              this->m_manMem, cyc, BOOL_FALSE);
+              this->m_manMem, cyc);
     switch ( REG ) {
     case  RA:
         setupNZFlags(mog_cpuRegs.A = rOp);
@@ -109,7 +109,7 @@ Cpu6502::execStore(
     const  GuestMemoryAddress   gmAddr  = AM().getOperandAddress(
             opeCode,
             mog_cpuRegs.X, mog_cpuRegs.Y, mog_cpuRegs.PC,
-            this->m_manMem, cyc, BOOL_FALSE);
+            this->m_manMem, cyc);
     switch ( REG ) {
     case  RA:
         this->m_manMem.writeMemory<RegType>(gmAddr, mog_cpuRegs.A);
@@ -212,9 +212,9 @@ Cpu6502::s_cpuInstTable[256] = {
 
     //  0x80 -- 8F  //
     nullptr,
-    nullptr,                                        //  81  STA ($nn,X)
-    nullptr,
-    nullptr,
+    &Cpu6502::execStore<Addres::Indirect<RX>, RA>,  //  81  STA ($nn,X)
+    nullptr,                                        //  82
+    nullptr,                                        //  83
     &Cpu6502::execStore<Addres::ZeroPage<0>, RY>,   //  84  STY <$nn
     &Cpu6502::execStore<Addres::ZeroPage<0>, RA>,   //  85  STA <$nn
     &Cpu6502::execStore<Addres::ZeroPage<0>, RX>,   //  86  STX <$nn
@@ -230,7 +230,7 @@ Cpu6502::s_cpuInstTable[256] = {
 
     //  0x90 -- 9F  //
     nullptr,                                        //  90  BCC
-    nullptr,                                        //  91  STA ($nn),Y
+    &Cpu6502::execStore<Addres::IdxIndY<RY>, RA>,   //  91  STA ($nn),Y
     nullptr,                                        //  92
     nullptr,                                        //  93
     &Cpu6502::execStore<Addres::ZeroPage<RX>, RY>,  //  94  STY $nn X
@@ -247,27 +247,40 @@ Cpu6502::s_cpuInstTable[256] = {
     nullptr,                                        //  9F
 
     //  0xA0 -- AF  //
-    &Cpu6502::execLoad<Addres::Immediate, RY>,      //  A0  LDY #
-    nullptr,
-    &Cpu6502::execLoad<Addres::Immediate, RX>,      //  A2  LDX #
+    &Cpu6502::execLoad<Addres::Immediate<0>, RY>,   //  A0  LDY #
+    &Cpu6502::execLoad<Addres::Indirect<RX>, RA>,   //  A1  LDA ($nn,X)
+    &Cpu6502::execLoad<Addres::Immediate<0>, RX>,   //  A2  LDX #
     nullptr,                                        //  A3
     &Cpu6502::execLoad<Addres::ZeroPage<0>, RY>,    //  A4  LDY <$nn
     &Cpu6502::execLoad<Addres::ZeroPage<0>, RA>,    //  A5  LDA <$nn
     &Cpu6502::execLoad<Addres::ZeroPage<0>, RX>,    //  A6  LDX <$nn
     nullptr,                                        //  A7
     &Cpu6502::execTransfer<RA, RY>,                 //  A8  TAY
-    &Cpu6502::execLoad<Addres::Immediate, RA>,      //  A9  LDA #
+    &Cpu6502::execLoad<Addres::Immediate<0>, RA>,   //  A9  LDA #
     &Cpu6502::execTransfer<RA, RX>,                 //  AA  TAX
     nullptr,                                        //  AB
-    nullptr, nullptr, nullptr, nullptr,
+    &Cpu6502::execLoad<Addres::Absolute<0>, RY>,    //  AC  LDY $nnnn
+    &Cpu6502::execLoad<Addres::Absolute<0>, RA>,    //  AD  LDA $nnnn
+    &Cpu6502::execLoad<Addres::Absolute<0>, RX>,    //  AE  LDX $nnnn
+    nullptr,                                        //  AF
 
     //  0xB0 -- BF  //
-    nullptr, nullptr, nullptr, nullptr,  nullptr, nullptr, nullptr, nullptr,
+    nullptr,                                        //  B0  BCS r
+    &Cpu6502::execLoad<Addres::IdxIndY<RY>, RA>,    //  B1  LDA ($nn),Y
+    nullptr,                                        //  B2
+    nullptr,                                        //  B3
+    &Cpu6502::execLoad<Addres::ZeroPage<RX>, RY>,   //  B4  LDY $nn,X
+    &Cpu6502::execLoad<Addres::ZeroPage<RX>, RA>,   //  B5  LDA $nn,X
+    &Cpu6502::execLoad<Addres::ZeroPage<RY>, RX>,   //  B6  LDX $nn,Y
+    nullptr,                                        //  B7
     &Cpu6502::execClearFlag<0x40>,                  //  B8  CLV
-    nullptr,                                        //  B9  LDA $nnnn Y
+    nullptr,                                        //  B9  LDA $nnnn,Y
     &Cpu6502::execTransfer<RS, RX>,                 //  BA  TSX
     nullptr,                                        //  BB
-    nullptr, nullptr, nullptr, nullptr,
+    &Cpu6502::execLoad<Addres::Absolute<RX>, RY>,   //  BC  LDY $nnnn,X
+    &Cpu6502::execLoad<Addres::Absolute<RX>, RA>,   //  BD  LDA $nnnn,X
+    &Cpu6502::execLoad<Addres::Absolute<RY>, RX>,   //  BE  LDX $nnnn,Y
+    nullptr,                                        //  BF
 
     //  0xC0 -- CF  //
     nullptr, nullptr, nullptr, nullptr,  nullptr, nullptr, nullptr, nullptr,
