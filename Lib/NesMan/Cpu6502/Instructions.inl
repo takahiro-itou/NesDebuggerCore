@@ -47,12 +47,11 @@ inline  InstExecResult
 Cpu6502::execLoad(
         const  OpeCode  opeCode)
 {
-    const  RegType  rOp = AM()(
+    ClockCount      cyc = 0;
+    const  RegType  rOp = AM().getOperandValue(
               opeCode,
-              mog_cpuRegs.X,
-              mog_cpuRegs.Y,
-              mog_cpuRegs.PC,
-              this->m_manMem);
+              mog_cpuRegs.X, mog_cpuRegs.Y, mog_cpuRegs.PC,
+              this->m_manMem, cyc, BOOL_FALSE);
     switch ( REG ) {
     case  0:
         setupNZFlags(mog_cpuRegs.A = rOp);
@@ -64,6 +63,10 @@ Cpu6502::execLoad(
         setupNZFlags(mog_cpuRegs.Y = rOp);
         break;
     }
+
+    //  追加サイクルがあれば加算する。  //
+    //  アドレスがページを跨いだ時等。   //
+    mog_ctrStep.totalCycles += cyc;
 
     return ( InstExecResult::SUCCESS_CONTINUE );
 }
