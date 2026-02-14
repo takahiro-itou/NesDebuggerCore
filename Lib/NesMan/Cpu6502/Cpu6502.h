@@ -161,6 +161,15 @@ private:
             const  OpeCode  opeCode);
 
     //----------------------------------------------------------------
+    /**   レジスタ間転送命令。
+    **
+    **/
+    template  <int SRC, int TRG>
+    inline  InstExecResult
+    execTransfer(
+            const  OpeCode  opeCode);
+
+    //----------------------------------------------------------------
     /**   フラグを設定する。
     **
     **/

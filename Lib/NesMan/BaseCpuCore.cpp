@@ -104,7 +104,7 @@ BaseCpuCore::doHardReset()
     mog_cpuRegs.X   = 0;
     mog_cpuRegs.Y   = 0;
     mog_cpuRegs.S   = 0xFF;
-    mog_cpuRegs.P   = 0;
+    mog_cpuRegs.P   = FLAG_R;
 
     mog_cpuInfo.totalCycles = 7;
     mog_cpuInfo.numOpeCodes = 0;

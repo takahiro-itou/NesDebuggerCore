@@ -117,6 +117,43 @@ Cpu6502::execStore(
     return ( InstExecResult::SUCCESS_CONTINUE );
 }
 
+//----------------------------------------------------------------
+//    レジスタ間転送命令。
+//
+
+template  <int SRC, int TRG>
+inline  InstExecResult
+Cpu6502::execTransfer(
+        const  OpeCode  opeCode)
+{
+    RegType rSrcVal = 0;
+
+    switch ( SRC ) {
+    case  0:
+        rSrcVal = mog_cpuRegs.A;    break;
+    case  1:
+        rSrcVal = mog_cpuRegs.X;    break;
+    case  2:
+        rSrcVal = mog_cpuRegs.Y;    break;
+    case  3:
+        rSrcVal = mog_cpuRegs.S;    break;
+    }
+
+    switch ( TRG ) {
+    case  0:
+        mog_cpuRegs.A   = rSrcVal;  break;
+    case  1:
+        mog_cpuRegs.X   = rSrcVal;  break;
+    case  2:
+        mog_cpuRegs.Y   = rSrcVal;  break;
+    case  3:
+        mog_cpuRegs.S   = rSrcVal;  break;
+    }
+
+    return ( InstExecResult::SUCCESS_CONTINUE );
+}
+
+
 //========================================================================
 
 const   Cpu6502::FnInst
@@ -166,12 +203,20 @@ Cpu6502::s_cpuInstTable[256] = {
     &Cpu6502::execStore<2, Addres::ZeroPage>,       //  84  STY <$nn
     &Cpu6502::execStore<0, Addres::ZeroPage>,       //  85  STA <$nn
     &Cpu6502::execStore<1, Addres::ZeroPage>,       //  86  STX <$nn
-    nullptr,
-    nullptr, nullptr, nullptr, nullptr,  nullptr, nullptr, nullptr, nullptr,
+    nullptr,                                        //  87
+    nullptr,                                        //  88  DEY
+    nullptr,                                        //  89
+    &Cpu6502::execTransfer<1, 0>,                   //  8A  TXA
+    nullptr,                                        //  8B
+    nullptr, nullptr, nullptr, nullptr,
 
     //  0x90 -- 9F  //
     nullptr, nullptr, nullptr, nullptr,  nullptr, nullptr, nullptr, nullptr,
-    nullptr, nullptr, nullptr, nullptr,  nullptr, nullptr, nullptr, nullptr,
+    &Cpu6502::execTransfer<2, 0>,                   //  98  TYA
+    nullptr,                                        //  99  STA $nnnn, Y
+    &Cpu6502::execTransfer<1, 3>,                   //  9A  TXS
+    nullptr,                                        //  9B
+    nullptr, nullptr, nullptr, nullptr,
 
     //  0xA0 -- AF  //
     &Cpu6502::execLoad<2, Addres::Immediate>,       //  A0  LDY #
@@ -182,16 +227,18 @@ Cpu6502::s_cpuInstTable[256] = {
     &Cpu6502::execLoad<0, Addres::ZeroPage>,        //  A5  LDA <$nn
     &Cpu6502::execLoad<1, Addres::ZeroPage>,        //  A6  LDX <$nn
     nullptr,                                        //  A7
-    nullptr,                                        //  A8  TAY
+    &Cpu6502::execTransfer<0, 2>,                   //  A8  TAY
     &Cpu6502::execLoad<0, Addres::Immediate>,       //  A9  LDA #
-    nullptr,                                        //  AA  TAX
+    &Cpu6502::execTransfer<0, 1>,                   //  AA  TAX
     nullptr,                                        //  AB
     nullptr, nullptr, nullptr, nullptr,
 
     //  0xB0 -- BF  //
     nullptr, nullptr, nullptr, nullptr,  nullptr, nullptr, nullptr, nullptr,
     &Cpu6502::execClearFlag<0x40>,                  //  B8  CLV
-    nullptr, nullptr, nullptr,
+    nullptr,                                        //  B9  LDA $nnnn, Y
+    &Cpu6502::execTransfer<3, 1>,                   //  BA  TSX
+    nullptr,                                        //  BB
     nullptr, nullptr, nullptr, nullptr,
 
     //  0xC0 -- CF  //
