@@ -44,9 +44,27 @@ Cpu6502::execClearFlag(
 
 template  <int REG, typename AM>
 inline  InstExecResult
-Cpu6502::execeLoad(
+Cpu6502::execLoad(
         const  OpeCode  opeCode)
 {
+    const  RegType  rOp = AM()(
+              opeCode,
+              mog_cpuRegs.X,
+              mog_cpuRegs.Y,
+              mog_cpuRegs.PC,
+              this->m_manMem);
+    switch ( REG ) {
+    case  0:
+        setupNZFlags(mog_cpuRegs.A = rOp);
+        break;
+    case  1:
+        setupNZFlags(mog_cpuRegs.X = rOp);
+        break;
+    case  2:
+        setupNZFlags(mog_cpuRegs.Y = rOp);
+        break;
+    }
+
     return ( InstExecResult::SUCCESS_CONTINUE );
 }
 
@@ -69,7 +87,7 @@ Cpu6502::execSetFlag(
 
 template  <int REG, typename AM>
 inline  InstExecResult
-Cpu6502::execeStore(
+Cpu6502::execStore(
         const  OpeCode  opeCode)
 {
     return ( InstExecResult::SUCCESS_CONTINUE );

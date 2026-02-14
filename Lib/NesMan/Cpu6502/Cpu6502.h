@@ -139,7 +139,7 @@ private:
     **/
     template  <int REG, typename AM>
     inline  InstExecResult
-    execeLoad(
+    execLoad(
             const  OpeCode  opeCode);
 
     //----------------------------------------------------------------
@@ -157,7 +157,7 @@ private:
     **/
     template  <int REG, typename AM>
     inline  InstExecResult
-    execeStore(
+    execStore(
             const  OpeCode  opeCode);
 
     //----------------------------------------------------------------
