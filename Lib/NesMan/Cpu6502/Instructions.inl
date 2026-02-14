@@ -103,7 +103,7 @@ Cpu6502::s_cpuInstTable[256] = {
 
     //  0x10 -- 1F  //
     nullptr, nullptr, nullptr, nullptr,  nullptr, nullptr, nullptr, nullptr,
-    &Cpu6502::execClearFlag<0x01>,      //  18  CLC
+    &Cpu6502::execClearFlag<0x01>,                  //  18  CLC
     nullptr, nullptr, nullptr,
     nullptr, nullptr, nullptr, nullptr,
 
@@ -113,7 +113,7 @@ Cpu6502::s_cpuInstTable[256] = {
 
     //  0x30 -- 3F  //
     nullptr, nullptr, nullptr, nullptr,  nullptr, nullptr, nullptr, nullptr,
-    &Cpu6502::execSetFlag<0x01>,        //  38  SEC
+    &Cpu6502::execSetFlag<0x01>,                    //  38  SEC
     nullptr, nullptr, nullptr,
     nullptr, nullptr, nullptr, nullptr,
 
@@ -123,7 +123,7 @@ Cpu6502::s_cpuInstTable[256] = {
 
     //  0x50 -- 5F  //
     nullptr, nullptr, nullptr, nullptr,  nullptr, nullptr, nullptr, nullptr,
-    &Cpu6502::execClearFlag<0x04>,      //  58  CLI
+    &Cpu6502::execClearFlag<0x04>,                  //  58  CLI
     nullptr, nullptr, nullptr,
     nullptr, nullptr, nullptr, nullptr,
 
@@ -133,7 +133,7 @@ Cpu6502::s_cpuInstTable[256] = {
 
     //  0x70 -- 7F  //
     nullptr, nullptr, nullptr, nullptr,  nullptr, nullptr, nullptr, nullptr,
-    &Cpu6502::execSetFlag<0x04>,        //  78  SEI
+    &Cpu6502::execSetFlag<0x04>,                    //  78  SEI
     nullptr, nullptr, nullptr,
     nullptr, nullptr, nullptr, nullptr,
 
@@ -146,12 +146,17 @@ Cpu6502::s_cpuInstTable[256] = {
     nullptr, nullptr, nullptr, nullptr,  nullptr, nullptr, nullptr, nullptr,
 
     //  0xA0 -- AF  //
-    nullptr, nullptr, nullptr, nullptr,  nullptr, nullptr, nullptr, nullptr,
-    nullptr, nullptr, nullptr, nullptr,  nullptr, nullptr, nullptr, nullptr,
+    &Cpu6502::execLoad<2, Addres::Immediate>,       //  A0  LDY #
+    nullptr,
+    &Cpu6502::execLoad<1, Addres::Immediate>,       //  A2  LDX #
+    nullptr,    //  A8  TAY
+    &Cpu6502::execLoad<0, Addres::Immediate>,       //  A9  LDA #
+    nullptr, nullptr,
+    nullptr, nullptr, nullptr, nullptr,
 
     //  0xB0 -- BF  //
     nullptr, nullptr, nullptr, nullptr,  nullptr, nullptr, nullptr, nullptr,
-    &Cpu6502::execClearFlag<0x40>,      //  B8  CLV
+    &Cpu6502::execClearFlag<0x40>,                  //  B8  CLV
     nullptr, nullptr, nullptr,
     nullptr, nullptr, nullptr, nullptr,
 
@@ -161,7 +166,7 @@ Cpu6502::s_cpuInstTable[256] = {
 
     //  0xD0 -- DF  //
     nullptr, nullptr, nullptr, nullptr,  nullptr, nullptr, nullptr, nullptr,
-    &Cpu6502::execClearFlag<0x08>,      //  D8  CLD
+    &Cpu6502::execClearFlag<0x08>,                  //  D8  CLD
     nullptr, nullptr, nullptr,
     nullptr, nullptr, nullptr, nullptr,
 
@@ -171,7 +176,7 @@ Cpu6502::s_cpuInstTable[256] = {
 
     //  0xF0 -- FF  //
     nullptr, nullptr, nullptr, nullptr,  nullptr, nullptr, nullptr, nullptr,
-    &Cpu6502::execSetFlag<0x08>,        //  F8  SED
+    &Cpu6502::execSetFlag<0x08>,                    //  F8  SED
     nullptr, nullptr, nullptr,
     nullptr, nullptr, nullptr, nullptr,
 };
