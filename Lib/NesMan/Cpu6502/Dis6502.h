@@ -119,6 +119,41 @@ public:
 //
 //    For Internal Use Only.
 //
+private:
+
+    //----------------------------------------------------------------
+    /**   絶対番地オペランドを表示する。
+    **
+    **/
+    inline  size_t
+    writeAbsolute(
+            const  OpeCode  opeCode,
+            char  *  const  dst,
+            const  size_t   remLen,
+            const  char     regName,
+            const  RegType  idxReg)  const;
+
+    //----------------------------------------------------------------
+    /**   即値オペランドを表示する。
+    **
+    **/
+    inline  size_t
+    writeImmediage(
+            const  OpeCode  opeCode,
+            char  *  const  dst,
+            const  size_t   remLen)  const;
+
+    //----------------------------------------------------------------
+    /**   ゼロページオペランドを表示する。
+    **
+    **/
+    inline  size_t
+    writeZeroPage(
+            const  OpeCode  opeCode,
+            char  *  const  dst,
+            const  size_t   remLen,
+            const  char     regName,
+            const  RegType  idxReg)  const;
 
 //========================================================================
 //
@@ -137,6 +172,16 @@ public:
     //  テストクラス。  //
     friend  class   Dis6502Test;
 };
+
+
+//========================================================================
+//
+//    For Tests.
+//
+
+const   std::string
+dumpMnemonicMap(
+        const  OpeCode  opeCode);
 
 }   //  End of namespace  NesMan
 NESDBG_NAMESPACE_END

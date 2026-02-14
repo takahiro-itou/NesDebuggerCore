@@ -209,6 +209,8 @@ protected:
 
     /**   カウンタ関連。    **/
     CounterInfo             mog_cpuInfo;
+
+    CounterInfo             mog_ctrStep;
 #endif
 
     /**  メモリマネージャ。     **/

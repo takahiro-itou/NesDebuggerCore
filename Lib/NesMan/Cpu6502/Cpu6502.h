@@ -25,6 +25,10 @@
 #    include    "NesDbg/NesMan/BaseCpuCore.h"
 #endif
 
+#if !defined( NESDBG_COMMON_INCLUDED_NESDBG_UTILS_H )
+#    include    "NesDbg/Common/NesDbgUtils.h"
+#endif
+
 
 NESDBG_NAMESPACE_BEGIN
 namespace  NesMan  {
@@ -45,6 +49,9 @@ private:
 
     typedef     BaseCpuCore     Super;
 
+    typedef     NESDBG_REGPARM  InstExecResult
+    (Cpu6502::* FnInst)(
+            const  OpeCode  opeCode);
 
 //========================================================================
 //
@@ -115,11 +122,34 @@ public:
 //
 //    For Internal Use Only.
 //
+private:
+
+    //----------------------------------------------------------------
+    /**   フラグ操作（クリア）命令。
+    **
+    **/
+    template  <RegType  VAL>
+    inline  InstExecResult
+    clearFlag(
+            const  OpeCode  opeCode);
+
+    //----------------------------------------------------------------
+    /**   フラグ操作（セット）命令。
+    **
+    **/
+    template  <RegType  VAL>
+    inline  InstExecResult
+    setFlag(
+            const  OpeCode  opeCode);
 
 //========================================================================
 //
 //    Member Variables.
 //
+private:
+
+    /**   命令テーブル。    **/
+    static  const   FnInst  s_cpuInstTable[256];
 
 //========================================================================
 //
