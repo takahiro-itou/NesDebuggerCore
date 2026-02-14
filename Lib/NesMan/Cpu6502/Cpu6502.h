@@ -137,7 +137,7 @@ private:
     /**   ロード命令。
     **
     **/
-    template  <int REG, typename AM>
+    template  <typename AM, int REG>
     inline  InstExecResult
     execLoad(
             const  OpeCode  opeCode);
@@ -155,7 +155,7 @@ private:
     /**   ロード命令。
     **
     **/
-    template  <int REG, typename AM>
+    template  <typename AM, int REG>
     inline  InstExecResult
     execStore(
             const  OpeCode  opeCode);

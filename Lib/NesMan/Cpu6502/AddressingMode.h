@@ -53,6 +53,7 @@ struct  Immediate
 **    ゼロページオペランド。
 **/
 
+template  <int IDXREG = 0>
 struct  ZeroPage
 {
     GuestMemoryAddress
