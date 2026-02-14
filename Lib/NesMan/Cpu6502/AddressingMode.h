@@ -38,7 +38,7 @@ struct  Immediate
             const  OpeCode  uOperand,
             const  RegType  rX,
             const  RegType  rY,
-            const  RegType  rPC
+            const  RegType  rPC,
             MemoryManager   &manMem)
     {
         return ( uOperand & 0x000000FF );

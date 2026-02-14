@@ -24,6 +24,7 @@
 
 #include    "NesDbg/NesMan/MemoryManager.h"
 #include    "InstTable.h"
+#include    "AddressingMode.h"
 #include    "Instructions.inl"
 
 #include    <iostream>
