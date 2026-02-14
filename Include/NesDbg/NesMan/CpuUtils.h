@@ -105,7 +105,8 @@ struct  CounterInfo
     ClockCount          remainClock;
 };
 
-};
+
+}   //  End of namespace  NesMan
 NESDBG_NAMESPACE_END
 
 #endif

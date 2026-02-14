@@ -41,6 +41,18 @@ class   MemoryManager;
 
 //========================================================================
 //
+//    Type Definitions.
+//
+
+struct  MnemonicMap  {
+    OpeCode         mask;
+    OpeCode         cval;
+    const  char  *  mnemonic;
+};
+
+
+//========================================================================
+//
 //    BaseDisCpu  class.
 //
 

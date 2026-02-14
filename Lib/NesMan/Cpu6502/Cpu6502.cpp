@@ -22,6 +22,12 @@
 
 #include    "Cpu6502.h"
 
+#include    "NesDbg/NesMan/MemoryManager.h"
+#include    "InstTable.h"
+#include    "Instructions.inl"
+
+#include    <iostream>
+
 
 NESDBG_NAMESPACE_BEGIN
 namespace  NesMan  {
@@ -74,7 +80,35 @@ Cpu6502::~Cpu6502()
 InstExecResult
 Cpu6502::executeNextInst()
 {
-    return ( InstExecResult::UNDEFINED_OPECODE );
+    char    buf[128];
+
+    const  GuestMemoryAddress oldPC = mog_cpuRegs.PC;
+    const  OpeCode  opeCode =
+        this->m_manMem.readMemory<OpeCode>(oldPC);
+    const  BtByte   ocInst  = (opeCode & 0x000000FF);
+    const  GuestMemoryAddress   opSize  = g_opeCodeSize[ocInst];
+
+    //  プログラムカウンタを更新する。  //
+    mog_cpuRegs.PC  += opSize;
+
+    //  クロックサイクル数を更新する。  //
+    mog_ctrStep.totalCycles += g_opeCodeCycles[ocInst];
+    ++ mog_ctrStep.numOpeCodes;
+
+    FnInst  pfInst  = s_cpuInstTable[ocInst];
+    InstExecResult  ret = InstExecResult::UNDEFINED_OPECODE;
+    if ( pfInst != nullptr ) {
+        ret = (this ->* pfInst)(opeCode >> 8);
+    }
+    if ( ret == InstExecResult::UNDEFINED_OPECODE ) {
+        snprintf(buf, sizeof(buf) - 1,
+                "Undefined Instruction %02X at %04X\n",
+                 ocInst, oldPC);
+        std::cerr   <<  buf;
+        return ( InstExecResult::UNDEFINED_OPECODE );
+    }
+
+    return ( ret );
 }
 
 //========================================================================

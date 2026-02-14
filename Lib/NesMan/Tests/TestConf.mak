@@ -5,6 +5,7 @@
 
 extra_tests             =
 TESTS                   =  \
+        DisCpu6502Test          \
         NesManagerTest          \
         ${extra_tests}
 
@@ -33,5 +34,6 @@ test_ldflags_common         +=
 ##    Test Programs.
 ##
 
+DisCpu6502Test_SOURCES      =  DisCpu6502Test.cpp
 NesManagerTest_SOURCES      =  NesManagerTest.cpp
 

@@ -13,9 +13,9 @@
 *************************************************************************/
 
 /**
-**      An Implementation of Thumb Instruction Table.
+**      An Implementation of 6502 Instruction Table.
 **
-**      @file       NesMan/Cpu6502/InsTablet.h
+**      @file       NesMan/Cpu6502/InstTablet.h
 **/
 
 #if !defined( NESDBG_NESMAN_CPU6502_INCLUDED_INST_TABLE_H )
@@ -25,13 +25,97 @@
 NESDBG_NAMESPACE_BEGIN
 namespace  NesMan  {
 
+
+//========================================================================
+//
+//    Addressing Mode Table.
+//
+
+namespace  AddressingMode  {
+
+enum  ModeValues
+{
+    AM_IMP  =  0,
+    AM_ACC  =  1,
+    AM_IMM  =  2,
+    AM_ZER  =  3,
+    AM_ZPX  =  4,
+    AM_ZPY  =  5,
+    AM_ABS  =  6,
+    AM_ABX  =  7,
+    AM_ABY  =  8,
+    AM_IDX  =  9,
+    AM_IDY  = 10,
+    AM_REL  = 11,
+    AM_IND  = 12,
+    AM_BRK  = 13,
+    AM_KIL  = 14,
+    AM_NOP  = 15,
+    AM_DOP  = 16,
+    AM_TOP  = 17,
+};
+
+CONSTEXPR_VAR
+ModeValues  g_opeCodeAddrs[256] = {
+    //  0x00 -- 0F   //
+    AM_BRK, AM_IDX, AM_KIL, AM_IDX,  AM_ZER, AM_ZER, AM_ZER, AM_ZER,
+    AM_IMP, AM_IMM, AM_ACC, AM_IMM,  AM_ABS, AM_ABS, AM_ABS, AM_ABS,
+    AM_REL, AM_IDY, AM_KIL, AM_IDY,  AM_DOP, AM_ZPX, AM_ZPX, AM_ZPX,
+    AM_IMP, AM_ABY, AM_NOP, AM_ABY,  AM_ABX, AM_ABX, AM_ABX, AM_ABX,
+
+    //  0x20 -- 3F  //
+    AM_ABS, AM_IDX, AM_KIL, AM_IDX,  AM_ZER, AM_ZER, AM_ZER, AM_ZER,
+    AM_IMP, AM_IMM, AM_ACC, AM_IMM,  AM_ABS, AM_ABS, AM_ABS, AM_ABS,
+    AM_REL, AM_IDY, AM_KIL, AM_IDY,  AM_DOP, AM_ZPX, AM_ZPX, AM_ZPX,
+    AM_IMP, AM_ABY, AM_NOP, AM_ABY,  AM_ABX, AM_ABX, AM_ABX, AM_ABX,
+
+    //  0x40 -- 5F  //
+    AM_IMP, AM_IDX, AM_KIL, AM_IDX,  AM_DOP, AM_ZER, AM_ZER, AM_ZER,
+    AM_IMP, AM_IMM, AM_ACC, AM_IMM,  AM_ABS, AM_ABS, AM_ABS, AM_ABS,
+    AM_REL, AM_IDY, AM_KIL, AM_IDY,  AM_DOP, AM_ZPX, AM_ZPX, AM_ZPX,
+    AM_IMP, AM_ABY, AM_NOP, AM_ABY,  AM_TOP, AM_ABX, AM_ABX, AM_ABX,
+
+    //  0x60 -- 7F  //
+    AM_IMP, AM_IDX, AM_KIL, AM_IDX,  AM_DOP, AM_ZER, AM_ZER, AM_ZER,
+    AM_IMP, AM_IMM, AM_ACC, AM_IMM,  AM_IND, AM_ABS, AM_ABS, AM_ABS,
+    AM_REL, AM_IDY, AM_KIL, AM_IDY,  AM_DOP, AM_ZPX, AM_ZPX, AM_ZPX,
+    AM_IMP, AM_ABY, AM_NOP, AM_ABY,  AM_ABX, AM_ABX, AM_ABX, AM_ABX,
+
+    //  0x80 -- 9F  //
+    AM_DOP, AM_IDX, AM_DOP, AM_IDX,  AM_ZER, AM_ZER, AM_ZER, AM_ZER,
+    AM_IMP, AM_DOP, AM_IMP, AM_IMM,  AM_ABS, AM_ABS, AM_ABS, AM_ABS,
+    AM_REL, AM_IDY, AM_KIL, AM_IDY,  AM_ZPX, AM_ZPX, AM_ZPY, AM_ZPY,
+    AM_IMP, AM_ABY, AM_IMP, AM_ABY,  AM_ABX, AM_ABX, AM_ABY, AM_ABY,
+
+    //  0xA0 -- BF  //
+    AM_IMM, AM_IDX, AM_IMM, AM_IDX,  AM_ZER, AM_ZER, AM_ZER, AM_ZER,
+    AM_IMP, AM_IMM, AM_IMP, AM_IMM,  AM_ABS, AM_ABS, AM_ABS, AM_ABS,
+    AM_REL, AM_IDY, AM_KIL, AM_IDY,  AM_ZPX, AM_ZPX, AM_ZPY, AM_ZPY,
+    AM_IMP, AM_ABY, AM_IMP, AM_ABY,  AM_ABX, AM_ABX, AM_ABY, AM_ABY,
+
+    //  0xC0 -- DF  //
+    AM_IMM, AM_IDX, AM_DOP, AM_IDX,  AM_ZER, AM_ZER, AM_ZER, AM_ZER,
+    AM_IMP, AM_IMM, AM_IMP, AM_IMM,  AM_ABS, AM_ABS, AM_ABS, AM_ABS,
+    AM_REL, AM_IDY, AM_KIL, AM_IDY,  AM_DOP, AM_ZPX, AM_ZPX, AM_ZPX,
+    AM_IMP, AM_ABY, AM_NOP, AM_ABY,  AM_TOP, AM_ABX, AM_ABX, AM_ABX,
+
+    //  0xE0 -- FF  //
+    AM_IMM, AM_IDX, AM_DOP, AM_IDX,  AM_ZER, AM_ZER, AM_ZER, AM_ZER,
+    AM_IMP, AM_IMM, AM_NOP, AM_IMM,  AM_ABS, AM_ABS, AM_ABS, AM_ABS,
+    AM_REL, AM_IDY, AM_KIL, AM_IDY,  AM_DOP, AM_ZPX, AM_ZPX, AM_ZPX,
+    AM_IMP, AM_ABY, AM_NOP, AM_ABY,  AM_TOP, AM_ABX, AM_ABX, AM_ABX,
+};
+
+}   //  End of namespace  AddressingMode
+
+
 //========================================================================
 //
 //    OpeCode Size Table.
 //
 
 CONSTEXPR_VAR
-BtByte  opSize[256] = {
+BtByte  g_opeCodeSize[256] = {
     2, 2, 1, 2, 2, 2, 2, 2,  1, 2, 1, 2, 3, 3, 3, 3,    //  0x00 -- 0F  //
     2, 2, 1, 2, 2, 2, 2, 2,  1, 3, 1, 3, 3, 3, 3, 3,    //  0x10 -- 1F  //
     3, 2, 1, 2, 2, 2, 2, 2,  1, 2, 1, 2, 3, 3, 3, 3,    //  0x20 -- 2F  //
@@ -56,7 +140,7 @@ BtByte  opSize[256] = {
 //
 
 CONSTEXPR_VAR
-ClockCount  opCycles[256] = {
+ClockCount  g_opeCodeCycles[256] = {
     7, 6, 2, 8, 3, 3, 5, 5,  3, 2, 2, 2, 4, 4, 6, 6,    //  0x00 -- 0F  //
     2, 5, 2, 8, 4, 4, 6, 6,  2, 4, 2, 7, 4, 4, 7, 7,    //  0x10 -- 1F  //
     6, 6, 2, 8, 3, 3, 5, 5,  4, 2, 2, 2, 4, 4, 6, 6,    //  0x20 -- 2F  //
