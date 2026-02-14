@@ -125,12 +125,39 @@ public:
 private:
 
     //----------------------------------------------------------------
+    /**   条件分岐命令。
+    **
+    **/
+    template  <RegType MSK, RegType FLG>
+    inline  InstExecResult
+    execBranch(
+            const  OpeCode  opeCode);
+
+    //----------------------------------------------------------------
     /**   フラグ操作（クリア）命令。
     **
     **/
     template  <RegType  VAL>
     inline  InstExecResult
     execClearFlag(
+            const  OpeCode  opeCode);
+
+    //----------------------------------------------------------------
+    /**   インクリメント、デクリメント命令。
+    **
+    **/
+    template  <typename AM, int VAL>
+    inline  InstExecResult
+    execIncDec(
+            const  OpeCode  opeCode);
+
+    //----------------------------------------------------------------
+    /**   インクリメント、デクリメント命令。
+    **
+    **/
+    template  <int REG, int VAL>
+    inline  InstExecResult
+    execIncDecReg(
             const  OpeCode  opeCode);
 
     //----------------------------------------------------------------
