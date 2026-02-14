@@ -130,7 +130,16 @@ private:
     **/
     template  <RegType  VAL>
     inline  InstExecResult
-    clearFlag(
+    execClearFlag(
+            const  OpeCode  opeCode);
+
+    //----------------------------------------------------------------
+    /**   ロード命令。
+    **
+    **/
+    template  <int REG, typename AM>
+    inline  InstExecResult
+    execeLoad(
             const  OpeCode  opeCode);
 
     //----------------------------------------------------------------
@@ -139,7 +148,16 @@ private:
     **/
     template  <RegType  VAL>
     inline  InstExecResult
-    setFlag(
+    execSetFlag(
+            const  OpeCode  opeCode);
+
+    //----------------------------------------------------------------
+    /**   ロード命令。
+    **
+    **/
+    template  <int REG, typename AM>
+    inline  InstExecResult
+    execeStore(
             const  OpeCode  opeCode);
 
     //----------------------------------------------------------------

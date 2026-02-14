@@ -31,10 +31,22 @@ namespace  NesMan  {
 
 template  <RegType  VAL>
 inline  InstExecResult
-Cpu6502::clearFlag(
+Cpu6502::execClearFlag(
         const  OpeCode  opeCode)
 {
     mog_cpuRegs.P   &= ~VAL;
+    return ( InstExecResult::SUCCESS_CONTINUE );
+}
+
+//----------------------------------------------------------------
+//    ロード命令。
+//
+
+template  <int REG, typename AM>
+inline  InstExecResult
+Cpu6502::execeLoad(
+        const  OpeCode  opeCode)
+{
     return ( InstExecResult::SUCCESS_CONTINUE );
 }
 
@@ -44,13 +56,24 @@ Cpu6502::clearFlag(
 
 template  <RegType  VAL>
 inline  InstExecResult
-Cpu6502::setFlag(
+Cpu6502::execSetFlag(
         const  OpeCode  opeCode)
 {
     mog_cpuRegs.P   |= VAL;
     return ( InstExecResult::SUCCESS_CONTINUE );
 }
 
+//----------------------------------------------------------------
+//    ロード命令。
+//
+
+template  <int REG, typename AM>
+inline  InstExecResult
+Cpu6502::execeStore(
+        const  OpeCode  opeCode)
+{
+    return ( InstExecResult::SUCCESS_CONTINUE );
+}
 
 //========================================================================
 
@@ -62,7 +85,7 @@ Cpu6502::s_cpuInstTable[256] = {
 
     //  0x10 -- 1F  //
     nullptr, nullptr, nullptr, nullptr,  nullptr, nullptr, nullptr, nullptr,
-    &Cpu6502::clearFlag<0x01>,      //  18  CLC
+    &Cpu6502::execClearFlag<0x01>,      //  18  CLC
     nullptr, nullptr, nullptr,
     nullptr, nullptr, nullptr, nullptr,
 
@@ -72,7 +95,7 @@ Cpu6502::s_cpuInstTable[256] = {
 
     //  0x30 -- 3F  //
     nullptr, nullptr, nullptr, nullptr,  nullptr, nullptr, nullptr, nullptr,
-    &Cpu6502::setFlag<0x01>,        //  38  SEC
+    &Cpu6502::execSetFlag<0x01>,        //  38  SEC
     nullptr, nullptr, nullptr,
     nullptr, nullptr, nullptr, nullptr,
 
@@ -82,7 +105,7 @@ Cpu6502::s_cpuInstTable[256] = {
 
     //  0x50 -- 5F  //
     nullptr, nullptr, nullptr, nullptr,  nullptr, nullptr, nullptr, nullptr,
-    &Cpu6502::clearFlag<0x04>,      //  58  CLI
+    &Cpu6502::execClearFlag<0x04>,      //  58  CLI
     nullptr, nullptr, nullptr,
     nullptr, nullptr, nullptr, nullptr,
 
@@ -92,7 +115,7 @@ Cpu6502::s_cpuInstTable[256] = {
 
     //  0x70 -- 7F  //
     nullptr, nullptr, nullptr, nullptr,  nullptr, nullptr, nullptr, nullptr,
-    &Cpu6502::setFlag<0x04>,        //  78  SEI
+    &Cpu6502::execSetFlag<0x04>,        //  78  SEI
     nullptr, nullptr, nullptr,
     nullptr, nullptr, nullptr, nullptr,
 
@@ -110,7 +133,7 @@ Cpu6502::s_cpuInstTable[256] = {
 
     //  0xB0 -- BF  //
     nullptr, nullptr, nullptr, nullptr,  nullptr, nullptr, nullptr, nullptr,
-    &Cpu6502::clearFlag<0x40>,      //  B8  CLV
+    &Cpu6502::execClearFlag<0x40>,      //  B8  CLV
     nullptr, nullptr, nullptr,
     nullptr, nullptr, nullptr, nullptr,
 
@@ -120,7 +143,7 @@ Cpu6502::s_cpuInstTable[256] = {
 
     //  0xD0 -- DF  //
     nullptr, nullptr, nullptr, nullptr,  nullptr, nullptr, nullptr, nullptr,
-    &Cpu6502::clearFlag<0x08>,      //  D8  CLD
+    &Cpu6502::execClearFlag<0x08>,      //  D8  CLD
     nullptr, nullptr, nullptr,
     nullptr, nullptr, nullptr, nullptr,
 
@@ -130,7 +153,7 @@ Cpu6502::s_cpuInstTable[256] = {
 
     //  0xF0 -- FF  //
     nullptr, nullptr, nullptr, nullptr,  nullptr, nullptr, nullptr, nullptr,
-    &Cpu6502::setFlag<0x08>,        //  F8  SED
+    &Cpu6502::execSetFlag<0x08>,        //  F8  SED
     nullptr, nullptr, nullptr,
     nullptr, nullptr, nullptr, nullptr,
 };
