@@ -149,7 +149,9 @@ Cpu6502::s_cpuInstTable[256] = {
     &Cpu6502::execLoad<2, Addres::Immediate>,       //  A0  LDY #
     nullptr,
     &Cpu6502::execLoad<1, Addres::Immediate>,       //  A2  LDX #
-    nullptr,    //  A8  TAY
+    nullptr,                                        //  A3
+    nullptr, nullptr, nullptr, nullptr,
+    nullptr,                                        //  A8  TAY
     &Cpu6502::execLoad<0, Addres::Immediate>,       //  A9  LDA #
     nullptr, nullptr,
     nullptr, nullptr, nullptr, nullptr,
