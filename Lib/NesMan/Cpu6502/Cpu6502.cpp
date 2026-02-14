@@ -146,5 +146,15 @@ Cpu6502::executeNextInst()
 //    For Internal Use Only.
 //
 
+//----------------------------------------------------------------
+//    フラグを設定する。
+//
+
+inline  void
+Cpu6502::setupNZFlags(
+        const  RegType  value)
+{
+}
+
 }   //  End of namespace  NesMan
 NESDBG_NAMESPACE_END

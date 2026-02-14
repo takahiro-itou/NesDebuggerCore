@@ -142,6 +142,14 @@ private:
     setFlag(
             const  OpeCode  opeCode);
 
+    //----------------------------------------------------------------
+    /**   フラグを設定する。
+    **
+    **/
+    inline  void
+    setupNZFlags(
+            const  RegType  value);
+
 //========================================================================
 //
 //    Member Variables.
