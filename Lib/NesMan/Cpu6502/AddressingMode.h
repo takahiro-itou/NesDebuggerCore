@@ -93,6 +93,72 @@ struct  ZeroPage
 
 };
 
+
+//========================================================================
+/**
+**    アブソリュートオペランド。
+**/
+
+template  <int  IDXREG>
+struct  Absolute
+{
+    GuestMemoryAddress
+    getOperandAddress(
+            const  OpeCode  uOperand,
+            const  RegType  rX,
+            const  RegType  rY,
+            const  RegType  rPC,
+            MemoryManager   &manMem,
+            ClockCount      &addCyc,
+            const  Boolean  flgPeek)  const
+    {
+        return  getTargetAddress(uOperand, rX, rY, addCyc);
+    }
+
+    RegType
+    getOperandValue(
+            const  OpeCode  uOperand,
+            const  RegType  rX,
+            const  RegType  rY,
+            const  RegType  rPC,
+            MemoryManager   &manMem,
+            ClockCount      &addCyc,
+            const  Boolean  flgPeek)  const
+    {
+        const   GuestMemoryAddress  gmAddr
+            = getTargetAddress(uOperand, rX, rY, addCyc);
+        return  manMem.readMemory<RegType>(gmAddr);
+    }
+
+    GuestMemoryAddress
+    getTargetAddress(
+            const  OpeCode  uOperand,
+            const  RegType  rX,
+            const  RegType  rY,
+            ClockCount      &addCyc)  const
+    {
+        GuestMemoryAddress  regIdx  = 0;
+
+        switch ( IDXREG ) {
+        case  1:        //  $nnnn, X
+            regIdx  = rX;
+            break;
+        case  2:        //  $nnnn, Y
+            regIdx  = rY;
+            break;
+        default:        //  $nnnn
+            regIdx  = 0;
+            break;
+        }
+
+        const   GuestMemoryAddress  gmAddr  = (uOperand + regIdx) & 0xFFFF;
+        addCyc  = ( (regIdx) > (uint8_t)(gmAddr) ) ? 1 : 0;
+        return ( gmAddr );
+    }
+
+};
+
+
 }   //  End of namespace  Addres
 }   //  End of namespace  NesMan
 NESDBG_NAMESPACE_END
