@@ -28,10 +28,10 @@ namespace  NesMan  {
 namespace  {
 
 enum  IndexRegister  {
-    IA  = 0,
-    IX  = 1,
-    IY  = 2,
-    IS  = 3,
+    RA  = 0,
+    RX  = 1,
+    RY  = 2,
+    RS  = 3,
 };
 
 }   //  End of (Unnamed) namespace.
@@ -65,13 +65,13 @@ Cpu6502::execLoad(
               mog_cpuRegs.X, mog_cpuRegs.Y, mog_cpuRegs.PC,
               this->m_manMem, cyc, BOOL_FALSE);
     switch ( REG ) {
-    case  IA:
+    case  RA:
         setupNZFlags(mog_cpuRegs.A = rOp);
         break;
-    case  IX:
+    case  RX:
         setupNZFlags(mog_cpuRegs.X = rOp);
         break;
-    case  IY:
+    case  RY:
         setupNZFlags(mog_cpuRegs.Y = rOp);
         break;
     }
@@ -111,13 +111,13 @@ Cpu6502::execStore(
             mog_cpuRegs.X, mog_cpuRegs.Y, mog_cpuRegs.PC,
             this->m_manMem, cyc, BOOL_FALSE);
     switch ( REG ) {
-    case  IA:
+    case  RA:
         this->m_manMem.writeMemory<RegType>(gmAddr, mog_cpuRegs.A);
         break;
-    case  IX:
+    case  RX:
         this->m_manMem.writeMemory<RegType>(gmAddr, mog_cpuRegs.X);
         break;
-    case  IY:
+    case  RY:
         this->m_manMem.writeMemory<RegType>(gmAddr, mog_cpuRegs.Y);
         break;
     }
@@ -141,24 +141,24 @@ Cpu6502::execTransfer(
     RegType rSrcVal = 0;
 
     switch ( SRC ) {
-    case  IA:
+    case  RA:
         rSrcVal = mog_cpuRegs.A;    break;
-    case  IX:
+    case  RX:
         rSrcVal = mog_cpuRegs.X;    break;
-    case  IY:
+    case  RY:
         rSrcVal = mog_cpuRegs.Y;    break;
-    case  IS:
+    case  RS:
         rSrcVal = mog_cpuRegs.S;    break;
     }
 
     switch ( TRG ) {
-    case  IA:
+    case  RA:
         mog_cpuRegs.A   = rSrcVal;  break;
-    case  IX:
+    case  RX:
         mog_cpuRegs.X   = rSrcVal;  break;
-    case  IY:
+    case  RY:
         mog_cpuRegs.Y   = rSrcVal;  break;
-    case  IS:
+    case  RS:
         mog_cpuRegs.S   = rSrcVal;  break;
     }
 
@@ -211,46 +211,61 @@ Cpu6502::s_cpuInstTable[256] = {
     nullptr, nullptr, nullptr, nullptr,
 
     //  0x80 -- 8F  //
-    nullptr, nullptr, nullptr, nullptr,
-    &Cpu6502::execStore<Addres::ZeroPage<0>, IY>,   //  84  STY <$nn
-    &Cpu6502::execStore<Addres::ZeroPage<0>, IA>,   //  85  STA <$nn
-    &Cpu6502::execStore<Addres::ZeroPage<0>, IX>,   //  86  STX <$nn
+    nullptr,
+    nullptr,                                        //  81  STA ($nn,X)
+    nullptr,
+    nullptr,
+    &Cpu6502::execStore<Addres::ZeroPage<0>, RY>,   //  84  STY <$nn
+    &Cpu6502::execStore<Addres::ZeroPage<0>, RA>,   //  85  STA <$nn
+    &Cpu6502::execStore<Addres::ZeroPage<0>, RX>,   //  86  STX <$nn
     nullptr,                                        //  87
     nullptr,                                        //  88  DEY
     nullptr,                                        //  89
-    &Cpu6502::execTransfer<IX, IA>,                 //  8A  TXA
+    &Cpu6502::execTransfer<RX, RA>,                 //  8A  TXA
     nullptr,                                        //  8B
-    &Cpu6502::execStore<Addres::Absolute<0>, 2>,    //  8C  STY, $nnnn
-    nullptr, nullptr, nullptr,
+    &Cpu6502::execStore<Addres::Absolute<0>, RY>,   //  8C  STY $nnnn
+    &Cpu6502::execStore<Addres::Absolute<0>, RA>,   //  8D  STA $nnnn
+    &Cpu6502::execStore<Addres::Absolute<0>, RX>,   //  8E  STX $nnnn
+    nullptr,                                        //  8F
 
     //  0x90 -- 9F  //
-    nullptr, nullptr, nullptr, nullptr,  nullptr, nullptr, nullptr, nullptr,
-    &Cpu6502::execTransfer<IY, IA>,                 //  98  TYA
-    nullptr,                                        //  99  STA $nnnn, Y
-    &Cpu6502::execTransfer<IX, IS>,                 //  9A  TXS
+    nullptr,                                        //  90  BCC
+    nullptr,                                        //  91  STA ($nn),Y
+    nullptr,                                        //  92
+    nullptr,                                        //  93
+    &Cpu6502::execStore<Addres::ZeroPage<RX>, RY>,  //  94  STY $nn X
+    &Cpu6502::execStore<Addres::ZeroPage<RX>, RA>,  //  95  STA $nn X
+    &Cpu6502::execStore<Addres::ZeroPage<RY>, RX>,  //  96  STX $nn Y
+    nullptr,                                        //  97
+    &Cpu6502::execTransfer<RY, RA>,                 //  98  TYA
+    &Cpu6502::execStore<Addres::Absolute<RY>, RA>,  //  99  STA $nnnn Y
+    &Cpu6502::execTransfer<RX, RS>,                 //  9A  TXS
     nullptr,                                        //  9B
-    nullptr, nullptr, nullptr, nullptr,
+    nullptr,                                        //  9C
+    &Cpu6502::execStore<Addres::Absolute<RX>, RA>,  //  9D  STA $nnnn X
+    nullptr,                                        //  9E
+    nullptr,                                        //  9F
 
     //  0xA0 -- AF  //
-    &Cpu6502::execLoad<Addres::Immediate, IY>,      //  A0  LDY #
+    &Cpu6502::execLoad<Addres::Immediate, RY>,      //  A0  LDY #
     nullptr,
-    &Cpu6502::execLoad<Addres::Immediate, IX>,      //  A2  LDX #
+    &Cpu6502::execLoad<Addres::Immediate, RX>,      //  A2  LDX #
     nullptr,                                        //  A3
-    &Cpu6502::execLoad<Addres::ZeroPage<0>, IY>,    //  A4  LDY <$nn
-    &Cpu6502::execLoad<Addres::ZeroPage<0>, IA>,    //  A5  LDA <$nn
-    &Cpu6502::execLoad<Addres::ZeroPage<0>, IX>,    //  A6  LDX <$nn
+    &Cpu6502::execLoad<Addres::ZeroPage<0>, RY>,    //  A4  LDY <$nn
+    &Cpu6502::execLoad<Addres::ZeroPage<0>, RA>,    //  A5  LDA <$nn
+    &Cpu6502::execLoad<Addres::ZeroPage<0>, RX>,    //  A6  LDX <$nn
     nullptr,                                        //  A7
-    &Cpu6502::execTransfer<IA, IY>,                 //  A8  TAY
-    &Cpu6502::execLoad<Addres::Immediate, IA>,      //  A9  LDA #
-    &Cpu6502::execTransfer<IA, IX>,                 //  AA  TAX
+    &Cpu6502::execTransfer<RA, RY>,                 //  A8  TAY
+    &Cpu6502::execLoad<Addres::Immediate, RA>,      //  A9  LDA #
+    &Cpu6502::execTransfer<RA, RX>,                 //  AA  TAX
     nullptr,                                        //  AB
     nullptr, nullptr, nullptr, nullptr,
 
     //  0xB0 -- BF  //
     nullptr, nullptr, nullptr, nullptr,  nullptr, nullptr, nullptr, nullptr,
     &Cpu6502::execClearFlag<0x40>,                  //  B8  CLV
-    nullptr,                                        //  B9  LDA $nnnn, Y
-    &Cpu6502::execTransfer<IS, IX>,                 //  BA  TSX
+    nullptr,                                        //  B9  LDA $nnnn Y
+    &Cpu6502::execTransfer<RS, RX>,                 //  BA  TSX
     nullptr,                                        //  BB
     nullptr, nullptr, nullptr, nullptr,
 
