@@ -46,7 +46,6 @@ template  <RegType  VAL>
 inline  InstExecResult
 Cpu6502::setFlag(
         const  OpeCode  opeCode)
-
 {
     mog_cpuRegs.P   |= VAL;
     return ( InstExecResult::SUCCESS_CONTINUE );
