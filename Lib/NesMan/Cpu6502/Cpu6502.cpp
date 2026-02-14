@@ -154,6 +154,9 @@ inline  void
 Cpu6502::setupNZFlags(
         const  RegType  value)
 {
+    mog_cpuRegs.P   &= ~(FLAG_N | FLAG_Z);
+    mog_cpuRegs.P   |= (value & FLAG_N);
+    mog_cpuRegs.P   |= (value ? 0: FLAG_Z);
 }
 
 }   //  End of namespace  NesMan
