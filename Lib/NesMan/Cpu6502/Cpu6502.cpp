@@ -149,6 +149,29 @@ Cpu6502::executeNextInst()
 //
 
 //----------------------------------------------------------------
+//    スタックからデータを取り出す。
+//
+
+inline  const   RegType
+Cpu6502::popValue()
+{
+    mog_cpuRegs.S ++;
+    return  this->m_manMem.readMemory<RegType>(0x0100 + mog_cpuRegs.S);
+}
+
+//----------------------------------------------------------------
+//    スタックにデータを積む。
+//
+
+inline  void
+Cpu6502::pushValue(
+        const  RegType  value)
+{
+    this->m_manMem.writeMemory<RegType>(0x0100 + mog_cpuRegs.S, value);
+    -- mog_cpuRegs.S;
+}
+
+//----------------------------------------------------------------
 //    フラグを設定する。
 //
 

@@ -159,6 +159,29 @@ Cpu6502::execIncDecReg(
 }
 
 //----------------------------------------------------------------
+//    ジャンプ命令。
+//
+
+inline  InstExecResult
+Cpu6502::execJsr(const  OpeCode  opeCode)
+{
+    //  まず現在 PC をスタックに積むが、            //
+    //  積まれるのは次の命令の１バイト手前である。  //
+    //  つまり、この命令の最後のバイトをを積む。    //
+    //  ここに到達した時点で、既に次の命令の先頭を  //
+    //  指しているので１バイト引いて push する。    //
+    const   GuestMemoryAddress  pc  = mog_cpuRegs.PC - 1;
+    pushValue((pc >> 8) & 0x000000FF);
+    pushValue((pc     ) & 0x000000FF);
+
+    //  オペランドは 16 ビットの即値による          //
+    //  絶対番地指定なので、そのまま PC にコピー。  //
+    mog_cpuRegs.PC  = (opeCode & 0x0000FFFF);
+
+    return ( InstExecResult::SUCCESS_CONTINUE );
+}
+
+//----------------------------------------------------------------
 //    ロード命令。
 //
 
@@ -249,7 +272,7 @@ Cpu6502::s_cpuInstTable[256] = {
     nullptr, nullptr, nullptr, nullptr,
 
     //  0x20 -- 2F  //
-    nullptr,                                        //  20  JSR
+    &Cpu6502::execJsr,                              //  20  JSR
     nullptr, nullptr, nullptr,  nullptr, nullptr, nullptr, nullptr,
     nullptr, nullptr, nullptr, nullptr,  nullptr, nullptr, nullptr, nullptr,
 
