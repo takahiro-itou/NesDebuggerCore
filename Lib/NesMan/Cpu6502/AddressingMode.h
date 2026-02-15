@@ -120,7 +120,7 @@ struct  Immediate
 **    インデックスインダイレクトオペランド。
 **/
 
-template  <int IDXREG = IDX_REG_N, typename TMemMan = MemoryManager>
+template  <TRegPtr IDXREG = &RegBank::Zr, typename TMemMan = MemoryManager>
 struct  Indirect
 {
     typedef     TMemMan     MemManType;
@@ -138,14 +138,12 @@ struct  Indirect
         //  ゼロページ内でのアクセスなので、        //
         //  X を加算した繰り上がりは無視される。    //
         BtByte  tmp = (uOperand & 0x000000FF);
-        switch ( IDXREG ) {
-        case  IDX_REG_X:
-            tmp += cpuRegs.X;
-            break;
-        case  IDX_REG_Y:    //  このモードは実在しない。
-            tmp += cpuRegs.Y;
-            break;
+#if defined( _DEBUG )
+        if ( IDXREG == &RegBank::Zr ) {
+            assert( cpuRegs.Zr == 0 );
         }
+#endif
+        tmp += (cpuRegs .* IDXREG);
 
         //  加算した結果のアドレスが境界にある時、  //
         //  下位アドレスを 0x00FF から読み出し、    //
