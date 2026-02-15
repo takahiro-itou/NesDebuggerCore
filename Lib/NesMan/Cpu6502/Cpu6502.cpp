@@ -25,6 +25,7 @@
 #include    "NesDbg/NesMan/MemoryManager.h"
 #include    "InstTable.h"
 #include    "AddressingMode.h"
+#include    "ArithmeticLogic.h"
 #include    "Instructions.inl"
 
 #include    <iostream>

@@ -74,6 +74,9 @@ inline  InstExecResult
 Cpu6502::execArithmeticLogic(
         const  OpeCode  opeCode)
 {
+    ClockCount  cyc = 0;
+    OPERAND operand(opeCode, mog_cpuRegs, this->m_manMem, cyc);
+
     return ( InstExecResult::UNDEFINED_OPECODE );
 }
 
