@@ -69,7 +69,9 @@ namespace  {
 //    算術論理演算命令。
 //
 
-template  <typename OPERAND, int CODE1, int CODE2>
+template  <
+    typename OPERAND, typename CODE1, typename CODE2,
+    int RMWW, TRegPtr REGPTR>
 inline  InstExecResult
 Cpu6502::execArithmeticLogic(
         const  OpeCode  opeCode)
@@ -77,7 +79,29 @@ Cpu6502::execArithmeticLogic(
     ClockCount  cyc = 0;
     OPERAND operand(opeCode, mog_cpuRegs, this->m_manMem, cyc);
 
-    return ( InstExecResult::UNDEFINED_OPECODE );
+    RegType lhs = (mog_cpuRegs .* REGPTR);
+    RegType rhs = operand.readValue();
+
+    if ( RMWW ) {
+        //  Read-Modify-Write 命令は、  //
+        //  一回元の値を書き込む仕様。  //
+        operand.writeValue(rhs);
+    }
+    rhs = CODE2()(lhs, rhs, mog_cpuRegs.P);
+    if ( RMWW ) {
+        operand.writeValue(rhs);
+    }
+
+    if ( REGPTR == &RegBank::Zr ) {
+        //  ここに来るのは ASL A  などの場合。  //
+        //  CODE1 側は何もしない命令。          //
+        return ( InstExecResult::SUCCESS_CONTINUE );
+    }
+
+    lhs = CODE1()(lhs, rhs, mog_cpuRegs.P);
+    (mog_cpuRegs .* REGPTR) = lhs;
+
+    return ( InstExecResult::SUCCESS_CONTINUE );
 }
 
 

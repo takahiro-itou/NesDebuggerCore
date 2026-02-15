@@ -128,7 +128,11 @@ private:
     /**   算術論理演算命令。
     **
     **/
-    template  <typename OPERAND, int CODE1, int CODE2>
+    template  <typename OPERAND,
+               typename CODE1,
+               typename CODE2,
+               int RMWW = 0,
+               TRegPtr REGPTR = &RegBank::A>
     inline  InstExecResult
     execArithmeticLogic(
             const  OpeCode  opeCode);
