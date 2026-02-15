@@ -26,6 +26,18 @@ NESDBG_NAMESPACE_BEGIN
 namespace  NesMan  {
 namespace  ALU  {
 
+inline  const   RegType
+checkCarryAdd(
+        const  RegType  lhs,
+        const  RegType  rhs,
+        const  RegType  res)
+{
+    //  以下のいずれの条件：    //
+    //  負の数同士の足し算の場合は常に発生。    //
+    //  足した数のどちらかが負で結果が正の時。  //
+    const  RegType  cy  = (lhs & rhs) | ((lhs | rhs) & ~res);
+    return ( (cy >> 7) & FLAG_C );
+}
 
 inline  const   RegType
 checkCarrySub(
@@ -33,8 +45,31 @@ checkCarrySub(
         const  RegType  rhs,
         const  RegType  res)
 {
+    //  以下のいずれか条件：        //
     const  RegType  cy  = (lhs & ~rhs) | ((lhs | ~rhs) & ~res);
     return ( (cy >> 7) & FLAG_C );
+}
+
+inline  const   RegType
+checkOverflowAdd(
+        const  RegType  lhs,
+        const  RegType  rhs,
+        const  RegType  res)
+{
+    //  同符号での足し算、かつ、結果と足される数が異符号。  //
+    const  RegType  tmp = ~(lhs ^ rhs) & (lhs ^ res);
+    return ( (tmp >> 1) & FLAG_V );
+}
+
+inline  const   RegType
+checkOverflowSub(
+        const  RegType  lhs,
+        const  RegType  rhs,
+        const  RegType  res)
+{
+    //  異符号での引き算、かつ、結果と引かれる数が異符号。  //
+    const  RegType  tmp = (lhs ^ rhs) & (lhs ^ res);
+    return ( (tmp >> 1) & FLAG_V );
 }
 
 
@@ -96,6 +131,28 @@ struct  OpeR2L
 
 //------------------------------------------------------------------------
 //    オペコード 011xxx01 : ADC
+
+struct  OpeADC
+{
+    const   RegType
+    operator()(
+            const  RegType  lhs,
+            const  RegType  rhs,
+            RegType        &flg)
+    {
+        //  SBC 命令はキャリーも加えて計算するが、  //
+        //  CMP 命令ははキャリーを使わない。        //
+        //  またオーバーフローフラグも弄らない。    //
+        const  RegType  res = (lhs + rhs) + (flg & FLAG_C);
+
+        flg &= ~(FLAG_N | FLAG_V | FLAG_Z | FLAG_C);
+        flg |= (res & FLAG_N);
+        flg |= (res ? 0 : FLAG_Z);
+        flg |= checkOverflowAdd(lhs, rhs, res);
+        flg |= checkCarryAdd(lhs, rhs, res);
+        return ( lhs );
+    }
+};
 
 //------------------------------------------------------------------------
 //    オペコード 100xxx01 : STA (別途実装)

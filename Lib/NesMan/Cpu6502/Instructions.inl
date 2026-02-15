@@ -57,7 +57,8 @@
 #define     REG_Y           &RegBank::Y
 #define     REG_S           &RegBank::S
 
-#define     ADC(operand)    nullptr
+#define     ADC(operand)    \
+    &Cpu6502::execArithLogic<operand, ALU::OpeADC, ALU::OpeNopR, 0, REG_A>
 #define     AND(operand)    nullptr
 #define     ARR(operand)    nullptr
 #define     ASL(operand)    nullptr
