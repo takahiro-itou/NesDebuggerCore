@@ -24,9 +24,9 @@
 
 //  アドレッシングモード
 #define     ADR_IMM         Addres::Immediate<0>
-#define     ADR_ZERO        Addres::ZeroPage<Addres::IDX_REG_N>
-#define     ADR_ZEROX       Addres::ZeroPage<Addres::IDX_REG_X>
-#define     ADR_ZEROY       Addres::ZeroPage<Addres::IDX_REG_Y>
+#define     ADR_ZERO        Addres::ZeroPage<&RegBank::Zr>
+#define     ADR_ZEROX       Addres::ZeroPage<&RegBank::X>
+#define     ADR_ZEROY       Addres::ZeroPage<&RegBank::Y>
 #define     ADR_ABSOL       Addres::Absolute<&RegBank::Zr>
 #define     ADR_ABS_X       Addres::Absolute<&RegBank::X>
 #define     ADR_ABS_Y       Addres::Absolute<&RegBank::Y>

@@ -71,12 +71,6 @@ struct  Absolute
             const  RegType  regIdx,
             ClockCount      &addCyc)  const
     {
-#if defined( _DEBUG )
-        if ( IDXREG == &RegBank::Zr ) {
-            assert( regIdx == 0 );
-        }
-#endif
-
         const   GuestMemoryAddress  gmAddr  = (uOperand + regIdx) & 0xFFFF;
         addCyc  = ( (regIdx) > (uint8_t)(gmAddr) ) ? 1 : 0;
         return ( gmAddr );
@@ -89,7 +83,7 @@ struct  Absolute
 **    即値オペランド。
 **/
 
-template <int IDXREG = IDX_REG_N, typename TMemMan = MemoryManager>
+template  <int IDXREG = IDX_REG_N, typename TMemMan = MemoryManager>
 struct  Immediate
 {
     typedef     TMemMan     MemManType;
@@ -129,11 +123,6 @@ struct  Indirect
         //  ゼロページ内でのアクセスなので、        //
         //  X を加算した繰り上がりは無視される。    //
         BtByte  tmp = (uOperand & 0x000000FF);
-#if defined( _DEBUG )
-        if ( IDXREG == &RegBank::Zr ) {
-            assert( cpuRegs.Zr == 0 );
-        }
-#endif
         tmp += (cpuRegs .* IDXREG);
 
         //  加算した結果のアドレスが境界にある時、  //
@@ -229,7 +218,7 @@ struct  IdxIndY
 **    ゼロページオペランド。
 **/
 
-template  <int IDXREG = IDX_REG_N, typename TMemMan = MemoryManager>
+template  <TRegPtr IDXREG = &RegBank::Zr, typename TMemMan = MemoryManager>
 struct  ZeroPage
 {
     typedef     TMemMan     MemManType;
@@ -242,15 +231,7 @@ struct  ZeroPage
             ClockCount      &addCyc)  const
     {
         addCyc  = 0;
-
-        switch ( IDXREG ) {
-        case  IDX_REG_X:
-            return ( (uOperand + cpuRegs.X) & 0x000000FF );
-        case  IDX_REG_Y:
-            return ( (uOperand + cpuRegs.Y) & 0x000000FF );
-        }
-
-        return ( uOperand & 0x000000FF );
+        return ( (uOperand + (cpuRegs .* IDXREG)) & 0x000000FF );
     }
 
     RegType
