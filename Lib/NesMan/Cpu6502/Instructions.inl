@@ -51,10 +51,10 @@
 #define     OPERAND_IND_Y   Addres::MemoryOperand< ADR_IDX_Y >
 
 //  対象レジスタ
-#define     REG_A           0
-#define     REG_X           1
-#define     REG_Y           2
-#define     REG_S           3
+#define     REG_A           &RegBank::A
+#define     REG_X           &RegBank::X
+#define     REG_Y           &RegBank::Y
+#define     REG_S           &RegBank::S
 
 
 NESDBG_NAMESPACE_BEGIN
@@ -133,28 +133,20 @@ Cpu6502::execIncDec(
 //    インクリメント、デクリメント命令。
 //
 
-template  <int REG, int VAL>
+template  <TRegPtr REG, int VAL>
 inline  InstExecResult
 Cpu6502::execIncDecReg(
         const  OpeCode  opeCode)
 {
-    switch ( REG ) {
-    case  REG_X:
-        setupNZFlags(mog_cpuRegs.X += VAL);
-        return ( InstExecResult::SUCCESS_CONTINUE );
-    case  REG_Y:
-        setupNZFlags(mog_cpuRegs.Y += VAL);
-        return ( InstExecResult::SUCCESS_CONTINUE );
-    }
-
-    return ( InstExecResult::UNDEFINED_OPECODE );
+    setupNZFlags((mog_cpuRegs .* REG) += VAL);
+    return ( InstExecResult::SUCCESS_CONTINUE );
 }
 
 //----------------------------------------------------------------
 //    ロード命令。
 //
 
-template  <typename AM, int REG>
+template  <typename AM, TRegPtr REG>
 inline  InstExecResult
 Cpu6502::execLoad(
         const  OpeCode  opeCode)
@@ -162,17 +154,8 @@ Cpu6502::execLoad(
     ClockCount      cyc = 0;
     const  RegType  rOp = AM().getOperandValue(
                 opeCode, mog_cpuRegs, this->m_manMem, cyc);
-    switch ( REG ) {
-    case  REG_A:
-        setupNZFlags(mog_cpuRegs.A = rOp);
-        break;
-    case  REG_X:
-        setupNZFlags(mog_cpuRegs.X = rOp);
-        break;
-    case  REG_Y:
-        setupNZFlags(mog_cpuRegs.Y = rOp);
-        break;
-    }
+
+    setupNZFlags((mog_cpuRegs .* REG) = rOp);
 
     //  追加サイクルがあれば加算する。  //
     //  アドレスがページを跨いだ時等。   //
@@ -198,7 +181,7 @@ Cpu6502::execSetFlag(
 //    ロード命令。
 //
 
-template  <typename AM, int REG>
+template  <typename AM, TRegPtr REG>
 inline  InstExecResult
 Cpu6502::execStore(
         const  OpeCode  opeCode)
@@ -207,17 +190,7 @@ Cpu6502::execStore(
     const  GuestMemoryAddress   gmAddr  = AM().getOperandAddress(
             opeCode, mog_cpuRegs, this->m_manMem, cyc);
 
-    switch ( REG ) {
-    case  REG_A:
-        this->m_manMem.writeMemory<RegType>(gmAddr, mog_cpuRegs.A);
-        break;
-    case  REG_X:
-        this->m_manMem.writeMemory<RegType>(gmAddr, mog_cpuRegs.X);
-        break;
-    case  REG_Y:
-        this->m_manMem.writeMemory<RegType>(gmAddr, mog_cpuRegs.Y);
-        break;
-    }
+    this->m_manMem.writeMemory<RegType>(gmAddr, (mog_cpuRegs .* REG));
 
     //  追加サイクルがあれば加算する。  //
     //  アドレスがページを跨いだ時等。   //
@@ -230,34 +203,15 @@ Cpu6502::execStore(
 //    レジスタ間転送命令。
 //
 
-template  <int SRC, int TRG>
+template  <TRegPtr SRCREG, TRegPtr TRGREG>
 inline  InstExecResult
 Cpu6502::execTransfer(
         const  OpeCode  opeCode)
 {
     RegType rSrcVal = 0;
 
-    switch ( SRC ) {
-    case  REG_A:
-        rSrcVal = mog_cpuRegs.A;    break;
-    case  REG_X:
-        rSrcVal = mog_cpuRegs.X;    break;
-    case  REG_Y:
-        rSrcVal = mog_cpuRegs.Y;    break;
-    case  REG_S:
-        rSrcVal = mog_cpuRegs.S;    break;
-    }
-
-    switch ( TRG ) {
-    case  REG_A:
-        mog_cpuRegs.A   = rSrcVal;  break;
-    case  REG_X:
-        mog_cpuRegs.X   = rSrcVal;  break;
-    case  REG_Y:
-        mog_cpuRegs.Y   = rSrcVal;  break;
-    case  REG_S:
-        mog_cpuRegs.S   = rSrcVal;  break;
-    }
+    rSrcVal = (mog_cpuRegs .* SRCREG);
+    (mog_cpuRegs .* TRGREG) = rSrcVal;
 
     return ( InstExecResult::SUCCESS_CONTINUE );
 }

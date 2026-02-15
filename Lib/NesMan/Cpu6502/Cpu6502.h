@@ -155,7 +155,7 @@ private:
     /**   インクリメント、デクリメント命令。
     **
     **/
-    template  <int REG, int VAL>
+    template  <TRegPtr REG, int VAL>
     inline  InstExecResult
     execIncDecReg(
             const  OpeCode  opeCode);
@@ -164,7 +164,7 @@ private:
     /**   ロード命令。
     **
     **/
-    template  <typename AM, int REG>
+    template  <typename AM, TRegPtr REG>
     inline  InstExecResult
     execLoad(
             const  OpeCode  opeCode);
@@ -182,7 +182,7 @@ private:
     /**   ロード命令。
     **
     **/
-    template  <typename AM, int REG>
+    template  <typename AM, TRegPtr REG>
     inline  InstExecResult
     execStore(
             const  OpeCode  opeCode);
@@ -191,7 +191,7 @@ private:
     /**   レジスタ間転送命令。
     **
     **/
-    template  <int SRC, int TRG>
+    template  <TRegPtr SRCREG, TRegPtr TRGREG>
     inline  InstExecResult
     execTransfer(
             const  OpeCode  opeCode);
