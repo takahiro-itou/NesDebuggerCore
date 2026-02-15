@@ -320,16 +320,14 @@ struct  MemoryOperand
 
     MemoryOperand(
             const  OpeCode  uOperand,
-            const  RegType  rX,
-            const  RegType  rY,
-            const  RegType  rPC,
+            RegBank       & cpuRegs,
             const  TMemMan  &manMem,
             ClockCount      &addCyc)
         : m_manMem(manMem)
     {
         this->m_gmAddr  = ADRMODE().getOperandAddress(
-                                uOperand, rX, rY, rPC,
-                                manMem, addCyc);
+                uOperand, cpuRegs.X, cpuRegs.Y, cpuRegs.PC,
+                manMem, addCyc);
     }
 
     RegType
@@ -343,6 +341,40 @@ struct  MemoryOperand
             const  RegType  valNew)
     {
         m_manMem.template writeMemory<RegType>(m_gmAddr, valNew);
+    }
+
+};
+
+
+//========================================================================
+/**
+**    レジスタオペランド。
+**/
+
+template  <RegType (RegBank::* PTR), typename TMemMan = MemoryManager>
+struct  RegisterOperand
+{
+    RegBank     & m_cpuRegs;
+
+    RegisterOperand(
+            const  OpeCode  uOperand,
+            RegBank       & cpuRegs,
+            const  TMemMan  &manMem,
+            ClockCount      &addCyc)
+    {
+    }
+
+    RegType
+    readValue()  const
+    {
+        return ( m_cpuRegs .* PTR );
+    }
+
+    void
+    wrtieValue(
+            const  RegType  valNew)
+    {
+        (m_cpuRegs .* PTR)  = valNew;
     }
 
 };
