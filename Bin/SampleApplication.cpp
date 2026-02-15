@@ -71,6 +71,7 @@ int  main(int argc, char * argv[])
     while ( ret != NesMan::InstExecResult::UNDEFINED_OPECODE ) {
         ret = manNes.executeCurrentInst();
 
+#if defined( _DEBUG )
         //  レジスタをダンプ。  //
         std::cout   <<  "\nREGS\n";
         manNes.printRegisters(std::cout)
@@ -83,9 +84,11 @@ int  main(int argc, char * argv[])
             manNes.writeMnemonic(std::cout, gmNext, gmNext)
                     <<  std::endl;
         }
+#endif
 
         ++ cnt;
         if ( !(cnt & 0x07FFFFFF) ) {
+            manNes.updateCounters();
             ci  = manNes.getCpuCounters();
             ClockCount  cc  = ci.totalCycles;
             clock_t clkEnd  = clock();
@@ -103,19 +106,37 @@ int  main(int argc, char * argv[])
         }
     }
 
+    manNes.updateCounters();
     ci  = manNes.getCpuCounters();
     ClockCount  cc  = ci.totalCycles;
     clock_t clkEnd  = clock();
     const double elapsed = static_cast<double>(clkEnd - clkSta)
                                 * 1000.0 / CLOCKS_PER_SEC;
-    std::cout   <<  "Instructions: "
-                <<  cnt <<  ", "
-                <<  elapsed <<  "ms : "
-                <<  (cnt / elapsed) <<  " kHz\n"
-                <<  "Clock Counts: "
-                <<  cc  <<  ", "
-                <<  elapsed <<  "ms : "
-                <<  (cc / elapsed)  <<  " kHz"
+
+    {
+        //  レジスタをダンプ。  //
+        std::cout   <<  "\nREGS\n";
+        manNes.printRegisters(std::cout)
                 <<  std::endl;
+
+        //  次の命令を逆アセンブル。    //
+        std::cout   <<  "Mnemonic:\t"  <<  cnt  <<  "\n";
+        gmNext  = manNes.getNextPC();
+        for ( int i = 0; i < 8; ++i ) {
+            manNes.writeMnemonic(std::cout, gmNext, gmNext)
+                    <<  std::endl;
+        }
+
+        std::cout   <<  "Instructions: "
+                    <<  cnt <<  ", "
+                    <<  elapsed <<  "ms : "
+                    <<  (cnt / elapsed) <<  " kHz\n"
+                    <<  "Clock Counts: "
+                    <<  cc  <<  ", "
+                    <<  elapsed <<  "ms : "
+                    <<  (cc / elapsed)  <<  " kHz"
+                    <<  std::endl;
+    }
+
     return ( 0 );
 }
