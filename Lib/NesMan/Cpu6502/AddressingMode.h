@@ -179,7 +179,8 @@ struct  Indirect
 **/
 
 template  <
-    int IDXREG = IDX_REG_Y, int PCC=1,
+    TRegPtr IDXREG = &RegBank::Y,
+    int PCC=1,
     typename TMemMan = MemoryManager>
 struct  IdxIndY
 {
@@ -205,16 +206,8 @@ struct  IdxIndY
         rt  |= manMem.template readMemory<RegType>(tmp) << 8;
         gmAddr  = rt;
 
-        switch ( IDXREG ) {
-        case  IDX_REG_Y:
-            gmAddr  += cpuRegs.Y;
-            break;
-        case  IDX_REG_X:
-            gmAddr  += cpuRegs.X;
-            break;
-        default:
-            break;
-        }
+        //  インデックスレジスタの値を加算する。    //
+        gmAddr  += (cpuRegs .* IDXREG);
 
         //  Page-Cross Check..  //
         if ( (gmAddr ^ rt) & 0x0100 ) {

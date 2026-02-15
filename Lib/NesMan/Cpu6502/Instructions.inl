@@ -32,7 +32,7 @@
 #define     ADR_ABS_Y       Addres::Absolute<Addres::IDX_REG_Y>
 #define     ADR_INDIR       Addres::Indirect<Addres::IDX_REG_N>
 #define     ADR_IND_X       Addres::Indirect<Addres::IDX_REG_X>
-#define     ADR_IND_Y       Addres::IdxIndY<Addres::IDX_REG_Y>
+#define     ADR_IND_Y       Addres::IdxIndY<&RegBank::Y>
 
 //  対象レジスタ
 #define     REG_A           0
