@@ -57,14 +57,17 @@
 #define     REG_Y           &RegBank::Y
 #define     REG_S           &RegBank::S
 
-#define     ASL(operand)    nullptr
-#define     ORA(operand)    nullptr
-#define     AND(operand)    nullptr
-#define     EOR(operand)    nullptr
 #define     ADC(operand)    nullptr
+#define     AND(operand)    nullptr
+#define     ARR(operand)    nullptr
+#define     ASL(operand)    nullptr
+#define     DOP(operand)    nullptr
+#define     EOR(operand)    nullptr
+#define     ORA(operand)    nullptr
+#define     ROR(operand)    nullptr
+#define     RRA(operand)    nullptr
 #define     SBC(operand)    nullptr
 #define     SLO(operand)    nullptr
-#define     DOP(operand)    nullptr
 #define     TOP(operand)    nullptr
 
 #define     CMP(reg, or2)   \
@@ -433,28 +436,39 @@ Cpu6502::s_cpuInstTable[256] = {
 
     //  0x60 -- 6F  //
     &Cpu6502::execRts,                              //  60  RTS
-    nullptr,                                        //  61  ADC $(nn,X)
+    ADC(OPERAND_IND_X),                             //  61  ADC $(nn,X)
     nullptr,                                        //  62  hlt
-    nullptr,                                        //  63  rra $(nn,X)
-    nullptr,                                        //  64  dop $nn
-    nullptr,                                        //  65  ADC $nn,
-    nullptr,                                        //  66  ROR $nn
-    nullptr,                                        //  67  rra $nn
+    RRA(OPERAND_IND_X),                             //  63  rra $(nn,X)
+    DOP(OPERAND_ZERPG),                             //  64  dop $nn
+    ADC(OPERAND_ZERPG),                             //  65  ADC $nn,
+    ROR(OPERAND_ZERPG),                             //  66  ROR $nn
+    RRA(OPERAND_ZERPG),                             //  67  rra $nn
     nullptr,                                        //  68  PLA
-    nullptr,                                        //  69  ADC #imm
-    nullptr,                                        //  6A  ROR A
-    nullptr,                                        //  6B  arr #imm
+    ADC(OPERAND_IMM),                               //  69  ADC #imm
+    ROR(OPERAND_REG_A),                             //  6A  ROR A
+    ARR(OPERAND_IMM),                               //  6B  arr #imm
     &Cpu6502::execJmpIndirect,                      //  6C  JMP ($nnnn)
-    nullptr,                                        //  6D  ADC $nnnn
-    nullptr,                                        //  6E  ROR $nnnn
-    nullptr,                                        //  6F  rra $nnnn
+    ADC(OPERAND_ABSOL),                             //  6D  ADC $nnnn
+    ROR(OPERAND_ABSOL),                             //  6E  ROR $nnnn
+    RRA(OPERAND_ABSOL),                             //  6F  rra $nnnn
 
     //  0x70 -- 7F  //
     &Cpu6502::execBranch<FLAG_V, FLAG_V>,           //  70  BVS r
-    nullptr, nullptr, nullptr,  nullptr, nullptr, nullptr, nullptr,
+    ADC(OPERAND_IND_Y),                             //  71  ADC $(nn),Y
+    nullptr,                                        //  72  hlt
+    RRA(OPERAND_IND_Y),                             //  73  rra $(nn),Y
+    DOP(OPERAND_ZEROX),                             //  74  dop $nn,X
+    ADC(OPERAND_ZEROX),                             //  75  ADC $nn,X
+    ROR(OPERAND_ZEROX),                             //  76  ROR $nn,X
+    RRA(OPERAND_ZEROX),                             //  77  rra $nn,X
     &Cpu6502::execSetFlag<0x04>,                    //  78  SEI
-    nullptr, nullptr, nullptr,
-    nullptr, nullptr, nullptr, nullptr,
+    ADC(OPERAND_ABS_Y),                             //  79  ADC $nnnn,Y
+    nullptr,                                        //  7A  nop
+    RRA(OPERAND_ABS_Y),                             //  7B  rra $nnnn,Y
+    TOP(OPERAND_ABS_X),                             //  7C  top $nnnn,X
+    ADC(OPERAND_ABS_X),                             //  7D  ADC $nnnn,X
+    ROR(OPERAND_ABS_X),                             //  7E  ROR $nnnn,X
+    RRA(OPERAND_ABS_X),                             //  7F  rra $nnnn,X
 
     //  0x80 -- 8F  //
     nullptr,
