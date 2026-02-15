@@ -188,6 +188,25 @@ struct  OpeCMP
 //------------------------------------------------------------------------
 //    オペコード 111xxx01 : SBC
 
+struct  OpeSBC
+{
+    const   RegType
+    operator()(
+            const  RegType  lhs,
+            const  RegType  rhs,
+            RegType        &flg)
+    {
+        const  RegType  res = (lhs + ~rhs) + (flg & FLAG_C);
+
+        flg &= ~(FLAG_N | FLAG_V | FLAG_Z | FLAG_C);
+        flg |= (res & FLAG_N);
+        flg |= (res ? 0 : FLAG_Z);
+        flg |= checkOverflowSub(lhs, rhs, res);
+        flg |= checkCarrySub(lhs, rhs, res);
+        return ( lhs );
+    }
+};
+
 
 //========================================================================
 //

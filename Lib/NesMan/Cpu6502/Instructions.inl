@@ -64,10 +64,12 @@
 #define     ASL(operand)    nullptr
 #define     DOP(operand)    nullptr
 #define     EOR(operand)    nullptr
+#define     ISB(operand)    nullptr
 #define     ORA(operand)    nullptr
 #define     ROR(operand)    nullptr
 #define     RRA(operand)    nullptr
-#define     SBC(operand)    nullptr
+#define     SBC(operand)    \
+    &Cpu6502::execArithLogic<operand, ALU::OpeSBC, ALU::OpeNopR, 0, REG_A>
 #define     SLO(operand)    nullptr
 #define     TOP(operand)    nullptr
 
@@ -609,37 +611,39 @@ Cpu6502::s_cpuInstTable[256] = {
 
     //  0xE0 -- EF  //
     CMP(REG_X, OPERAND_IMM),                        //  E0  CPX #imm
-    nullptr,                                        //  E1  SBC ($nn,X)
-    nullptr,                                        //  E2
-    nullptr,                                        //  E3
+    SBC(OPERAND_IND_X),                             //  E1  SBC ($nn,X)
+    DOP(OPERAND_IMM),                               //  E2  dop #imm
+    ISB(OPERAND_IND_X),                             //  E3  isb ($nn,X)
     CMP(REG_X, OPERAND_ZERPG),                      //  E4  CPX $nn
-    nullptr,                                        //  E5  SBC $nn
+    SBC(OPERAND_ZERPG),                             //  E5  SBC $nn
     &Cpu6502::execIncDec<OPERAND_ZERPG, +1>,        //  E6  INC $nn
-    nullptr,                                        //  E7
+    ISB(OPERAND_ZERPG),                             //  E7  isb $nn
     &Cpu6502::execIncDecReg<REG_X, +1>,             //  E8  INX
-    nullptr,                                        //  E9  SBC #imm
+    SBC(OPERAND_IMM),                               //  E9  SBC #imm
     nullptr,                                        //  EA  NOP
-    nullptr,                                        //  EB
-    CMP(REG_X, OPERAND_ABSOL),                      //  EC  CPX $nnnn
-    nullptr,                                        //  ED  SBC $nnnn
+    SBC(OPERAND_IMM),                               //  EB  sbc $imm
+    CPX(OPERAND_ABSOL),                      //  EC  CPX $nnnn
+    SBC(OPERAND_ABSOL),                             //  ED  SBC $nnnn
     &Cpu6502::execIncDec<OPERAND_ABSOL, +1>,        //  EE  INC $nnnn
-    nullptr,                                        //  EF
+    ISB(OPERAND_ABSOL),                             //  EF  isb $nnnn
 
     //  0xF0 -- FF  //
     &Cpu6502::execBranch<FLAG_Z, FLAG_Z>,           //  F0  BEQ r
-    nullptr,                                        //  F1  SBC ($nn),Y
-    nullptr, nullptr,
-    nullptr,                                        //  F4
-    nullptr,                                        //  F5  SBC $nn,X
+    SBC(OPERAND_IND_Y),                             //  F1  SBC ($nn),Y
+    nullptr,                                        //  F2  hlt
+    ISB(OPERAND_IND_Y),                             //  F3  isb ($nn),Y
+    DOP(OPERAND_ZEROX),                             //  F4  dop $nn,X
+    SBC(OPERAND_ZEROX),                             //  F5  SBC $nn,X
     &Cpu6502::execIncDec<OPERAND_ZEROX, +1>,        //  F6  INC $nn,X
-    nullptr,                                        //  F7
+    ISB(OPERAND_ZEROX),                             //  F7  isb $nn,X
     &Cpu6502::execSetFlag<0x08>,                    //  F8  SED
-    nullptr,                                        //  F9  SBC $nnnn,Y
-    nullptr, nullptr,
-    nullptr,                                        //  FC
-    nullptr,                                        //  FD  SBC $nnnn,X
+    SBC(OPERAND_ABS_Y),                             //  F9  SBC $nnnn,Y
+    nullptr,                                        //  FA  nop
+    ISB(OPERAND_ABS_Y),                             //  FB  isb $nnnn,Y
+    TOP(OPERAND_ABS_X),                             //  FC  top $nnnn,X
+    SBC(OPERAND_ABS_X),                             //  FD  SBC $nnnn,X
     &Cpu6502::execIncDec<OPERAND_ABS_X, +1>,        //  FE  INC $nnnn,X
-    nullptr,                                        //  FF
+    ISB(OPERAND_ABS_X),                             //  FF  isb $nnnn,X
 };
 
 
