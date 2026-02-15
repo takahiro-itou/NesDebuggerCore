@@ -34,6 +34,22 @@
 #define     ADR_IND_X       Addres::Indirect<&RegBank::X>
 #define     ADR_IND_Y       Addres::IdxIndY <&RegBank::Y>
 
+//  オペランド
+#define     OPERAND_REG_A   RegisterOperand<&RegBank::A>
+#define     OPERAND_REG_X   RegisterOperand<&RegBank::X>
+#define     OPERAND_REG_Y   RegisterOperand<&RegBank::Y>
+#define     OPERAND_REG_S   RegisterOperand<&RegBank::S>
+#define     OPERAND_REG_P   RegisterOperand<&RegBank::P>
+#define     OPERAND_ZERPG   MemoryOperand< ADR_ZERO  >
+#define     OPERAND_ZEROX   MemoryOperand< ADR_ZEROX >
+#define     OPERAND_ZEROY   MemoryOperand< ADR_ZEROY >
+#define     OPERAND_ABSOL   MemoryOperand< ADR_ABSOL >
+#define     OPERAND_ABS_X   MemoryOperand< ADR_ABS_X >
+#define     OPERAND_ABS_Y   MemoryOperand< ADR_ABS_Y >
+#define     OPERAND_INDIR   MemoryOperand< ADR_INDIR >
+#define     OPERAND_IND_X   MemoryOperand< ADR_IDX_X >
+#define     OPERAND_IND_Y   MemoryOperand< ADR_IDX_Y >
+
 //  対象レジスタ
 #define     REG_A           0
 #define     REG_X           1
@@ -455,6 +471,21 @@ NESDBG_NAMESPACE_END
 #undef      ADR_INDIR
 #undef      ADR_IND_X
 #undef      ADR_IND_Y
+
+#undef      OPERAND_REG_A
+#undef      OPERAND_REG_X
+#undef      OPERAND_REG_Y
+#undef      OPERAND_REG_S
+#undef      OPERAND_REG_O
+#undef      OPERAND_ZERPG
+#undef      OPERAND_ZEROX
+#undef      OPERAND_ZEROY
+#undef      OPERAND_ABSOL
+#undef      OPERAND_ABS_X
+#undef      OPERAND_ABS_Y
+#undef      OPERAND_INDIR
+#undef      OPERAND_IND_X
+#undef      OPERAND_IND_Y
 
 #undef      REG_A
 #undef      REG_X
