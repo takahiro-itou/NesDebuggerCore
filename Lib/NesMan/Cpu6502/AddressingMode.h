@@ -252,6 +252,41 @@ struct  ZeroPage
 
 //========================================================================
 /**
+**    即値オペランド。
+**/
+
+template  <typename TMemMan = MemoryManager>
+struct  ImmediateOperand
+{
+    const  RegType  val;
+
+    ImmediateOperand(
+            const  OpeCode  uOperand,
+            RegBank       & cpuRegs,
+            const  TMemMan  &manMem,
+            ClockCount      &addCyc)
+        : val(uOperand & 0x000000FF)
+    {
+        addCyc  = 0;
+    }
+
+    RegType
+    readValue()  const
+    {
+        return ( val );
+    }
+
+    void
+    writeValue(
+            const  RegType  valNew)
+    {
+    }
+
+};
+
+
+//========================================================================
+/**
 **    メモリオペランド。
 **/
 
@@ -306,7 +341,9 @@ struct  RegisterOperand
             RegBank       & cpuRegs,
             const  TMemMan  &manMem,
             ClockCount      &addCyc)
+        : m_cpuRegs(cpuRegs)
     {
+        addCyc  = 0;
     }
 
     RegType

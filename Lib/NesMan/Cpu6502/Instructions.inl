@@ -35,6 +35,7 @@
 #define     ADR_IND_Y       Addres::IdxIndY <&RegBank::Y>
 
 //  オペランド
+#define     OPERAND_IMM     Addres::ImmediateOperand<>
 #define     OPERAND_REG_A   Addres::RegisterOperand<&RegBank::A>
 #define     OPERAND_REG_X   Addres::RegisterOperand<&RegBank::X>
 #define     OPERAND_REG_Y   Addres::RegisterOperand<&RegBank::Y>
@@ -47,8 +48,8 @@
 #define     OPERAND_ABS_X   Addres::MemoryOperand< ADR_ABS_X >
 #define     OPERAND_ABS_Y   Addres::MemoryOperand< ADR_ABS_Y >
 #define     OPERAND_INDIR   Addres::MemoryOperand< ADR_INDIR >
-#define     OPERAND_IND_X   Addres::MemoryOperand< ADR_IDX_X >
-#define     OPERAND_IND_Y   Addres::MemoryOperand< ADR_IDX_Y >
+#define     OPERAND_IND_X   Addres::MemoryOperand< ADR_IND_X >
+#define     OPERAND_IND_Y   Addres::MemoryOperand< ADR_IND_Y >
 
 //  対象レジスタ
 #define     REG_A           &RegBank::A
@@ -56,6 +57,12 @@
 #define     REG_Y           &RegBank::Y
 #define     REG_S           &RegBank::S
 
+#define     CMP(reg, or2)   \
+    &Cpu6502::execArithmeticLogic<or2, ALU::OpeCMP, ALU::OpeNopR, 0, reg>
+#define     CPX(or2)        \
+    &Cpu6502::execArithmeticLogic<or2, ALU::OpeCMP, ALU::OpeNopR, 0, REG_X>
+#define     CPY(or2)        \
+    &Cpu6502::execArithmeticLogic<or2, ALU::OpeCMP, ALU::OpeNopR, 0, REG_Y>
 
 NESDBG_NAMESPACE_BEGIN
 namespace  NesMan  {
@@ -404,47 +411,47 @@ Cpu6502::s_cpuInstTable[256] = {
     nullptr,                                        //  BF
 
     //  0xC0 -- CF  //
-    nullptr,                                        //  C0  CPY #
-    nullptr,                                        //  C1  CMP ($nn,X)
+    CMP(REG_Y, OPERAND_IMM),                        //  C0  CPY #
+    CMP(REG_A, OPERAND_IND_X),                      //  C1  CMP ($nn,X)
     nullptr,                                        //  C2
     nullptr,                                        //  C3
-    nullptr,                                        //  C4  CPY $nn
-    nullptr,                                        //  C5  CMP $nn
+    CMP(REG_Y, OPERAND_ZERPG),                      //  C4  CPY $nn
+    CMP(REG_A, OPERAND_ZERPG),                      //  C5  CMP $nn
     &Cpu6502::execIncDec<OPERAND_ZERPG, -1>,        //  C6  DEC $nn
     nullptr,                                        //  C7
     &Cpu6502::execIncDecReg<REG_Y, +1>,             //  C8  INY
-    nullptr,                                        //  C9  CMP #imm
+    CMP(REG_A, OPERAND_IMM),                        //  C9  CMP #imm
     &Cpu6502::execIncDecReg<REG_X, -1>,             //  CA  DEX
     nullptr,                                        //  CB
-    nullptr,                                        //  CC  CPY $nnnn
-    nullptr,                                        //  CD  CMP $nnnn
+    CMP(REG_Y, OPERAND_ABSOL),                      //  CC  CPY $nnnn
+    CMP(REG_A, OPERAND_ABSOL),                      //  CD  CMP $nnnn
     &Cpu6502::execIncDec<OPERAND_ABSOL, -1>,        //  CE  DEC $nnnn
     nullptr,                                        //  CF
 
     //  0xD0 -- DF  //
     &Cpu6502::execBranch<FLAG_Z, 0>,                //  D0  BNE r
-    nullptr,                                        //  D1  CMP $(nn),Y
+    CMP(REG_A, OPERAND_IND_Y),                      //  D1  CMP $(nn),Y
     nullptr,                                        //  D2
     nullptr,                                        //  D3
     nullptr,                                        //  D4
-    nullptr,                                        //  D5  CMP $nn,X
+    CMP(REG_A, OPERAND_ZEROX),                      //  D5  CMP $nn,X
     &Cpu6502::execIncDec<OPERAND_ZEROX, -1>,        //  D6  DEC $nn,X
     nullptr,                                        //  D7
     &Cpu6502::execClearFlag<0x08>,                  //  D8  CLD
-    nullptr,                                        //  D9  CMP $nnnn,Y
+    CMP(REG_A, OPERAND_ABS_Y),                      //  D9  CMP $nnnn,Y
     nullptr,                                        //  DA
     nullptr,                                        //  DB
     nullptr,                                        //  DC
-    nullptr,                                        //  DD  CMP $nnnn,X
+    CMP(REG_A, OPERAND_ABS_X),                      //  DD  CMP $nnnn,X
     &Cpu6502::execIncDec<OPERAND_ABS_X, -1>,        //  DE  DEC $nnnn,X
     nullptr,                                        //  DF
 
     //  0xE0 -- EF  //
-    nullptr,                                        //  E0  CPX #imm
+    CMP(REG_X, OPERAND_IMM),                        //  E0  CPX #imm
     nullptr,                                        //  E1  SBC ($nn,X)
     nullptr,                                        //  E2
     nullptr,                                        //  E3
-    nullptr,                                        //  E4  CPX $nn
+    CMP(REG_X, OPERAND_ZERPG),                      //  E4  CPX $nn
     nullptr,                                        //  E5  SBC $nn
     &Cpu6502::execIncDec<OPERAND_ZERPG, +1>,        //  E6  INC $nn
     nullptr,                                        //  E7
@@ -452,7 +459,7 @@ Cpu6502::s_cpuInstTable[256] = {
     nullptr,                                        //  E9  SBC #imm
     nullptr,                                        //  EA  NOP
     nullptr,                                        //  EB
-    nullptr,                                        //  EC  CPX $nnnn
+    CMP(REG_X, OPERAND_ABSOL),                      //  EC  CPX $nnnn
     nullptr,                                        //  ED  SBC $nnnn
     &Cpu6502::execIncDec<OPERAND_ABSOL, +1>,        //  EE  INC $nnnn
     nullptr,                                        //  EF
