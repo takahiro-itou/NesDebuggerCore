@@ -41,6 +41,8 @@ enum  IndexRegister  {
 template  <int IDXREG = IDX_REG_N, typename TMemMan = MemoryManager>
 struct  Absolute
 {
+    typedef     TMemMan     MemManType;
+
     GuestMemoryAddress
     getOperandAddress(
             const  OpeCode  uOperand,
@@ -103,6 +105,8 @@ struct  Absolute
 template <int IDXREG = IDX_REG_N, typename TMemMan = MemoryManager>
 struct  Immediate
 {
+    typedef     TMemMan     MemManType;
+
     RegType
     getOperandValue(
             const  OpeCode  uOperand,
@@ -125,6 +129,8 @@ struct  Immediate
 template  <int IDXREG = IDX_REG_N, typename TMemMan = MemoryManager>
 struct  Indirect
 {
+    typedef     TMemMan     MemManType;
+
     GuestMemoryAddress
     getOperandAddress(
             const  OpeCode  uOperand,
@@ -187,6 +193,8 @@ template  <
     typename TMemMan = MemoryManager>
 struct  IdxIndY
 {
+    typedef     TMemMan     MemManType;
+
     GuestMemoryAddress
     getOperandAddress(
             const  OpeCode  uOperand,
@@ -256,6 +264,8 @@ struct  IdxIndY
 template  <int IDXREG = IDX_REG_N, typename TMemMan = MemoryManager>
 struct  ZeroPage
 {
+    typedef     TMemMan     MemManType;
+
     GuestMemoryAddress
     getOperandAddress(
             const  OpeCode  uOperand,
