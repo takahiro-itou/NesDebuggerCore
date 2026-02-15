@@ -125,12 +125,48 @@ public:
 private:
 
     //----------------------------------------------------------------
+    /**   条件分岐命令。
+    **
+    **/
+    template  <RegType MSK, RegType FLG>
+    inline  InstExecResult
+    execBranch(
+            const  OpeCode  opeCode);
+
+    //----------------------------------------------------------------
     /**   フラグ操作（クリア）命令。
     **
     **/
     template  <RegType  VAL>
     inline  InstExecResult
-    clearFlag(
+    execClearFlag(
+            const  OpeCode  opeCode);
+
+    //----------------------------------------------------------------
+    /**   インクリメント、デクリメント命令。
+    **
+    **/
+    template  <typename AM, int VAL>
+    inline  InstExecResult
+    execIncDec(
+            const  OpeCode  opeCode);
+
+    //----------------------------------------------------------------
+    /**   インクリメント、デクリメント命令。
+    **
+    **/
+    template  <int REG, int VAL>
+    inline  InstExecResult
+    execIncDecReg(
+            const  OpeCode  opeCode);
+
+    //----------------------------------------------------------------
+    /**   ロード命令。
+    **
+    **/
+    template  <typename AM, int REG>
+    inline  InstExecResult
+    execLoad(
             const  OpeCode  opeCode);
 
     //----------------------------------------------------------------
@@ -139,8 +175,34 @@ private:
     **/
     template  <RegType  VAL>
     inline  InstExecResult
-    setFlag(
+    execSetFlag(
             const  OpeCode  opeCode);
+
+    //----------------------------------------------------------------
+    /**   ロード命令。
+    **
+    **/
+    template  <typename AM, int REG>
+    inline  InstExecResult
+    execStore(
+            const  OpeCode  opeCode);
+
+    //----------------------------------------------------------------
+    /**   レジスタ間転送命令。
+    **
+    **/
+    template  <int SRC, int TRG>
+    inline  InstExecResult
+    execTransfer(
+            const  OpeCode  opeCode);
+
+    //----------------------------------------------------------------
+    /**   フラグを設定する。
+    **
+    **/
+    inline  void
+    setupNZFlags(
+            const  RegType  value);
 
 //========================================================================
 //

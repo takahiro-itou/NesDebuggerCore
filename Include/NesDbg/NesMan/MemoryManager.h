@@ -146,6 +146,21 @@ public:
         return ( *ptr );
     }
 
+    //----------------------------------------------------------------
+    /**   メモリの内容を読みだす。
+    **
+    **/
+    template  <typename  T>
+    inline  void
+    writeMemory(
+            const   GuestMemoryAddress  gmAddr,
+            const   T                   wValue)  const
+    {
+        T * ptr = static_cast<T *>(getMemoryAddress(gmAddr));
+        (* ptr) = wValue;
+    }
+
+
 //========================================================================
 //
 //    Accessors.

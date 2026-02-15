@@ -69,6 +69,23 @@ enum class  InstExecResult
 
 //----------------------------------------------------------------
 /**
+**    フラグレジスタ。
+**/
+
+enum  StatusRegister  {
+    FLAG_N  = 0x80,     //  bit 7 : Negative
+    FLAG_V  = 0x40,     //  bit 6 : Overflow
+    FLAG_R  = 0x20,     //  bit 5 : Reserved
+    FLAG_B  = 0x10,     //  bit 4 : Break
+    FLAG_D  = 0x08,     //  bit 3 : Decimal
+    FLAG_I  = 0x04,     //  bit 2 : Interrupt
+    FLAG_Z  = 0x02,     //  bit 1 : Zero
+    FLAG_C  = 0x01,     //  bit 0 : Carry
+};
+
+
+//----------------------------------------------------------------
+/**
 **    レジスタを管理する構造体。
 **/
 

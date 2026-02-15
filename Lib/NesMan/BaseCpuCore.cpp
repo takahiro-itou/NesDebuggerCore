@@ -104,7 +104,7 @@ BaseCpuCore::doHardReset()
     mog_cpuRegs.X   = 0;
     mog_cpuRegs.Y   = 0;
     mog_cpuRegs.S   = 0xFF;
-    mog_cpuRegs.P   = 0;
+    mog_cpuRegs.P   = FLAG_R;
 
     mog_cpuInfo.totalCycles = 7;
     mog_cpuInfo.numOpeCodes = 0;
@@ -187,6 +187,18 @@ BaseCpuCore::setRegisters(
 //
 //    Public Member Functions.
 //
+
+//----------------------------------------------------------------
+//    現在のカウンタ情報を更新する。
+//
+
+ErrCode
+BaseCpuCore::updateCounters()
+{
+    mog_cpuInfo.totalCycles += mog_ctrStep.totalCycles;
+    mog_cpuInfo.numOpeCodes += mog_ctrStep.numOpeCodes;
+    return ( ErrCode::SUCCESS );
+}
 
 //========================================================================
 //

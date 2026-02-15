@@ -40,6 +40,7 @@ dist_noinst_data_files      +=  \
         ${extra_noinst_data_files}
 
 dist_noinst_header_files    +=  \
+        Cpu6502/AddressingMode.h        \
         Cpu6502/Cpu6502.h               \
         Cpu6502/Dis6502.h               \
         Cpu6502/Instructions.inl        \
