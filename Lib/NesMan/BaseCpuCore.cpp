@@ -188,6 +188,18 @@ BaseCpuCore::setRegisters(
 //    Public Member Functions.
 //
 
+//----------------------------------------------------------------
+//    現在のカウンタ情報を更新する。
+//
+
+ErrCode
+BaseCpuCore::updateCounters()
+{
+    mog_cpuInfo.totalCycles += mog_ctrStep.totalCycles;
+    mog_cpuInfo.numOpeCodes += mog_ctrStep.numOpeCodes;
+    return ( ErrCode::SUCCESS );
+}
+
 //========================================================================
 //
 //    Accessors.
