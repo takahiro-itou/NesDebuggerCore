@@ -276,6 +276,31 @@ Cpu6502::execLoad(
 }
 
 //----------------------------------------------------------------
+//    ポップ命令。
+//
+
+template  <TRegPtr TRGREG>
+inline  InstExecResult
+Cpu6502::execPull(const  OpeCode  opeCode)
+{
+    (mog_cpuRegs .* TRGREG) = popValue();
+    return ( InstExecResult::SUCCESS_CONTINUE );
+}
+
+//----------------------------------------------------------------
+//    プッシュ命令。
+//
+
+template  <TRegPtr SECREG>
+inline  InstExecResult
+Cpu6502::execPush(
+        const  OpeCode  opeCode)
+{
+    pushValue(mog_cpuRegs .* SECREG);
+    return ( InstExecResult::SUCCESS_CONTINUE );
+}
+
+//----------------------------------------------------------------
 //    リターン命令。
 //
 
@@ -365,7 +390,7 @@ Cpu6502::s_cpuInstTable[256] = {
     ORA(OPERAND_ZERPG),                             //  05  ORA $nn
     ASL(OPERAND_ZERPG),                             //  06  ASL $nn
     SLO(OPERAND_ZERPG),                             //  07  slo $nn
-    nullptr,                                        //  08  PHP
+    &Cpu6502::execPush<&RegBank::P>,                //  08  PHP
     ORA(OPERAND_IMM),                               //  09  ORA #imm
     ASL(OPERAND_REG_A),                             //  0A  ASL A
     nullptr,                                        //  0B  ANC #imm
@@ -394,8 +419,11 @@ Cpu6502::s_cpuInstTable[256] = {
 
     //  0x20 -- 2F  //
     &Cpu6502::execJsr,                              //  20  JSR
-    nullptr, nullptr, nullptr,  nullptr, nullptr, nullptr, nullptr,
-    nullptr, nullptr, nullptr, nullptr,  nullptr, nullptr, nullptr, nullptr,
+    nullptr, nullptr, nullptr,
+    nullptr, nullptr, nullptr, nullptr,
+    &Cpu6502::execPull<&RegBank::P>,                //  28  PLP
+    nullptr, nullptr, nullptr,
+    nullptr, nullptr, nullptr, nullptr,
 
     //  0x30 -- 3F  //
     &Cpu6502::execBranch<FLAG_N, FLAG_N>,           //  30  BMI r
@@ -408,7 +436,7 @@ Cpu6502::s_cpuInstTable[256] = {
     nullptr,                                        //  40  RTI
     nullptr, nullptr, nullptr,
     nullptr, nullptr, nullptr, nullptr,             //  44 - 47
-    nullptr,                                        //  48  PHA
+    &Cpu6502::execPush<&RegBank::A>,                //  48  PHA
     nullptr,                                        //  49  EOR #imm
     nullptr,                                        //  4A  LSR A
     nullptr,                                        //  4B
@@ -444,7 +472,7 @@ Cpu6502::s_cpuInstTable[256] = {
     ADC(OPERAND_ZERPG),                             //  65  ADC $nn,
     ROR(OPERAND_ZERPG),                             //  66  ROR $nn
     RRA(OPERAND_ZERPG),                             //  67  rra $nn
-    nullptr,                                        //  68  PLA
+    &Cpu6502::execPull<&RegBank::A>,                //  68  PLA
     ADC(OPERAND_IMM),                               //  69  ADC #imm
     ROR(OPERAND_REG_A),                             //  6A  ROR A
     ARR(OPERAND_IMM),                               //  6B  arr #imm

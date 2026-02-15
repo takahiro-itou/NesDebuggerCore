@@ -204,6 +204,23 @@ private:
             const  OpeCode  opeCode);
 
     //----------------------------------------------------------------
+    /**   ポップ命令。
+    **
+    **/
+    template  <TRegPtr TRGREG>
+    inline  InstExecResult
+    execPull(const  OpeCode  opeCode);
+
+    //----------------------------------------------------------------
+    /**   プッシュ命令。
+    **
+    **/
+    template  <TRegPtr SECREG>
+    inline  InstExecResult
+    execPush(
+            const  OpeCode  opeCode);
+
+    //----------------------------------------------------------------
     /**   リターン命令。
     **
     **/
