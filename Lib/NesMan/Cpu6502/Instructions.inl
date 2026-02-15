@@ -27,9 +27,9 @@
 #define     ADR_ZERO        Addres::ZeroPage<Addres::IDX_REG_N>
 #define     ADR_ZEROX       Addres::ZeroPage<Addres::IDX_REG_X>
 #define     ADR_ZEROY       Addres::ZeroPage<Addres::IDX_REG_Y>
-#define     ADR_ABSOL       Addres::Absolute<Addres::IDX_REG_N>
-#define     ADR_ABS_X       Addres::Absolute<Addres::IDX_REG_X>
-#define     ADR_ABS_Y       Addres::Absolute<Addres::IDX_REG_Y>
+#define     ADR_ABSOL       Addres::Absolute<&RegBank::Zr>
+#define     ADR_ABS_X       Addres::Absolute<&RegBank::X>
+#define     ADR_ABS_Y       Addres::Absolute<&RegBank::Y>
 #define     ADR_INDIR       Addres::Indirect<&RegBank::Zr>
 #define     ADR_IND_X       Addres::Indirect<&RegBank::X>
 #define     ADR_IND_Y       Addres::IdxIndY <&RegBank::Y>

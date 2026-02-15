@@ -38,7 +38,7 @@ enum  IndexRegister  {
 **    アブソリュートオペランド。
 **/
 
-template  <int IDXREG = IDX_REG_N, typename TMemMan = MemoryManager>
+template  <TRegPtr IDXREG = &RegBank::Zr, typename TMemMan = MemoryManager>
 struct  Absolute
 {
     typedef     TMemMan     MemManType;
@@ -50,7 +50,7 @@ struct  Absolute
             const  TMemMan  &manMem,
             ClockCount      &addCyc)  const
     {
-        return  getTargetAddress(uOperand, cpuRegs.X, cpuRegs.Y, addCyc);
+        return  getTargetAddress(uOperand, (cpuRegs .* IDXREG), addCyc);
     }
 
     RegType
@@ -61,30 +61,21 @@ struct  Absolute
             ClockCount      &addCyc)  const
     {
         const   GuestMemoryAddress  gmAddr
-            = getTargetAddress(uOperand, cpuRegs.X, cpuRegs.Y, addCyc);
+            = getTargetAddress(uOperand, (cpuRegs .* IDXREG), addCyc);
         return  manMem.template readMemory<RegType>(gmAddr);
     }
 
     GuestMemoryAddress
     getTargetAddress(
             const  OpeCode  uOperand,
-            const  RegType  rX,
-            const  RegType  rY,
+            const  RegType  regIdx,
             ClockCount      &addCyc)  const
     {
-        GuestMemoryAddress  regIdx  = 0;
-
-        switch ( IDXREG ) {
-        case  1:        //  $nnnn, X
-            regIdx  = rX;
-            break;
-        case  2:        //  $nnnn, Y
-            regIdx  = rY;
-            break;
-        default:        //  $nnnn
-            regIdx  = 0;
-            break;
+#if defined( _DEBUG )
+        if ( IDXREG == &RegBank::Zr ) {
+            assert( regIdx == 0 );
         }
+#endif
 
         const   GuestMemoryAddress  gmAddr  = (uOperand + regIdx) & 0xFFFF;
         addCyc  = ( (regIdx) > (uint8_t)(gmAddr) ) ? 1 : 0;
