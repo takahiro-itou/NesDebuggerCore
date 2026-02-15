@@ -178,6 +178,20 @@ private:
     **
     **/
     inline  InstExecResult
+    execJmpAbs(const  OpeCode  opeCode);
+
+    //----------------------------------------------------------------
+    /**   ジャンプ命令。
+    **
+    **/
+    inline  InstExecResult
+    execJmpIndirect(const  OpeCode  opeCode);
+
+    //----------------------------------------------------------------
+    /**   ジャンプ命令。
+    **
+    **/
+    inline  InstExecResult
     execJsr(const  OpeCode  opeCode);
 
     //----------------------------------------------------------------
@@ -188,6 +202,20 @@ private:
     inline  InstExecResult
     execLoad(
             const  OpeCode  opeCode);
+
+    //----------------------------------------------------------------
+    /**   リターン命令。
+    **
+    **/
+    inline  InstExecResult
+    execRti(const  OpeCode  opeCode);
+
+    //----------------------------------------------------------------
+    /**   リターン命令。
+    **
+    **/
+    inline  InstExecResult
+    execRts(const  OpeCode  opeCode);
 
     //----------------------------------------------------------------
     /**   フラグ操作（セット）命令。

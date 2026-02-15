@@ -194,6 +194,37 @@ Cpu6502::execIncDecReg(
 //
 
 inline  InstExecResult
+Cpu6502::execJmpAbs(const  OpeCode  opeCode)
+{
+    //  オペランドは 16 ビットの即値による          //
+    //  絶対番地指定なので、そのまま PC にコピー。  //
+    mog_cpuRegs.PC  = (opeCode & 0x0000FFFF);
+
+    return ( InstExecResult::SUCCESS_CONTINUE );
+}
+
+//----------------------------------------------------------------
+//    ジャンプ命令。
+//
+
+inline  InstExecResult
+Cpu6502::execJmpIndirect(const  OpeCode  opeCode)
+{
+    GuestMemoryAddress  gmL, gmH;
+    gmL = this->m_manMem.readMemory<BtByte>(opeCode & 0x000000FF);
+    gmH = this->m_manMem.readMemory<BtByte>(
+                ((opeCode & 0xFF00) << 8) | ((opeCode + 1) & 0x00FF)
+    );
+
+    mog_cpuRegs.PC  = ((gmH << 8) | gmL);
+    return ( InstExecResult::SUCCESS_CONTINUE );
+}
+
+//----------------------------------------------------------------
+//    ジャンプ命令。
+//
+
+inline  InstExecResult
 Cpu6502::execJsr(const  OpeCode  opeCode)
 {
     //  まず現在 PC をスタックに積むが、            //
@@ -205,11 +236,7 @@ Cpu6502::execJsr(const  OpeCode  opeCode)
     pushValue((pc >> 8) & 0x000000FF);
     pushValue((pc     ) & 0x000000FF);
 
-    //  オペランドは 16 ビットの即値による          //
-    //  絶対番地指定なので、そのまま PC にコピー。  //
-    mog_cpuRegs.PC  = (opeCode & 0x0000FFFF);
-
-    return ( InstExecResult::SUCCESS_CONTINUE );
+    return  execJmpAbs(opeCode);
 }
 
 //----------------------------------------------------------------
@@ -231,6 +258,30 @@ Cpu6502::execLoad(
     //  アドレスがページを跨いだ時等。   //
     mog_ctrStep.totalCycles += cyc;
 
+    return ( InstExecResult::SUCCESS_CONTINUE );
+}
+
+//----------------------------------------------------------------
+//    リターン命令。
+//
+
+inline  InstExecResult
+Cpu6502::execRti(const  OpeCode  opeCode)
+{
+    return ( InstExecResult::UNDEFINED_OPECODE );
+}
+
+//----------------------------------------------------------------
+//    リターン命令。
+//
+
+inline  InstExecResult
+Cpu6502::execRts(const  OpeCode  opeCode)
+{
+    mog_cpuRegs.PC  = popValue();
+    mog_cpuRegs.PC  |= (popValue() << 8);
+    ++ mog_cpuRegs.PC;
+    mog_cpuRegs.PC  &= 0x0000FFFF;
     return ( InstExecResult::SUCCESS_CONTINUE );
 }
 
@@ -316,20 +367,52 @@ Cpu6502::s_cpuInstTable[256] = {
 
     //  0x40 -- 4F  //
     nullptr,                                        //  40  RTI
-    nullptr, nullptr, nullptr,  nullptr, nullptr, nullptr, nullptr,
-    nullptr, nullptr, nullptr, nullptr,  nullptr, nullptr, nullptr, nullptr,
+    nullptr, nullptr, nullptr,
+    nullptr, nullptr, nullptr, nullptr,             //  44 - 47
+    nullptr,                                        //  48  PHA
+    nullptr,                                        //  49  EOR #imm
+    nullptr,                                        //  4A  LSR A
+    nullptr,                                        //  4B
+    &Cpu6502::execJmpAbs,                           //  4C  JMP $nnnn
+    nullptr,                                        //  4D  ADC $nnnn
+    nullptr,                                        //  4E  ROR $nnnn
+    nullptr,                                        //  4F  rra $nnnn
 
     //  0x50 -- 5F  //
     &Cpu6502::execBranch<FLAG_V, 0>,                //  50  BVC r
-    nullptr, nullptr, nullptr,  nullptr, nullptr, nullptr, nullptr,
+    nullptr,                                        //  51  EOR ($nn),Y
+    nullptr,                                        //  52  hlt
+    nullptr,                                        //  53  str ($nn),Y
+    nullptr,                                        //  54  dop $nn,X
+    nullptr,                                        //  55  EOR $nn,X
+    nullptr,                                        //  56  LSR $nn,X
+    nullptr,                                        //  57  sre $nn,X
     &Cpu6502::execClearFlag<0x04>,                  //  58  CLI
-    nullptr, nullptr, nullptr,
-    nullptr, nullptr, nullptr, nullptr,
+    nullptr,                                        //  59  EOR $nnnn,Y
+    nullptr,                                        //  5A  nop
+    nullptr,                                        //  5B  sre $nnnn,Y
+    nullptr,                                        //  5C  top $nnnn,X
+    nullptr,                                        //  5D  EOR $nnnn,X
+    nullptr,                                        //  5E  LSR $nnnn,X
+    nullptr,                                        //  5F  sre $nnnn,X
 
     //  0x60 -- 6F  //
-    nullptr,                                        //  60  RTS
-    nullptr, nullptr, nullptr,  nullptr, nullptr, nullptr, nullptr,
-    nullptr, nullptr, nullptr, nullptr,  nullptr, nullptr, nullptr, nullptr,
+    &Cpu6502::execRts,                              //  60  RTS
+    nullptr,                                        //  61  ADC $(nn,X)
+    nullptr,                                        //  62  hlt
+    nullptr,                                        //  63  rra $(nn,X)
+    nullptr,                                        //  64  dop $nn
+    nullptr,                                        //  65  ADC $nn,
+    nullptr,                                        //  66  ROR $nn
+    nullptr,                                        //  67  rra $nn
+    nullptr,                                        //  68  PLA
+    nullptr,                                        //  69  ADC #imm
+    nullptr,                                        //  6A  ROR A
+    nullptr,                                        //  6B  arr #imm
+    &Cpu6502::execJmpIndirect,                      //  6C  JMP ($nnnn)
+    nullptr,                                        //  6D  ADC $nnnn
+    nullptr,                                        //  6E  ROR $nnnn
+    nullptr,                                        //  6F  rra $nnnn
 
     //  0x70 -- 7F  //
     &Cpu6502::execBranch<FLAG_V, FLAG_V>,           //  70  BVS r
@@ -402,7 +485,7 @@ Cpu6502::s_cpuInstTable[256] = {
     &Cpu6502::execLoad<ADR_ZEROY, REG_X>,           //  B6  LDX $nn,Y
     nullptr,                                        //  B7
     &Cpu6502::execClearFlag<0x40>,                  //  B8  CLV
-    nullptr,                                        //  B9  LDA $nnnn,Y
+    &Cpu6502::execLoad<ADR_ABS_Y, REG_A>,           //  B9  LDA $nnnn,Y
     &Cpu6502::execTransfer<REG_S, REG_X>,           //  BA  TSX
     nullptr,                                        //  BB
     &Cpu6502::execLoad<ADR_ABS_X, REG_Y>,           //  BC  LDY $nnnn,X
