@@ -146,7 +146,7 @@ private:
     /**   インクリメント、デクリメント命令。
     **
     **/
-    template  <typename AM, int VAL>
+    template  <typename OPERAND, int VAL>
     inline  InstExecResult
     execIncDec(
             const  OpeCode  opeCode);

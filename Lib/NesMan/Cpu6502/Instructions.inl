@@ -35,20 +35,20 @@
 #define     ADR_IND_Y       Addres::IdxIndY <&RegBank::Y>
 
 //  オペランド
-#define     OPERAND_REG_A   RegisterOperand<&RegBank::A>
-#define     OPERAND_REG_X   RegisterOperand<&RegBank::X>
-#define     OPERAND_REG_Y   RegisterOperand<&RegBank::Y>
-#define     OPERAND_REG_S   RegisterOperand<&RegBank::S>
-#define     OPERAND_REG_P   RegisterOperand<&RegBank::P>
-#define     OPERAND_ZERPG   MemoryOperand< ADR_ZERO  >
-#define     OPERAND_ZEROX   MemoryOperand< ADR_ZEROX >
-#define     OPERAND_ZEROY   MemoryOperand< ADR_ZEROY >
-#define     OPERAND_ABSOL   MemoryOperand< ADR_ABSOL >
-#define     OPERAND_ABS_X   MemoryOperand< ADR_ABS_X >
-#define     OPERAND_ABS_Y   MemoryOperand< ADR_ABS_Y >
-#define     OPERAND_INDIR   MemoryOperand< ADR_INDIR >
-#define     OPERAND_IND_X   MemoryOperand< ADR_IDX_X >
-#define     OPERAND_IND_Y   MemoryOperand< ADR_IDX_Y >
+#define     OPERAND_REG_A   Addres::RegisterOperand<&RegBank::A>
+#define     OPERAND_REG_X   Addres::RegisterOperand<&RegBank::X>
+#define     OPERAND_REG_Y   Addres::RegisterOperand<&RegBank::Y>
+#define     OPERAND_REG_S   Addres::RegisterOperand<&RegBank::S>
+#define     OPERAND_REG_P   Addres::RegisterOperand<&RegBank::P>
+#define     OPERAND_ZERPG   Addres::MemoryOperand< ADR_ZERO  >
+#define     OPERAND_ZEROX   Addres::MemoryOperand< ADR_ZEROX >
+#define     OPERAND_ZEROY   Addres::MemoryOperand< ADR_ZEROY >
+#define     OPERAND_ABSOL   Addres::MemoryOperand< ADR_ABSOL >
+#define     OPERAND_ABS_X   Addres::MemoryOperand< ADR_ABS_X >
+#define     OPERAND_ABS_Y   Addres::MemoryOperand< ADR_ABS_Y >
+#define     OPERAND_INDIR   Addres::MemoryOperand< ADR_INDIR >
+#define     OPERAND_IND_X   Addres::MemoryOperand< ADR_IDX_X >
+#define     OPERAND_IND_Y   Addres::MemoryOperand< ADR_IDX_Y >
 
 //  対象レジスタ
 #define     REG_A           0
@@ -110,19 +110,19 @@ Cpu6502::execClearFlag(
 //    インクリメント、デクリメント命令。
 //
 
-template  <typename AM, int VAL>
+template  <typename OPERAND, int VAL>
 inline  InstExecResult
 Cpu6502::execIncDec(
         const  OpeCode  opeCode)
 {
-    ClockCount      cyc = 0;
-    const   GuestMemoryAddress  gmAddr  = AM().getOperandAddress(
-                opeCode, mog_cpuRegs, this->m_manMem, cyc);
+    ClockCount  cyc = 0;
 
-    BtByte  val = this->m_manMem.readMemory<BtByte>(gmAddr);
-    this->m_manMem.writeMemory<BtByte>(gmAddr, val);
+    OPERAND operand(opeCode, mog_cpuRegs, this->m_manMem, cyc);
+    RegType val = operand.readValue();
+
+    operand.writeValue(val);
     setupNZFlags(val += VAL);
-    this->m_manMem.writeMemory<BtByte>(gmAddr, val);
+    operand.writeValue(val);
 
     mog_ctrStep.totalCycles += cyc;
 
@@ -393,7 +393,7 @@ Cpu6502::s_cpuInstTable[256] = {
     nullptr,                                        //  C3
     nullptr,                                        //  C4  CPY $nn
     nullptr,                                        //  C5  CMP $nn
-    &Cpu6502::execIncDec<ADR_ZERO, -1>,             //  C6  DEC $nn
+    &Cpu6502::execIncDec<OPERAND_ZERPG, -1>,        //  C6  DEC $nn
     nullptr,                                        //  C7
     &Cpu6502::execIncDecReg<REG_Y, +1>,             //  C8  INY
     nullptr,                                        //  C9  CMP #imm
@@ -401,7 +401,7 @@ Cpu6502::s_cpuInstTable[256] = {
     nullptr,                                        //  CB
     nullptr,                                        //  CC  CPY $nnnn
     nullptr,                                        //  CD  CMP $nnnn
-    &Cpu6502::execIncDec<ADR_ABSOL, -1>,            //  CE  DEC $nnnn
+    &Cpu6502::execIncDec<OPERAND_ABSOL, -1>,        //  CE  DEC $nnnn
     nullptr,                                        //  CF
 
     //  0xD0 -- DF  //
@@ -411,7 +411,7 @@ Cpu6502::s_cpuInstTable[256] = {
     nullptr,                                        //  D3
     nullptr,                                        //  D4
     nullptr,                                        //  D5  CMP $nn,X
-    &Cpu6502::execIncDec<ADR_ZEROX, -1>,            //  D6  DEC $nn,X
+    &Cpu6502::execIncDec<OPERAND_ZEROX, -1>,        //  D6  DEC $nn,X
     nullptr,                                        //  D7
     &Cpu6502::execClearFlag<0x08>,                  //  D8  CLD
     nullptr,                                        //  D9  CMP $nnnn,Y
@@ -419,7 +419,7 @@ Cpu6502::s_cpuInstTable[256] = {
     nullptr,                                        //  DB
     nullptr,                                        //  DC
     nullptr,                                        //  DD  CMP $nnnn,X
-    &Cpu6502::execIncDec<ADR_ABS_X, -1>,            //  DE  DEC $nnnn,X
+    &Cpu6502::execIncDec<OPERAND_ABS_X, -1>,        //  DE  DEC $nnnn,X
     nullptr,                                        //  DF
 
     //  0xE0 -- EF  //
@@ -429,7 +429,7 @@ Cpu6502::s_cpuInstTable[256] = {
     nullptr,                                        //  E3
     nullptr,                                        //  E4  CPX $nn
     nullptr,                                        //  E5  SBC $nn
-    &Cpu6502::execIncDec<ADR_ZERO, +1>,             //  E6  INC $nn
+    &Cpu6502::execIncDec<OPERAND_ZERPG, +1>,        //  E6  INC $nn
     nullptr,                                        //  E7
     &Cpu6502::execIncDecReg<REG_X, +1>,             //  E8  INX
     nullptr,                                        //  E9  SBC #imm
@@ -437,7 +437,7 @@ Cpu6502::s_cpuInstTable[256] = {
     nullptr,                                        //  EB
     nullptr,                                        //  EC  CPX $nnnn
     nullptr,                                        //  ED  SBC $nnnn
-    &Cpu6502::execIncDec<ADR_ABSOL, +1>,            //  EE  INC $nnnn
+    &Cpu6502::execIncDec<OPERAND_ABSOL, +1>,        //  EE  INC $nnnn
     nullptr,                                        //  EF
 
     //  0xF0 -- FF  //
@@ -446,14 +446,14 @@ Cpu6502::s_cpuInstTable[256] = {
     nullptr, nullptr,
     nullptr,                                        //  F4
     nullptr,                                        //  F5  SBC $nn,X
-    &Cpu6502::execIncDec<ADR_ZEROX, +1>,            //  F6  INC $nn,X
+    &Cpu6502::execIncDec<OPERAND_ZEROX, +1>,        //  F6  INC $nn,X
     nullptr,                                        //  F7
     &Cpu6502::execSetFlag<0x08>,                    //  F8  SED
     nullptr,                                        //  F9  SBC $nnnn,Y
     nullptr, nullptr,
     nullptr,                                        //  FC
     nullptr,                                        //  FD  SBC $nnnn,X
-    &Cpu6502::execIncDec<ADR_ABS_X, +1>,            //  FE  INC $nnnn,X
+    &Cpu6502::execIncDec<OPERAND_ABS_X, +1>,        //  FE  INC $nnnn,X
     nullptr,                                        //  FF
 };
 

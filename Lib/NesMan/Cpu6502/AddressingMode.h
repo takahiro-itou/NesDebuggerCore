@@ -260,19 +260,19 @@ struct  MemoryOperand
 {
     typedef     typename  ADRMODE::MemManType   TMemMan;
 
-    GuestMemoryAddress      m_gmAddr;
     const   TMemMan       & m_manMem;
+    GuestMemoryAddress      m_gmAddr;
 
     MemoryOperand(
             const  OpeCode  uOperand,
             RegBank       & cpuRegs,
             const  TMemMan  &manMem,
             ClockCount      &addCyc)
-        : m_manMem(manMem)
+        : m_manMem(manMem),
+          m_gmAddr()
     {
         this->m_gmAddr  = ADRMODE().getOperandAddress(
-                uOperand, cpuRegs.X, cpuRegs.Y, cpuRegs.PC,
-                manMem, addCyc);
+                uOperand, cpuRegs, manMem, addCyc);
     }
 
     RegType
@@ -282,7 +282,7 @@ struct  MemoryOperand
     }
 
     void
-    wrtieValue(
+    writeValue(
             const  RegType  valNew)
     {
         m_manMem.template writeMemory<RegType>(m_gmAddr, valNew);
@@ -316,7 +316,7 @@ struct  RegisterOperand
     }
 
     void
-    wrtieValue(
+    writeValue(
             const  RegType  valNew)
     {
         (m_cpuRegs .* PTR)  = valNew;
