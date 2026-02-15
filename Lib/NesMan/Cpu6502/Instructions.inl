@@ -58,11 +58,11 @@
 #define     REG_S           &RegBank::S
 
 #define     CMP(reg, or2)   \
-    &Cpu6502::execArithmeticLogic<or2, ALU::OpeCMP, ALU::OpeNopR, 0, reg>
+    &Cpu6502::execArithLogic<or2, ALU::OpeCMP, ALU::OpeNopR, 0, reg>
 #define     CPX(or2)        \
-    &Cpu6502::execArithmeticLogic<or2, ALU::OpeCMP, ALU::OpeNopR, 0, REG_X>
+    &Cpu6502::execArithLogic<or2, ALU::OpeCMP, ALU::OpeNopR, 0, REG_X>
 #define     CPY(or2)        \
-    &Cpu6502::execArithmeticLogic<or2, ALU::OpeCMP, ALU::OpeNopR, 0, REG_Y>
+    &Cpu6502::execArithLogic<or2, ALU::OpeCMP, ALU::OpeNopR, 0, REG_Y>
 
 NESDBG_NAMESPACE_BEGIN
 namespace  NesMan  {
@@ -80,7 +80,7 @@ template  <
     typename OPERAND, typename CODE1, typename CODE2,
     int RMWW, TRegPtr REGPTR>
 inline  InstExecResult
-Cpu6502::execArithmeticLogic(
+Cpu6502::execArithLogic(
         const  OpeCode  opeCode)
 {
     ClockCount  cyc = 0;

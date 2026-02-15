@@ -134,7 +134,7 @@ private:
                int RMWW = 0,
                TRegPtr REGPTR = &RegBank::A>
     inline  InstExecResult
-    execArithmeticLogic(
+    execArithLogic(
             const  OpeCode  opeCode);
 
     //----------------------------------------------------------------
