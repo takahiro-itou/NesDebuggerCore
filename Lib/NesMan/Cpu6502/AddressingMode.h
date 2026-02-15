@@ -305,6 +305,49 @@ struct  ZeroPage
 };
 
 
+//========================================================================
+/**
+**    メモリオペランド。
+**/
+
+template  <typename ADRMODE>
+struct  MemoryOperand
+{
+    typedef     typename  ADRMODE::MemManType   TMemMan;
+
+    GuestMemoryAddress      m_gmAddr;
+    const   TMemMan       & m_manMem;
+
+    MemoryOperand(
+            const  OpeCode  uOperand,
+            const  RegType  rX,
+            const  RegType  rY,
+            const  RegType  rPC,
+            const  TMemMan  &manMem,
+            ClockCount      &addCyc)
+        : m_manMem(manMem)
+    {
+        this->m_gmAddr  = ADRMODE().getOperandAddress(
+                                uOperand, rX, rY, rPC,
+                                manMem, addCyc);
+    }
+
+    RegType
+    readValue()  const
+    {
+        return  m_manMem.template readMemory<RegType>(m_gmAddr);
+    }
+
+    void
+    wrtieValue(
+            const  RegType  valNew)
+    {
+        m_manMem.template writeMemory<RegType>(m_gmAddr, valNew);
+    }
+
+};
+
+
 }   //  End of namespace  Addres
 }   //  End of namespace  NesMan
 NESDBG_NAMESPACE_END
