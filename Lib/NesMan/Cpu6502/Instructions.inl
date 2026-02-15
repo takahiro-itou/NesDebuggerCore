@@ -66,6 +66,19 @@ namespace  {
 
 
 //----------------------------------------------------------------
+//    算術論理演算命令。
+//
+
+template  <typename OPERAND, int CODE1, int CODE2>
+inline  InstExecResult
+Cpu6502::execArithmeticLogic(
+        const  OpeCode  opeCode)
+{
+    return ( InstExecResult::UNDEFINED_OPECODE );
+}
+
+
+//----------------------------------------------------------------
 //    条件分岐命令。
 //
 
