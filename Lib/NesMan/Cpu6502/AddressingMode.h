@@ -46,26 +46,22 @@ struct  Absolute
     GuestMemoryAddress
     getOperandAddress(
             const  OpeCode  uOperand,
-            const  RegType  rX,
-            const  RegType  rY,
-            const  RegType  rPC,
+            const  RegBank  &cpuRegs,
             const  TMemMan  &manMem,
             ClockCount      &addCyc)  const
     {
-        return  getTargetAddress(uOperand, rX, rY, addCyc);
+        return  getTargetAddress(uOperand, cpuRegs.X, cpuRegs.Y, addCyc);
     }
 
     RegType
     getOperandValue(
             const  OpeCode  uOperand,
-            const  RegType  rX,
-            const  RegType  rY,
-            const  RegType  rPC,
+            const  RegBank  &cpuRegs,
             const  TMemMan  &manMem,
             ClockCount      &addCyc)  const
     {
         const   GuestMemoryAddress  gmAddr
-            = getTargetAddress(uOperand, rX, rY, addCyc);
+            = getTargetAddress(uOperand, cpuRegs.X, cpuRegs.Y, addCyc);
         return  manMem.template readMemory<RegType>(gmAddr);
     }
 
@@ -110,9 +106,7 @@ struct  Immediate
     RegType
     getOperandValue(
             const  OpeCode  uOperand,
-            const  RegType  rX,
-            const  RegType  rY,
-            const  RegType  rPC,
+            const  RegBank  &cpuRegs,
             const  TMemMan  &manMem,
             ClockCount      &addCyc)  const
     {
@@ -134,9 +128,7 @@ struct  Indirect
     GuestMemoryAddress
     getOperandAddress(
             const  OpeCode  uOperand,
-            const  RegType  rX,
-            const  RegType  rY,
-            const  RegType  rPC,
+            const  RegBank  &cpuRegs,
             const  TMemMan  &manMem,
             ClockCount      &addCyc)  const
     {
@@ -148,10 +140,10 @@ struct  Indirect
         BtByte  tmp = (uOperand & 0x000000FF);
         switch ( IDXREG ) {
         case  IDX_REG_X:
-            tmp += rX;
+            tmp += cpuRegs.X;
             break;
         case  IDX_REG_Y:    //  このモードは実在しない。
-            tmp += rY;
+            tmp += cpuRegs.Y;
             break;
         }
 
@@ -169,14 +161,12 @@ struct  Indirect
     RegType
     getOperandValue(
             const  OpeCode  uOperand,
-            const  RegType  rX,
-            const  RegType  rY,
-            const  RegType  rPC,
+            const  RegBank  &cpuRegs,
             const  TMemMan  &manMem,
             ClockCount      &addCyc)  const
     {
         GuestMemoryAddress  gmAddr  = getOperandAddress(
-                uOperand, rX, rY, rPC, manMem, addCyc);
+                uOperand, cpuRegs, manMem, addCyc);
         return  manMem.template readMemory<RegType>(gmAddr);
     }
 
@@ -198,9 +188,7 @@ struct  IdxIndY
     GuestMemoryAddress
     getOperandAddress(
             const  OpeCode  uOperand,
-            const  RegType  rX,
-            const  RegType  rY,
-            const  RegType  rPC,
+            const  RegBank  &cpuRegs,
             const  TMemMan  &manMem,
             ClockCount      &addCyc)  const
     {
@@ -219,10 +207,10 @@ struct  IdxIndY
 
         switch ( IDXREG ) {
         case  IDX_REG_Y:
-            gmAddr  += rY;
+            gmAddr  += cpuRegs.Y;
             break;
         case  IDX_REG_X:
-            gmAddr  += rX;
+            gmAddr  += cpuRegs.X;
             break;
         default:
             break;
@@ -242,14 +230,12 @@ struct  IdxIndY
     RegType
     getOperandValue(
             const  OpeCode  uOperand,
-            const  RegType  rX,
-            const  RegType  rY,
-            const  RegType  rPC,
+            const  RegBank  &cpuRegs,
             const  TMemMan  &manMem,
             ClockCount      &addCyc)  const
     {
         GuestMemoryAddress  gmAddr  =
-                getOperandAddress(uOperand, rX, rY, rPC, manMem, addCyc);
+                getOperandAddress(uOperand, cpuRegs, manMem, addCyc);
         return  manMem.template readMemory<RegType>(gmAddr);
     }
 
@@ -269,9 +255,7 @@ struct  ZeroPage
     GuestMemoryAddress
     getOperandAddress(
             const  OpeCode  uOperand,
-            const  RegType  rX,
-            const  RegType  rY,
-            const  RegType  rPC,
+            const  RegBank  &cpuRegs,
             const  TMemMan  &manMem,
             ClockCount      &addCyc)  const
     {
@@ -279,9 +263,9 @@ struct  ZeroPage
 
         switch ( IDXREG ) {
         case  IDX_REG_X:
-            return ( (uOperand + rX) & 0x000000FF );
+            return ( (uOperand + cpuRegs.X) & 0x000000FF );
         case  IDX_REG_Y:
-            return ( (uOperand + rY) & 0x000000FF );
+            return ( (uOperand + cpuRegs.Y) & 0x000000FF );
         }
 
         return ( uOperand & 0x000000FF );
@@ -290,15 +274,13 @@ struct  ZeroPage
     RegType
     getOperandValue(
             const  OpeCode  uOperand,
-            const  RegType  rX,
-            const  RegType  rY,
-            const  RegType  rPC,
+            const  RegBank  &cpuRegs,
             const  TMemMan  &manMem,
             ClockCount      &addCyc)  const
     {
         addCyc  = 0;
         GuestMemoryAddress  gmAddr  =
-                getOperandAddress(uOperand, rX, rY, rPC, manMem, addCyc);
+                getOperandAddress(uOperand, cpuRegs, manMem, addCyc);
         return  manMem.template readMemory<RegType>(gmAddr);
     }
 

@@ -101,9 +101,7 @@ Cpu6502::execIncDec(
 {
     ClockCount      cyc = 0;
     const   GuestMemoryAddress  gmAddr  = AM().getOperandAddress(
-                opeCode,
-                mog_cpuRegs.X, mog_cpuRegs.Y, mog_cpuRegs.PC,
-                this->m_manMem, cyc);
+                opeCode, mog_cpuRegs, this->m_manMem, cyc);
 
     BtByte  val = this->m_manMem.readMemory<BtByte>(gmAddr);
     this->m_manMem.writeMemory<BtByte>(gmAddr, val);
@@ -147,9 +145,7 @@ Cpu6502::execLoad(
 {
     ClockCount      cyc = 0;
     const  RegType  rOp = AM().getOperandValue(
-                opeCode,
-                mog_cpuRegs.X, mog_cpuRegs.Y, mog_cpuRegs.PC,
-                this->m_manMem, cyc);
+                opeCode, mog_cpuRegs, this->m_manMem, cyc);
     switch ( REG ) {
     case  REG_A:
         setupNZFlags(mog_cpuRegs.A = rOp);
@@ -193,9 +189,7 @@ Cpu6502::execStore(
 {
     ClockCount      cyc = 0;
     const  GuestMemoryAddress   gmAddr  = AM().getOperandAddress(
-            opeCode,
-            mog_cpuRegs.X, mog_cpuRegs.Y, mog_cpuRegs.PC,
-            this->m_manMem, cyc);
+            opeCode, mog_cpuRegs, this->m_manMem, cyc);
 
     switch ( REG ) {
     case  REG_A:
