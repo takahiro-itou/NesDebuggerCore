@@ -57,6 +57,16 @@
 #define     REG_Y           &RegBank::Y
 #define     REG_S           &RegBank::S
 
+#define     ASL(operand)    nullptr
+#define     ORA(operand)    nullptr
+#define     AND(operand)    nullptr
+#define     EOR(operand)    nullptr
+#define     ADC(operand)    nullptr
+#define     SBC(operand)    nullptr
+#define     SLO(operand)    nullptr
+#define     DOP(operand)    nullptr
+#define     TOP(operand)    nullptr
+
 #define     CMP(reg, or2)   \
     &Cpu6502::execArithLogic<or2, ALU::OpeCMP, ALU::OpeNopR, 0, reg>
 #define     CPX(or2)        \
@@ -343,15 +353,40 @@ Cpu6502::execTransfer(
 const   Cpu6502::FnInst
 Cpu6502::s_cpuInstTable[256] = {
     //  0x00 -- 0F  //
-    nullptr, nullptr, nullptr, nullptr,  nullptr, nullptr, nullptr, nullptr,
-    nullptr, nullptr, nullptr, nullptr,  nullptr, nullptr, nullptr, nullptr,
+    nullptr,                                        //  00  BRK
+    ORA(OPERAND_IND_X),                             //  01  ORA ($nn,X)
+    nullptr,                                        //  02  hlt
+    SLO(OPERAND_IND_X),                             //  03  slo ($nn,X)
+    DOP(OPERAND_ZERPG),                             //  04  dop $nn
+    ORA(OPERAND_ZERPG),                             //  05  ORA $nn
+    ASL(OPERAND_ZERPG),                             //  06  ASL $nn
+    SLO(OPERAND_ZERPG),                             //  07  slo $nn
+    nullptr,                                        //  08  PHP
+    ORA(OPERAND_IMM),                               //  09  ORA #imm
+    ASL(OPERAND_REG_A),                             //  0A  ASL A
+    nullptr,                                        //  0B  ANC #imm
+    TOP(OPERAND_ABSOL),                             //  0C  TOP $nnnn
+    ORA(OPERAND_ABSOL),                             //  0D  ORA $nnnn
+    ASL(OPERAND_ABSOL),                             //  0E  ASL $nnnn
+    SLO(OPERAND_ABSOL),                             //  0F  slo $nnnn
 
     //  0x10 -- 1F  //
     &Cpu6502::execBranch<FLAG_N, 0>,                //  10  BPL r
-    nullptr, nullptr, nullptr,  nullptr, nullptr, nullptr, nullptr,
+    ORA(OPERAND_IND_Y),                             //  11  ORA ($nn),Y
+    nullptr,                                        //  12  hlt
+    SLO(OPERAND_IND_Y),                             //  13  slo ($nn),Y
+    DOP(OPERAND_ZEROX),                             //  14  DOP $nn,X
+    ORA(OPERAND_ZEROX),                             //  15  ORA $nn,X
+    ASL(OPERAND_ZEROX),                             //  16  ASL $nn,X
+    SLO(OPERAND_ZEROX),                             //  17  SLO $nn,X
     &Cpu6502::execClearFlag<0x01>,                  //  18  CLC
-    nullptr, nullptr, nullptr,
-    nullptr, nullptr, nullptr, nullptr,
+    ORA(OPERAND_ABS_Y),                             //  19  ORA $nnnn,Y
+    nullptr,                                        //  1A  nop
+    SLO(OPERAND_ABS_Y),                             //  1B  slo $nnnn,Y
+    TOP(OPERAND_ABS_X),                             //  1C  top $nnnn,X
+    ORA(OPERAND_ABS_X),                             //  1D  ORA $nnnn,X
+    ASL(OPERAND_ABS_X),                             //  1E  ASL $nnnn,X
+    SLO(OPERAND_ABS_X),                             //  1F  ASL,$nnnn,X
 
     //  0x20 -- 2F  //
     &Cpu6502::execJsr,                              //  20  JSR
