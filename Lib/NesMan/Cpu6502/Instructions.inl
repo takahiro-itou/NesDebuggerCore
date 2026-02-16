@@ -59,28 +59,33 @@
 
 #define     ADC(operand)    \
     &Cpu6502::execArithLogic<operand, ALU::OpeADC, ALU::OpeNopR, 0, REG_A>
-#define     ANC(operand)    nullptr
 #define     AND(operand)    nullptr
-#define     ANE(operand)    nullptr
-#define     ALR(operand)    nullptr
-#define     ARR(operand)    nullptr
 #define     ASL(operand)    nullptr
 #define     BIT(operand)    nullptr
 #define     BRK             nullptr
-#define     DOP(operand)    nullptr
+#define     CMP(or2, reg)   \
+    &Cpu6502::execArithLogic<or2, ALU::OpeCMP, ALU::OpeNopR, 0, reg>
 #define     EOR(operand)    nullptr
-#define     UND_HLT         nullptr
-#define     ISB(operand)    nullptr
 #define     LSR(operand)    nullptr
-#define     UND_NOP         nullptr
 #define     ORA(operand)    nullptr
-#define     RLA(operand)    nullptr
 #define     ROL(operand)    nullptr
 #define     ROR(operand)    nullptr
-#define     RRA(operand)    nullptr
-#define     SAX(operand)    nullptr
 #define     SBC(operand)    \
     &Cpu6502::execArithLogic<operand, ALU::OpeSBC, ALU::OpeNopR, 0, REG_A>
+
+#define     ANC(operand)    nullptr
+#define     ANE(operand)    nullptr
+#define     ALR(operand)    nullptr
+#define     ARR(operand)    nullptr
+
+#define     DOP(operand)    nullptr
+#define     UND_HLT         nullptr
+#define     ISB(operand)    nullptr
+#define     LAX(operand)    nullptr
+#define     UND_NOP         nullptr
+#define     RLA(operand)    nullptr
+#define     RRA(operand)    nullptr
+#define     SAX(operand)    nullptr
 #define     SHA(operand)    nullptr
 #define     SHS(operand)    nullptr
 #define     SHX(operand)    nullptr
@@ -90,8 +95,6 @@
 #define     STR(operand)    nullptr
 #define     TOP(operand)    nullptr
 
-#define     CMP(or2, reg)   \
-    &Cpu6502::execArithLogic<or2, ALU::OpeCMP, ALU::OpeNopR, 0, reg>
 #define     CPX(or2)        \
     &Cpu6502::execArithLogic<or2, ALU::OpeCMP, ALU::OpeNopR, 0, REG_X>
 #define     CPY(or2)        \
