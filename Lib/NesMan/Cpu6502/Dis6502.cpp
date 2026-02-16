@@ -378,6 +378,8 @@ Dis6502::writeIndirectJump(
         char  *  const  dst,
         const  size_t   remLen)  const
 {
+    const   GuestMemoryAddress  gmAddr  = (opeCode >> 8) & 0xFFFF;
+    return  snprintf(dst, remLen, "($%04X)", gmAddr);
 }
 
 //----------------------------------------------------------------
@@ -392,6 +394,8 @@ Dis6502::writePostIndexIndirect(
         const  char     regName,
         const  RegType  idxReg)  const
 {
+    const   GuestMemoryAddress  gmAddr  = (opeCode >> 8) & 0x00FF;
+    return  snprintf(dst, remLen, "($%02X),%c", gmAddr, regName);
 }
 
 //----------------------------------------------------------------
@@ -406,6 +410,8 @@ Dis6502::writePreIndexIndirect(
         const  char     regName,
         const  RegType  idxReg)  const
 {
+    const   GuestMemoryAddress  gmAddr  = (opeCode >> 8) & 0x00FF;
+    return  snprintf(dst, remLen, "($%02X,%c)", gmAddr, regName);
 }
 
 //----------------------------------------------------------------
@@ -418,6 +424,8 @@ Dis6502::writeRelative(
         char  *  const  dst,
         const  size_t   remLen)  const
 {
+    const   GuestMemoryAddress  gmAddr  = (opeCode >> 8) & 0x00FF;
+    return  snprintf(dst, remLen, "$%02X", gmAddr);
 }
 
 //----------------------------------------------------------------
