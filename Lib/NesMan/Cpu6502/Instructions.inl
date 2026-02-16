@@ -67,6 +67,7 @@
     &Cpu6502::execArithLogic<or2, ALU::OpeCMP, ALU::OpeNopR, 0, reg>
 #define     EOR(operand)    nullptr
 #define     LSR(operand)    nullptr
+#define     NOP             nullptr
 #define     ORA(operand)    nullptr
 #define     ROL(operand)    nullptr
 #define     ROR(operand)    nullptr
@@ -668,7 +669,7 @@ Cpu6502::s_cpuInstTable[256] = {
     ISB(OPERAND_ZERPG),                             //  E7  isb $nn
     &Cpu6502::execIncDecReg<REG_X, +1>,             //  E8  INX
     SBC(OPERAND_IMM),                               //  E9  SBC #imm
-    nullptr,                                        //  EA  NOP
+    NOP,                                            //  EA  NOP
     SBC(OPERAND_IMM),                               //  EB  sbc $imm
     CMP(OPERAND_ABSOL, REG_X),                      //  EC  CPX $nnnn
     SBC(OPERAND_ABSOL),                             //  ED  SBC $nnnn
@@ -678,7 +679,7 @@ Cpu6502::s_cpuInstTable[256] = {
     //  0xF0 -- FF  //
     &Cpu6502::execBranch<FLAG_Z, FLAG_Z>,           //  F0  BEQ r
     SBC(OPERAND_IND_Y),                             //  F1  SBC ($nn),Y
-    nullptr,                                        //  F2  hlt
+    UND_HLT,                                        //  F2  hlt
     ISB(OPERAND_IND_Y),                             //  F3  isb ($nn),Y
     DOP(OPERAND_ZEROX),                             //  F4  dop $nn,X
     SBC(OPERAND_ZEROX),                             //  F5  SBC $nn,X
@@ -686,7 +687,7 @@ Cpu6502::s_cpuInstTable[256] = {
     ISB(OPERAND_ZEROX),                             //  F7  isb $nn,X
     &Cpu6502::execSetFlag<0x08>,                    //  F8  SED
     SBC(OPERAND_ABS_Y),                             //  F9  SBC $nnnn,Y
-    nullptr,                                        //  FA  nop
+    UND_NOP,                                        //  FA  nop
     ISB(OPERAND_ABS_Y),                             //  FB  isb $nnnn,Y
     TOP(OPERAND_ABS_X),                             //  FC  top $nnnn,X
     SBC(OPERAND_ABS_X),                             //  FD  SBC $nnnn,X
