@@ -584,31 +584,31 @@ Cpu6502::s_cpuInstTable[256] = {
     SHA(OPERAND_ABS_Y),                             //  9F  sha $nnnn,Y
 
     //  0xA0 -- AF  //
-    &Cpu6502::execLoad<ADR_IMM, REG_Y>,             //  A0  LDY #
+    &Cpu6502::execLoad<ADR_IMM, REG_Y>,             //  A0  LDY #imm
     &Cpu6502::execLoad<ADR_IND_X, REG_A>,           //  A1  LDA ($nn,X)
-    &Cpu6502::execLoad<ADR_IMM, REG_X>,             //  A2  LDX #
-    nullptr,                                        //  A3
+    &Cpu6502::execLoad<ADR_IMM, REG_X>,             //  A2  LDX #imm
+    LAX(OPERAND_IND_X),                             //  A3  lax ($nn,X)
     &Cpu6502::execLoad<ADR_ZERO, REG_Y>,            //  A4  LDY <$nn
     &Cpu6502::execLoad<ADR_ZERO, REG_A>,            //  A5  LDA <$nn
     &Cpu6502::execLoad<ADR_ZERO, REG_X>,            //  A6  LDX <$nn
-    nullptr,                                        //  A7
+    LAX(OPERAND_ZERPG),                             //  A7  lax <$nn
     &Cpu6502::execTransfer<REG_A, REG_Y>,           //  A8  TAY
-    &Cpu6502::execLoad<ADR_IMM, REG_A>,             //  A9  LDA #
+    &Cpu6502::execLoad<ADR_IMM, REG_A>,             //  A9  LDA #imm
     &Cpu6502::execTransfer<REG_A, REG_X>,           //  AA  TAX
-    nullptr,                                        //  AB
+    LAX(OPERAND_IMM),                               //  AB  lax #imm
     &Cpu6502::execLoad<ADR_ABSOL, REG_Y>,           //  AC  LDY $nnnn
     &Cpu6502::execLoad<ADR_ABSOL, REG_A>,           //  AD  LDA $nnnn
     &Cpu6502::execLoad<ADR_ABSOL, REG_X>,           //  AE  LDX $nnnn
-    nullptr,                                        //  AF
+    LAX(OPERAND_ABSOL),                             //  AF  lax $nnnn
 
     //  0xB0 -- BF  //
     &Cpu6502::execBranch<FLAG_C, FLAG_C>,           //  B0  BCS r
     &Cpu6502::execLoad<ADR_IND_Y, REG_A>,           //  B1  LDA ($nn),Y
     nullptr,                                        //  B2
     nullptr,                                        //  B3
-    &Cpu6502::execLoad<ADR_ZEROX, REG_Y>,           //  B4  LDY $nn,X
-    &Cpu6502::execLoad<ADR_ZEROX, REG_A>,           //  B5  LDA $nn,X
-    &Cpu6502::execLoad<ADR_ZEROY, REG_X>,           //  B6  LDX $nn,Y
+    &Cpu6502::execLoad<ADR_ZEROX, REG_Y>,           //  B4  LDY <$nn,X
+    &Cpu6502::execLoad<ADR_ZEROX, REG_A>,           //  B5  LDA <$nn,X
+    &Cpu6502::execLoad<ADR_ZEROY, REG_X>,           //  B6  LDX <$nn,Y
     nullptr,                                        //  B7
     &Cpu6502::execClearFlag<0x40>,                  //  B8  CLV
     &Cpu6502::execLoad<ADR_ABS_Y, REG_A>,           //  B9  LDA $nnnn,Y
@@ -620,13 +620,13 @@ Cpu6502::s_cpuInstTable[256] = {
     nullptr,                                        //  BF
 
     //  0xC0 -- CF  //
-    CMP(OPERAND_IMM,   REG_Y),                      //  C0  CPY #
+    CMP(OPERAND_IMM,   REG_Y),                      //  C0  CPY #imm
     CMP(OPERAND_IND_X, REG_A),                      //  C1  CMP ($nn,X)
     nullptr,                                        //  C2
     nullptr,                                        //  C3
-    CMP(OPERAND_ZERPG, REG_Y),                      //  C4  CPY $nn
-    CMP(OPERAND_ZERPG, REG_A),                      //  C5  CMP $nn
-    &Cpu6502::execIncDec<OPERAND_ZERPG, -1>,        //  C6  DEC $nn
+    CMP(OPERAND_ZERPG, REG_Y),                      //  C4  CPY <$nn
+    CMP(OPERAND_ZERPG, REG_A),                      //  C5  CMP <$nn
+    &Cpu6502::execIncDec<OPERAND_ZERPG, -1>,        //  C6  DEC <$nn
     nullptr,                                        //  C7
     &Cpu6502::execIncDecReg<REG_Y, +1>,             //  C8  INY
     CMP(OPERAND_IMM,   REG_A),                      //  C9  CMP #imm
