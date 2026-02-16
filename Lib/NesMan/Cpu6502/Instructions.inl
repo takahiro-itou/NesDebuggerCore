@@ -641,21 +641,21 @@ Cpu6502::s_cpuInstTable[256] = {
 
     //  0xD0 -- DF  //
     &Cpu6502::execBranch<FLAG_Z, 0>,                //  D0  BNE r
-    CMP(OPERAND_IND_Y, REG_A),                      //  D1  CMP $(nn),Y
-    nullptr,                                        //  D2
-    nullptr,                                        //  D3
-    nullptr,                                        //  D4
-    CMP(OPERAND_ZEROX, REG_A),                      //  D5  CMP $nn,X
-    &Cpu6502::execIncDec<OPERAND_ZEROX, -1>,        //  D6  DEC $nn,X
-    nullptr,                                        //  D7
+    CMP(OPERAND_IND_Y, REG_A),                      //  D1  CMP ($nn),Y
+    UND_HLT,                                        //  D2  hlt
+    DCP(OPERAND_IND_Y),                             //  D3  dcp ($nn),Y
+    DOP(OPERAND_ZEROX),                             //  D4  dop <$nn,X
+    CMP(OPERAND_ZEROX, REG_A),                      //  D5  CMP <$nn,X
+    &Cpu6502::execIncDec<OPERAND_ZEROX, -1>,        //  D6  DEC <$nn,X
+    DCP(OPERAND_ZEROX),                             //  D7  DCP <$nn,X
     &Cpu6502::execClearFlag<0x08>,                  //  D8  CLD
     CMP(OPERAND_ABS_Y, REG_A),                      //  D9  CMP $nnnn,Y
-    nullptr,                                        //  DA
-    nullptr,                                        //  DB
-    nullptr,                                        //  DC
+    UND_NOP,                                        //  DA  nop
+    DCP(OPERAND_ABS_Y),                             //  DB  dcp $nnnn,Y
+    TOP(OPERAND_ABS_X),                             //  DC  top $nnnn,X
     CMP(OPERAND_ABS_X, REG_A),                      //  DD  CMP $nnnn,X
     &Cpu6502::execIncDec<OPERAND_ABS_X, -1>,        //  DE  DEC $nnnn,X
-    nullptr,                                        //  DF
+    DCP(OPERAND_ABS_X),                             //  DF  dcp $nnnn,x
 
     //  0xE0 -- EF  //
     CMP(OPERAND_IMM, REG_X),                        //  E0  CPX #imm
