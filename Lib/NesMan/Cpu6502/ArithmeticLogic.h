@@ -203,7 +203,7 @@ struct  OpeSBC
         flg |= (res ? 0 : FLAG_Z);
         flg |= checkOverflowSub(lhs, rhs, res);
         flg |= checkCarrySub(lhs, rhs, res);
-        return ( lhs );
+        return ( res );
     }
 };
 
