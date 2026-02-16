@@ -259,7 +259,9 @@ Dis6502::writeMnemonic(
 
     switch ( adr ) {
     case  AddressingMode::AM_IMP:
+        break;
     case  AddressingMode::AM_ACC:
+        len = snprintf(dst, rem, "A");
         break;
     case  AddressingMode::AM_IMM:
         len = writeImmediage(opeCode, dst, rem);
@@ -283,11 +285,16 @@ Dis6502::writeMnemonic(
         len = writeAbsolute(opeCode, dst, rem, 'Y', 0);
         break;
     case  AddressingMode::AM_IDX:
+        len = writePreIndexIndirect (opeCode, dst, rem, 'X', 0);
+        break;
     case  AddressingMode::AM_IDY:
+        len = writePostIndexIndirect(opeCode, dst, rem, 'Y', 0);
         break;
     case  AddressingMode::AM_REL:
+        len = writeRelative(opeCode, dst, rem);
         break;
     case  AddressingMode::AM_IND:
+        len = writeIndirectJump(opeCode, dst, rem);
         break;
     default:
         break;
@@ -359,6 +366,58 @@ Dis6502::writeImmediage(
         const  size_t   remLen)  const
 {
     return  snprintf(dst, remLen, "#$%02X", (opeCode >> 8) & 0x00FF);
+}
+
+//----------------------------------------------------------------
+//    インダイレクトジャンプ。
+//
+
+inline  size_t
+Dis6502::writeIndirectJump(
+        const  OpeCode  opeCode,
+        char  *  const  dst,
+        const  size_t   remLen)  const
+{
+}
+
+//----------------------------------------------------------------
+//    インダイレクトオペランドを表示する。
+//
+
+inline  size_t
+Dis6502::writePostIndexIndirect(
+        const  OpeCode  opeCode,
+        char  *  const  dst,
+        const  size_t   remLen,
+        const  char     regName,
+        const  RegType  idxReg)  const
+{
+}
+
+//----------------------------------------------------------------
+//    インダイレクトオペランドを表示する。
+//
+
+inline  size_t
+Dis6502::writePreIndexIndirect(
+        const  OpeCode  opeCode,
+        char  *  const  dst,
+        const  size_t   remLen,
+        const  char     regName,
+        const  RegType  idxReg)  const
+{
+}
+
+//----------------------------------------------------------------
+//    相対アドレスオペランドを表示する。
+//
+
+inline  size_t
+Dis6502::writeRelative(
+        const  OpeCode  opeCode,
+        char  *  const  dst,
+        const  size_t   remLen)  const
+{
 }
 
 //----------------------------------------------------------------
