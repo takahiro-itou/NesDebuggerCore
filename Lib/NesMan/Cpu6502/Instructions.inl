@@ -61,6 +61,7 @@
     &Cpu6502::execArithLogic<operand, ALU::OpeADC, ALU::OpeNopR, 0, REG_A>
 #define     ANC(operand)    nullptr
 #define     AND(operand)    nullptr
+#define     ANE(operand)    nullptr
 #define     ALR(operand)    nullptr
 #define     ARR(operand)    nullptr
 #define     ASL(operand)    nullptr
@@ -80,6 +81,10 @@
 #define     SAX(operand)    nullptr
 #define     SBC(operand)    \
     &Cpu6502::execArithLogic<operand, ALU::OpeSBC, ALU::OpeNopR, 0, REG_A>
+#define     SHA(operand)    nullptr
+#define     SHS(operand)    nullptr
+#define     SHX(operand)    nullptr
+#define     SHY(operand)    nullptr
 #define     SLO(operand)    nullptr
 #define     SRE(operand)    nullptr
 #define     STR(operand)    nullptr
@@ -549,31 +554,31 @@ Cpu6502::s_cpuInstTable[256] = {
     &Cpu6502::execStore<ADR_ZERO, REG_X>,           //  86  STX <$nn
     SAX(OPERAND_ZERPG),                             //  87  sax <$nn
     &Cpu6502::execIncDecReg<REG_Y, -1>,             //  88  DEY
-    nullptr,                                        //  89
+    DOP(OPERAND_IMM),                               //  89  dop #imm
     &Cpu6502::execTransfer<REG_X, REG_A>,           //  8A  TXA
-    nullptr,                                        //  8B
+    ANE(OPERAND_IMM),                               //  8B  ane #imm
     &Cpu6502::execStore<ADR_ABSOL, REG_Y>,          //  8C  STY $nnnn
     &Cpu6502::execStore<ADR_ABSOL, REG_A>,          //  8D  STA $nnnn
     &Cpu6502::execStore<ADR_ABSOL, REG_X>,          //  8E  STX $nnnn
-    nullptr,                                        //  8F
+    SAX(OPERAND_ABSOL),                             //  8F  sax $nnnn
 
     //  0x90 -- 9F  //
     &Cpu6502::execBranch<FLAG_C, 0>,                //  90  BCC r
     &Cpu6502::execStore<ADR_IND_Y, REG_A>,          //  91  STA ($nn),Y
-    nullptr,                                        //  92
-    nullptr,                                        //  93
-    &Cpu6502::execStore<ADR_ZEROX, REG_Y>,          //  94  STY $nn X
-    &Cpu6502::execStore<ADR_ZEROX, REG_A>,          //  95  STA $nn X
-    &Cpu6502::execStore<ADR_ZEROY, REG_X>,          //  96  STX $nn Y
-    nullptr,                                        //  97
+    UND_HLT,                                        //  92  hlt
+    SHA(OPERAND_IND_Y),                             //  93  sha ($nn),Y
+    &Cpu6502::execStore<ADR_ZEROX, REG_Y>,          //  94  STY <$nn,X
+    &Cpu6502::execStore<ADR_ZEROX, REG_A>,          //  95  STA <$nn,X
+    &Cpu6502::execStore<ADR_ZEROY, REG_X>,          //  96  STX <$nn,Y
+    SAX(OPERAND_ZEROY),                             //  97  sax <$nn,Y
     &Cpu6502::execTransfer<REG_Y, REG_A>,           //  98  TYA
-    &Cpu6502::execStore<ADR_ABS_Y, REG_A>,          //  99  STA $nnnn Y
+    &Cpu6502::execStore<ADR_ABS_Y, REG_A>,          //  99  STA $nnnn,Y
     &Cpu6502::execTransfer<REG_X, REG_S>,           //  9A  TXS
-    nullptr,                                        //  9B
-    nullptr,                                        //  9C
-    &Cpu6502::execStore<ADR_ABS_X, REG_A>,          //  9D  STA $nnnn X
-    nullptr,                                        //  9E
-    nullptr,                                        //  9F
+    SHS(OPERAND_ABS_Y),                             //  9B  shs $nnnn,Y
+    SHY(OPERAND_ABS_X),                             //  9C  shy $nnnn,X
+    &Cpu6502::execStore<ADR_ABS_X, REG_A>,          //  9D  STA $nnnn,X
+    SHX(OPERAND_ABS_Y),                             //  9E  shx $nnnn,Y
+    SHA(OPERAND_ABS_Y),                             //  9F  sha $nnnn,Y
 
     //  0xA0 -- AF  //
     &Cpu6502::execLoad<ADR_IMM, REG_Y>,             //  A0  LDY #
