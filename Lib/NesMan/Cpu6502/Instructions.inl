@@ -77,7 +77,7 @@
 #define     ANE(operand)    nullptr
 #define     ALR(operand)    nullptr
 #define     ARR(operand)    nullptr
-
+#define     DCP(operand)    nullptr
 #define     DOP(operand)    nullptr
 #define     UND_HLT         nullptr
 #define     ISB(operand)    nullptr
@@ -87,6 +87,7 @@
 #define     RLA(operand)    nullptr
 #define     RRA(operand)    nullptr
 #define     SAX(operand)    nullptr
+#define     SBX(operand)    nullptr
 #define     SHA(operand)    nullptr
 #define     SHS(operand)    nullptr
 #define     SHX(operand)    nullptr
@@ -623,20 +624,20 @@ Cpu6502::s_cpuInstTable[256] = {
     //  0xC0 -- CF  //
     CMP(OPERAND_IMM,   REG_Y),                      //  C0  CPY #imm
     CMP(OPERAND_IND_X, REG_A),                      //  C1  CMP ($nn,X)
-    nullptr,                                        //  C2
-    nullptr,                                        //  C3
+    DOP(OPERAND_IMM),                               //  C2  dop $imm
+    DCP(OPERAND_IND_X),                             //  C3  DCP ($nn,X)
     CMP(OPERAND_ZERPG, REG_Y),                      //  C4  CPY <$nn
     CMP(OPERAND_ZERPG, REG_A),                      //  C5  CMP <$nn
     &Cpu6502::execIncDec<OPERAND_ZERPG, -1>,        //  C6  DEC <$nn
-    nullptr,                                        //  C7
+    DCP(OPERAND_ZERPG),                             //  C7  DCP <$nn
     &Cpu6502::execIncDecReg<REG_Y, +1>,             //  C8  INY
     CMP(OPERAND_IMM,   REG_A),                      //  C9  CMP #imm
     &Cpu6502::execIncDecReg<REG_X, -1>,             //  CA  DEX
-    nullptr,                                        //  CB
+    SBX(OPERAND_IMM),                               //  sbx #imm
     CMP(OPERAND_ABSOL, REG_Y),                      //  CC  CPY $nnnn
     CMP(OPERAND_ABSOL, REG_A),                      //  CD  CMP $nnnn
     &Cpu6502::execIncDec<OPERAND_ABSOL, -1>,        //  CE  DEC $nnnn
-    nullptr,                                        //  CF
+    DCP(OPERAND_ABSOL),                             //  CF  DCP $nnnn
 
     //  0xD0 -- DF  //
     &Cpu6502::execBranch<FLAG_Z, 0>,                //  D0  BNE r
