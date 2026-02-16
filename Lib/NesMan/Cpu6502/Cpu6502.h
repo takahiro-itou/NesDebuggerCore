@@ -125,6 +125,19 @@ public:
 private:
 
     //----------------------------------------------------------------
+    /**   算術論理演算命令。
+    **
+    **/
+    template  <typename OPERAND,
+               typename CODE1,
+               typename CODE2,
+               int RMWW = 0,
+               TRegPtr REGPTR = &RegBank::A>
+    inline  InstExecResult
+    execArithLogic(
+            const  OpeCode  opeCode);
+
+    //----------------------------------------------------------------
     /**   条件分岐命令。
     **
     **/
@@ -146,7 +159,7 @@ private:
     /**   インクリメント、デクリメント命令。
     **
     **/
-    template  <typename AM, int VAL>
+    template  <typename OPERAND, int VAL>
     inline  InstExecResult
     execIncDec(
             const  OpeCode  opeCode);
@@ -155,19 +168,71 @@ private:
     /**   インクリメント、デクリメント命令。
     **
     **/
-    template  <int REG, int VAL>
+    template  <TRegPtr REG, int VAL>
     inline  InstExecResult
     execIncDecReg(
             const  OpeCode  opeCode);
 
     //----------------------------------------------------------------
+    /**   ジャンプ命令。
+    **
+    **/
+    inline  InstExecResult
+    execJmpAbs(const  OpeCode  opeCode);
+
+    //----------------------------------------------------------------
+    /**   ジャンプ命令。
+    **
+    **/
+    inline  InstExecResult
+    execJmpIndirect(const  OpeCode  opeCode);
+
+    //----------------------------------------------------------------
+    /**   ジャンプ命令。
+    **
+    **/
+    inline  InstExecResult
+    execJsr(const  OpeCode  opeCode);
+
+    //----------------------------------------------------------------
     /**   ロード命令。
     **
     **/
-    template  <typename AM, int REG>
+    template  <typename AM, TRegPtr REG>
     inline  InstExecResult
     execLoad(
             const  OpeCode  opeCode);
+
+    //----------------------------------------------------------------
+    /**   ポップ命令。
+    **
+    **/
+    template  <TRegPtr TRGREG>
+    inline  InstExecResult
+    execPull(const  OpeCode  opeCode);
+
+    //----------------------------------------------------------------
+    /**   プッシュ命令。
+    **
+    **/
+    template  <TRegPtr SECREG>
+    inline  InstExecResult
+    execPush(
+            const  OpeCode  opeCode);
+
+    //----------------------------------------------------------------
+    /**   リターン命令。
+    **
+    **/
+    inline  InstExecResult
+    execRti(const  OpeCode  opeCode);
+
+    //----------------------------------------------------------------
+    /**   リターン命令。
+    **
+    **/
+    inline  InstExecResult
+    execRts(const  OpeCode  opeCode);
 
     //----------------------------------------------------------------
     /**   フラグ操作（セット）命令。
@@ -182,7 +247,7 @@ private:
     /**   ロード命令。
     **
     **/
-    template  <typename AM, int REG>
+    template  <typename AM, TRegPtr REG>
     inline  InstExecResult
     execStore(
             const  OpeCode  opeCode);
@@ -191,10 +256,25 @@ private:
     /**   レジスタ間転送命令。
     **
     **/
-    template  <int SRC, int TRG>
+    template  <TRegPtr SRCREG, TRegPtr TRGREG>
     inline  InstExecResult
     execTransfer(
             const  OpeCode  opeCode);
+
+    //----------------------------------------------------------------
+    /**   スタックからデータを取り出す。
+    **
+    **/
+    inline  const   RegType
+    popValue();
+
+    //----------------------------------------------------------------
+    /**   スタックにデータを積む。
+    **
+    **/
+    inline  void
+    pushValue(
+            const  RegType  value);
 
     //----------------------------------------------------------------
     /**   フラグを設定する。
