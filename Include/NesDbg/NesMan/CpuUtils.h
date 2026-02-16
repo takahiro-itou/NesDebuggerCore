@@ -91,15 +91,28 @@ enum  StatusRegister  {
 
 struct  RegBank
 {
-    /**  プログラムカウンタ。   **/
-    GuestMemoryAddress  PC;
+    RegType     Zr;     /**<  番兵。        **/
 
     RegType     A;      /**<  A レジスタ。  **/
     RegType     X;      /**<  X レジスタ。  **/
     RegType     Y;      /**<  Y レジスタ。  **/
     RegType     S;      /**<  S レジスタ。  **/
     RegType     P;      /**<  ステータスレジスタ。  **/
+
+    RegType     rs0;    /**<  予約。アライメント調整。  **/
+    RegType     rs1;    /**<  予約。アライメント調整。  **/
+
+    /**  プログラムカウンタ。   **/
+    GuestMemoryAddress  PC;
 };
+
+
+//----------------------------------------------------------------
+/**
+**    レジスタ構造体の特定のレジスタを指すポインタ型。
+**/
+
+typedef     RegType (RegBank::* TRegPtr);
 
 
 //----------------------------------------------------------------
