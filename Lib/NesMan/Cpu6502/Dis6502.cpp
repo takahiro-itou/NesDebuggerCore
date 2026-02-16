@@ -20,9 +20,12 @@
 
 #include    "NesDbg/pch/PreCompile.h"
 
-#include    "NesDbg/NesMan/MemoryManager.h"
-
 #include    "Dis6502.h"
+
+#include    "NesDbg/NesMan/BaseCpuCore.h"
+#include    "NesDbg/NesMan/MemoryManager.h"
+#include    "NesDbg/NesMan/NesManager.h"
+
 #include    "InstTable.h"
 
 #include    <cstring>
@@ -211,6 +214,10 @@ Dis6502::writeMnemonic(
     size_t  rem = sizeof(buf) - 1;
     char *  dst = buf;
 
+    //  現時点でのレジスタのコピーを取得する。  //
+    RegBank         cpuRegs;
+    this->m_pManNes->getCurrentCpu().getRegisters(cpuRegs);
+
     const uint32_t  opeCode = this->m_pManMem->readMemory<uint32_t>(gmAddr);
     const MnemonicMap *  oc = dis6502Mnemonics;
     for ( ; (opeCode & oc->mask) != oc->cval; ++ oc );
@@ -270,28 +277,28 @@ Dis6502::writeMnemonic(
         len = writeZeroPage(opeCode, dst, rem, ' ', 0);
         break;
     case  AddressingMode::AM_ZPX:
-        len = writeZeroPage(opeCode, dst, rem, 'X', 0);
+        len = writeZeroPage(opeCode, dst, rem, 'X', cpuRegs.X);
         break;
     case  AddressingMode::AM_ZPY:
-        len = writeZeroPage(opeCode, dst, rem, 'Y', 0);
+        len = writeZeroPage(opeCode, dst, rem, 'Y', cpuRegs.Y);
         break;
     case  AddressingMode::AM_ABS:
         len = writeAbsolute(opeCode, dst, rem, ' ', 0);
         break;
     case  AddressingMode::AM_ABX:
-        len = writeAbsolute(opeCode, dst, rem, 'X', 0);
+        len = writeAbsolute(opeCode, dst, rem, 'X', cpuRegs.X);
         break;
     case  AddressingMode::AM_ABY:
-        len = writeAbsolute(opeCode, dst, rem, 'Y', 0);
+        len = writeAbsolute(opeCode, dst, rem, 'Y', cpuRegs.Y);
         break;
     case  AddressingMode::AM_IDX:
-        len = writePreIndexIndirect (opeCode, dst, rem, 'X', 0);
+        len = writePreIndexIndirect (opeCode, dst, rem, 'X', cpuRegs.X);
         break;
     case  AddressingMode::AM_IDY:
-        len = writePostIndexIndirect(opeCode, dst, rem, 'Y', 0);
+        len = writePostIndexIndirect(opeCode, dst, rem, 'Y', cpuRegs.Y);
         break;
     case  AddressingMode::AM_REL:
-        len = writeRelative(opeCode, dst, rem);
+        len = writeRelative(opeCode, dst, rem, gmNext);
         break;
     case  AddressingMode::AM_IND:
         len = writeIndirectJump(opeCode, dst, rem);
@@ -351,8 +358,15 @@ Dis6502::writeAbsolute(
         const  char     regName,
         const  RegType  idxReg)  const
 {
-    const   GuestMemoryAddress  gmAddr  = (opeCode >> 8) & 0xFFFF;
-    return  snprintf(dst, remLen, "$%04X %c", gmAddr, regName);
+    const   GuestMemoryAddress  gmShow  = (opeCode >> 8) & 0x0000FFFF;
+    const   GuestMemoryAddress  gmAddr  = (gmShow + idxReg) & 0x0000FFFF;
+    const   BtByte  cv  = this->m_pManMem->peekMemory<BtByte>(gmAddr);
+
+    return  snprintf(dst, remLen, "$%04X%c%c @ $%04X = #$%02X",
+                    gmShow, (regName != ' ' ? ',' : ' '), regName,
+                    gmAddr, cv
+    );
+
 }
 
 //----------------------------------------------------------------
@@ -378,8 +392,8 @@ Dis6502::writeIndirectJump(
         char  *  const  dst,
         const  size_t   remLen)  const
 {
-    const   GuestMemoryAddress  gmAddr  = (opeCode >> 8) & 0xFFFF;
-    return  snprintf(dst, remLen, "($%04X)", gmAddr);
+    const   GuestMemoryAddress  gmShow  = (opeCode >> 8) & 0xFFFF;
+    return  snprintf(dst, remLen, "($%04X)", gmShow);
 }
 
 //----------------------------------------------------------------
@@ -394,8 +408,8 @@ Dis6502::writePostIndexIndirect(
         const  char     regName,
         const  RegType  idxReg)  const
 {
-    const   GuestMemoryAddress  gmAddr  = (opeCode >> 8) & 0x00FF;
-    return  snprintf(dst, remLen, "($%02X),%c", gmAddr, regName);
+    const   GuestMemoryAddress  gmShow  = (opeCode >> 8) & 0x000000FF;
+    return  snprintf(dst, remLen, "($%02X),%c", gmShow, regName);
 }
 
 //----------------------------------------------------------------
@@ -410,8 +424,8 @@ Dis6502::writePreIndexIndirect(
         const  char     regName,
         const  RegType  idxReg)  const
 {
-    const   GuestMemoryAddress  gmAddr  = (opeCode >> 8) & 0x00FF;
-    return  snprintf(dst, remLen, "($%02X,%c)", gmAddr, regName);
+    const   GuestMemoryAddress  gmShow  = (opeCode >> 8) & 0x000000FF;
+    return  snprintf(dst, remLen, "($%02X,%c)", gmShow, regName);
 }
 
 //----------------------------------------------------------------
@@ -422,10 +436,13 @@ inline  size_t
 Dis6502::writeRelative(
         const  OpeCode  opeCode,
         char  *  const  dst,
-        const  size_t   remLen)  const
+        const  size_t   remLen,
+        GuestMemoryAddress  regPC)  const
 {
-    const   GuestMemoryAddress  gmAddr  = (opeCode >> 8) & 0x00FF;
-    return  snprintf(dst, remLen, "$%02X", gmAddr);
+    const   GuestMemoryAddress  gmOffs  = (opeCode >> 8) & 0x00FF;
+    const   GuestMemoryAddress  gmAddr  =
+        (regPC & 0xFF00) | ((regPC + gmOffs) & 0x00FF);
+    return  snprintf(dst, remLen, "$%04X  ; $%02X", gmAddr, gmOffs);
 }
 
 //----------------------------------------------------------------
@@ -440,8 +457,14 @@ Dis6502::writeZeroPage(
         const  char     regName,
         const  RegType  idxReg)  const
 {
-    const   GuestMemoryAddress  gmAddr  = (opeCode >> 8) & 0x00FF;
-    return  snprintf(dst, remLen, "<$%02X %c", gmAddr, regName);
+    const   GuestMemoryAddress  gmShow  = (opeCode >> 8) & 0x000000FF;
+    const   GuestMemoryAddress  gmAddr  = (gmShow + idxReg) & 0x000000FF;
+    const   BtByte  cv  = this->m_pManMem->peekMemory<BtByte>(gmAddr);
+
+    return  snprintf(dst, remLen, "<$%02X%c%c @ $%02X = #$%02X",
+                    gmShow, (regName != ' ' ? ',' : ' '), regName,
+                    gmAddr, cv
+    );
 }
 
 //========================================================================

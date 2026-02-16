@@ -185,7 +185,8 @@ private:
     writeRelative(
             const  OpeCode  opeCode,
             char  *  const  dst,
-            const  size_t   remLen)  const;
+            const  size_t   remLen,
+            GuestMemoryAddress  regPC)  const;
 
     //----------------------------------------------------------------
     /**   ゼロページオペランドを表示する。
