@@ -81,6 +81,7 @@
 #define     DOP(operand)    nullptr
 #define     UND_HLT         nullptr
 #define     ISB(operand)    nullptr
+#define     LAS(operand)    nullptr
 #define     LAX(operand)    nullptr
 #define     UND_NOP         nullptr
 #define     RLA(operand)    nullptr
@@ -604,20 +605,20 @@ Cpu6502::s_cpuInstTable[256] = {
     //  0xB0 -- BF  //
     &Cpu6502::execBranch<FLAG_C, FLAG_C>,           //  B0  BCS r
     &Cpu6502::execLoad<ADR_IND_Y, REG_A>,           //  B1  LDA ($nn),Y
-    nullptr,                                        //  B2
-    nullptr,                                        //  B3
+    UND_HLT,                                        //  B2  hlt
+    LAX(OPERAND_IND_Y),                             //  B3  lax ($nn),Y
     &Cpu6502::execLoad<ADR_ZEROX, REG_Y>,           //  B4  LDY <$nn,X
     &Cpu6502::execLoad<ADR_ZEROX, REG_A>,           //  B5  LDA <$nn,X
     &Cpu6502::execLoad<ADR_ZEROY, REG_X>,           //  B6  LDX <$nn,Y
-    nullptr,                                        //  B7
+    LAX(OPERAND_ZEROY),                             //  B7  lax <$nn,Y
     &Cpu6502::execClearFlag<0x40>,                  //  B8  CLV
     &Cpu6502::execLoad<ADR_ABS_Y, REG_A>,           //  B9  LDA $nnnn,Y
     &Cpu6502::execTransfer<REG_S, REG_X>,           //  BA  TSX
-    nullptr,                                        //  BB
+    LAS(OPERAND_ABS_Y),                             //  BB  las $nnnn,Y
     &Cpu6502::execLoad<ADR_ABS_X, REG_Y>,           //  BC  LDY $nnnn,X
     &Cpu6502::execLoad<ADR_ABS_X, REG_A>,           //  BD  LDA $nnnn,X
     &Cpu6502::execLoad<ADR_ABS_Y, REG_X>,           //  BE  LDX $nnnn,Y
-    nullptr,                                        //  BF
+    LAX(OPERAND_ABS_Y),                             //  BF  lax $nnnn,Y
 
     //  0xC0 -- CF  //
     CMP(OPERAND_IMM,   REG_Y),                      //  C0  CPY #imm
