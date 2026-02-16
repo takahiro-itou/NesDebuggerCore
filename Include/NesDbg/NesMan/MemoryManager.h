@@ -134,6 +134,19 @@ public:
             const   GuestMemoryAddress  gmAddr)  const;
 
     //----------------------------------------------------------------
+    /**   メモリの内容を覗く。
+    **
+    **/
+    template  <typename  T>
+    inline  const  T
+    peekMemory(
+            const   GuestMemoryAddress  gmAddr)  const
+    {
+        const T  *  ptr = static_cast<const T *>(getMemoryAddress(gmAddr));
+        return ( *ptr );
+    }
+
+    //----------------------------------------------------------------
     /**   メモリの内容を読みだす。
     **
     **/
