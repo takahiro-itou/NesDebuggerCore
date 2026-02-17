@@ -68,7 +68,10 @@
 #define     BRK             nullptr
 #define     CMP(or2, reg)   \
     &Cpu6502::execArithLogic<or2, ALU::OpeCMP, ALU::OpeNopR, 0, reg>
+
 #define     EOR(operand)    nullptr
+    &Cpu6502::execArithLogic<operand, ALU::OpeEOR, ALU::OpeNopR, 0, REG_A>
+
 #define     LSR(operand)    nullptr
 #define     NOP             nullptr
 #define     ORA(operand)    \
