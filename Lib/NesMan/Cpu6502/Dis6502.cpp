@@ -306,7 +306,7 @@ Dis6502::writeMnemonic(
         len = writePostIndexIndirect(opeCode, dst, rem, 'Y', cpuRegs.Y);
         break;
     case  AddressingMode::AM_REL:
-        len = writeRelative(opeCode, dst, rem, gmNext);
+        len = writeRelative(opeCode, dst, rem, gmNext, cpuRegs.P);
         break;
     case  AddressingMode::AM_IND:
         len = writeJumpIndirect(opeCode, dst, rem);
@@ -458,12 +458,39 @@ Dis6502::writeRelative(
         const  OpeCode  opeCode,
         char  *  const  dst,
         const  size_t   remLen,
-        GuestMemoryAddress  regPC)  const
+        GuestMemoryAddress  regPC,
+        const  RegType  regFlag)  const
 {
+    int     flg = 2;
+    const  char  tbl[3] = { 'F', 'T', '?' };
+
+    switch ( (opeCode >> 5) & 0x07 ) {
+    case  0:        //  BPL
+        flg = ((regFlag & FLAG_N) ? 0 : 1);     break;
+    case  1:        //  BMI
+        flg = ((regFlag & FLAG_N) ? 1 : 0);     break;
+    case  2:        //  BVC
+        flg = ((regFlag & FLAG_V) ? 0 : 1);     break;
+    case  3:        //  BVS
+        flg = ((regFlag & FLAG_V) ? 1 : 0);     break;
+    case  4:        //  BCC
+        flg = ((regFlag & FLAG_C) ? 0 : 1);     break;
+    case  5:        //  BCS
+        flg = ((regFlag & FLAG_C) ? 1 : 0);     break;
+    case  6:        //  BNE
+        flg = ((regFlag & FLAG_Z) ? 0 : 1);     break;
+    case  7:        //  BEQ
+        flg = ((regFlag & FLAG_Z) ? 1 : 0);     break;
+    default:
+        flg = 2;
+    }
+
     const   GuestMemoryAddress  gmOffs  = (opeCode >> 8) & 0x00FF;
     const   GuestMemoryAddress  gmAddr  =
         (regPC & 0xFF00) | ((regPC + gmOffs) & 0x00FF);
-    return  snprintf(dst, remLen, "$%04X  ; $%02X", gmAddr, gmOffs);
+    return  snprintf(dst, remLen, "$%04X  ; $%02X (%c)",
+                    gmAddr, gmOffs, tbl[flg]
+    );
 }
 
 //----------------------------------------------------------------

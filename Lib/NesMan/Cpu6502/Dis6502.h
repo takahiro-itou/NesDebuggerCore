@@ -196,7 +196,8 @@ private:
             const  OpeCode  opeCode,
             char  *  const  dst,
             const  size_t   remLen,
-            GuestMemoryAddress  regPC)  const;
+            GuestMemoryAddress  regPC,
+            const  RegType  regFlag)  const;
 
     //----------------------------------------------------------------
     /**   ゼロページオペランドを表示する。
