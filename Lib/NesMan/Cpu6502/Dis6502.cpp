@@ -301,7 +301,7 @@ Dis6502::writeMnemonic(
         len = writeRelative(opeCode, dst, rem, gmNext);
         break;
     case  AddressingMode::AM_IND:
-        len = writeIndirectJump(opeCode, dst, rem);
+        len = writeJumpIndirect(opeCode, dst, rem);
         break;
     default:
         break;
@@ -366,7 +366,6 @@ Dis6502::writeAbsolute(
                     gmShow, (regName != ' ' ? ',' : ' '), regName,
                     gmAddr, cv
     );
-
 }
 
 //----------------------------------------------------------------
@@ -383,11 +382,26 @@ Dis6502::writeImmediage(
 }
 
 //----------------------------------------------------------------
+//    絶対番地ジャンプ。
+//
+
+inline  size_t
+Dis6502::writeJumpAbsolute(
+        const  OpeCode  opeCode,
+        char  *  const  dst,
+        const  size_t   remLen)  const
+{
+    const   GuestMemoryAddress  gmShow  = (opeCode >> 8) & 0x0000FFFF;
+
+    return  snprintf(dst, remLen, "$%04X", gmShow);
+}
+
+//----------------------------------------------------------------
 //    インダイレクトジャンプ。
 //
 
 inline  size_t
-Dis6502::writeIndirectJump(
+Dis6502::writeJumpIndirect(
         const  OpeCode  opeCode,
         char  *  const  dst,
         const  size_t   remLen)  const

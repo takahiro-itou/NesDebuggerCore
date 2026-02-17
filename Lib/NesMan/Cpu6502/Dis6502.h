@@ -144,11 +144,21 @@ private:
             const  size_t   remLen)  const;
 
     //----------------------------------------------------------------
+    /**   絶対番地ジャンプ。
+    **
+    **/
+    inline  size_t
+    writeJumpAbsolute(
+            const  OpeCode  opeCode,
+            char  *  const  dst,
+            const  size_t   remLen)  const;
+
+    //----------------------------------------------------------------
     /**   インダイレクトジャンプ。
     **
     **/
     inline  size_t
-    writeIndirectJump(
+    writeJumpIndirect(
             const  OpeCode  opeCode,
             char  *  const  dst,
             const  size_t   remLen)  const;
