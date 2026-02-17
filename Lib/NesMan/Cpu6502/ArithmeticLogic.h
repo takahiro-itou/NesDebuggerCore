@@ -278,6 +278,24 @@ struct  OpeASL
 //--------------------------------------------------------------
 //    オペコード 001xxx10 : ROL
 
+struct  OpeROL
+{
+    const   RegType
+    operator()(
+            RegType     val,
+            RegType   & flg)
+    {
+        const  RegType  cy  = (val >> 7);
+        val = ((val << 1) | (flg & FLAG_C));
+
+        flg &= ~(FLAG_N | FLAG_Z | FLAG_C);
+        flg |= cy;
+        SET_NZ_FLAGS(flg, val);
+
+        return ( val );
+    }
+};
+
 //--------------------------------------------------------------
 //    オペコード 010xxx10 : LSR
 
