@@ -144,6 +144,62 @@ private:
             const  size_t   remLen)  const;
 
     //----------------------------------------------------------------
+    /**   絶対番地ジャンプ。
+    **
+    **/
+    inline  size_t
+    writeJumpAbsolute(
+            const  OpeCode  opeCode,
+            char  *  const  dst,
+            const  size_t   remLen)  const;
+
+    //----------------------------------------------------------------
+    /**   インダイレクトジャンプ。
+    **
+    **/
+    inline  size_t
+    writeJumpIndirect(
+            const  OpeCode  opeCode,
+            char  *  const  dst,
+            const  size_t   remLen)  const;
+
+    //----------------------------------------------------------------
+    /**   インダイレクトオペランドを表示する。
+    **
+    **/
+    inline  size_t
+    writePostIndexIndirect(
+            const  OpeCode  opeCode,
+            char  *  const  dst,
+            const  size_t   remLen,
+            const  char     regName,
+            const  RegType  idxReg)  const;
+
+    //----------------------------------------------------------------
+    /**   インダイレクトオペランドを表示する。
+    **
+    **/
+    inline  size_t
+    writePreIndexIndirect(
+            const  OpeCode  opeCode,
+            char  *  const  dst,
+            const  size_t   remLen,
+            const  char     regName,
+            const  RegType  idxReg)  const;
+
+    //----------------------------------------------------------------
+    /**   相対アドレスオペランドを表示する。
+    **
+    **/
+    inline  size_t
+    writeRelative(
+            const  OpeCode  opeCode,
+            char  *  const  dst,
+            const  size_t   remLen,
+            GuestMemoryAddress  regPC,
+            const  RegType  regFlag)  const;
+
+    //----------------------------------------------------------------
     /**   ゼロページオペランドを表示する。
     **
     **/
