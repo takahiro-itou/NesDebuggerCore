@@ -84,7 +84,9 @@
 #define     ROL(operand)    \
     &Cpu6502::execArithLogic<operand, ALU::OpeNopL, ALU::OpeROL, 1>
 
-#define     ROR(operand)    nullptr
+#define     ROR(operand)    \
+    &Cpu6502::execArithLogic<operand, ALU::OpeNopL, ALU::OpeROR, 1>
+
 #define     SBC(operand)    \
     &Cpu6502::execArithLogic<operand, ALU::OpeSBC, ALU::OpeNopR, 0, REG_A>
 

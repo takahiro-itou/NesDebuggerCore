@@ -285,7 +285,7 @@ struct  OpeROL
             RegType     val,
             RegType   & flg)
     {
-        const  RegType  cy  = (val >> 7);
+        const  RegType  cy  = (val >> 7) & FLAG_C;
         val = ((val << 1) | (flg & FLAG_C));
 
         flg &= ~(FLAG_N | FLAG_Z | FLAG_C);
@@ -316,6 +316,24 @@ struct  OpeLSR
 
 //--------------------------------------------------------------
 //    オペコード 011xxx10 : ROR
+
+struct  OpeROR
+{
+    const   RegType
+    operator()(
+            RegType     val,
+            RegType   & flg)
+    {
+        const  RegType  cy  = (val & FLAG_C);
+        val = ((val >> 1) | ((flg & FLAG_C) << 7));
+
+        flg &= ~(FLAG_N | FLAG_Z | FLAG_C);
+        flg |= cy;
+        SET_NZ_FLAGS(flg, val);
+
+        return ( val );
+    }
+};
 
 //--------------------------------------------------------------
 //    オペコード 100xxx10 : STX (別途実装)
