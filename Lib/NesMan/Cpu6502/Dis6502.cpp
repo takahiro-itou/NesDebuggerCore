@@ -222,13 +222,14 @@ Dis6502::writeMnemonic(
     const MnemonicMap *  oc = dis6502Mnemonics;
     for ( ; (opeCode & oc->mask) != oc->cval; ++ oc );
 
-    const  BtByte   opSize  = g_opeCodeSize[opeCode & 0x000000FF];
+    const  OpeCode  ocInst  = (opeCode & 0x000000FF);
+    const  BtByte   opSize  = g_opeCodeSize[ocInst];
     const  AddressingMode::ModeValues
-        adr = AddressingMode::g_opeCodeAddrs[opeCode & 0x000000FF];
+        adr = AddressingMode::g_opeCodeAddrs[ocInst];
 
     gmNext  = gmAddr + opSize;
 
-    len = snprintf(dst, rem, "%04X:   %02X", gmAddr, (opeCode & 0xFF));
+    len = snprintf(dst, rem, "%04X:   %02X", gmAddr, ocInst);
     dst += len;
     rem -= len;
 
@@ -283,6 +284,10 @@ Dis6502::writeMnemonic(
         len = writeZeroPage(opeCode, dst, rem, 'Y', cpuRegs.Y);
         break;
     case  AddressingMode::AM_ABS:
+        if ( (ocInst == 0x20) || (ocInst == 0x4C) ) {
+            len = writeJumpAbsolute(opeCode, dst, rem);
+            break;
+        }
         len = writeAbsolute(opeCode, dst, rem, ' ', 0);
         break;
     case  AddressingMode::AM_ABX:
@@ -392,7 +397,6 @@ Dis6502::writeJumpAbsolute(
         const  size_t   remLen)  const
 {
     const   GuestMemoryAddress  gmShow  = (opeCode >> 8) & 0x0000FFFF;
-
     return  snprintf(dst, remLen, "$%04X", gmShow);
 }
 
