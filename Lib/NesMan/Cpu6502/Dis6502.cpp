@@ -229,7 +229,10 @@ Dis6502::writeMnemonic(
 
     gmNext  = gmAddr + opSize;
 
-    len = snprintf(dst, rem, "%c%04X:  %02X", ' ', gmAddr, ocInst);
+    len = snprintf(dst, rem, "  %04X:  %02X", gmAddr, ocInst);
+    if ( gmAddr == cpuRegs.PC ) {
+        dst[0] = '>';
+    }
     dst += len;
     rem -= len;
 
