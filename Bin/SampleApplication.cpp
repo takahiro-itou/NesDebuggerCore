@@ -51,7 +51,7 @@ int  main(int argc, char * argv[])
 
     NesMan::InstExecResult  ret = NesMan::InstExecResult::SUCCESS_CONTINUE;
     NesMan::CounterInfo     ci;
-    GuestMemoryAddress      gmNext  = 0;
+    GuestMemoryAddress      pcPrev, pcNext  = 0;
     ClockCount  cnt     = 0;
 
     //  最初のレジスタをダンプ。    //
@@ -61,9 +61,9 @@ int  main(int argc, char * argv[])
 
     //  最初の命令を逆アセンブル。    //
     std::cout   <<  "Mnemonic:\t"  <<  cnt  <<  "\n";
-    gmNext  = manNes.getNextPC();
+    pcNext = pcPrev = manNes.getNextPC();
     for ( int i = 0; i < 8; ++i ) {
-        manNes.writeMnemonic(std::cout, gmNext, gmNext)
+        manNes.writeMnemonic(std::cout, pcNext, pcNext)
                 <<  std::endl;
     }
 
@@ -79,11 +79,12 @@ int  main(int argc, char * argv[])
 
         //  次の命令を逆アセンブル。    //
         std::cout   <<  "Mnemonic:\t"  <<  cnt  <<  "\n";
-        gmNext  = manNes.getNextPC();
+        pcNext  = pcPrev;
         for ( int i = 0; i < 8; ++i ) {
-            manNes.writeMnemonic(std::cout, gmNext, gmNext)
+            manNes.writeMnemonic(std::cout, pcNext, pcNext)
                     <<  std::endl;
         }
+        pcPrev  = manNes.getNextPC();
 #endif
 
         ++ cnt;
@@ -121,9 +122,9 @@ int  main(int argc, char * argv[])
 
         //  次の命令を逆アセンブル。    //
         std::cout   <<  "Mnemonic:\t"  <<  cnt  <<  "\n";
-        gmNext  = manNes.getNextPC();
+        pcNext  = pcPrev;
         for ( int i = 0; i < 8; ++i ) {
-            manNes.writeMnemonic(std::cout, gmNext, gmNext)
+            manNes.writeMnemonic(std::cout, pcNext, pcNext)
                     <<  std::endl;
         }
 
