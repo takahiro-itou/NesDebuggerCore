@@ -51,7 +51,8 @@ int  main(int argc, char * argv[])
 
     NesMan::InstExecResult  ret = NesMan::InstExecResult::SUCCESS_CONTINUE;
     NesMan::CounterInfo     ci;
-    GuestMemoryAddress      pcPrev, pcNext  = 0;
+    GuestMemoryAddress      pcPrev, pcWork;
+    GuestMemoryAddress      pcNext  = 0;
     ClockCount  cnt     = 0;
 
     //  最初のレジスタをダンプ。    //
@@ -80,11 +81,16 @@ int  main(int argc, char * argv[])
         //  次の命令を逆アセンブル。    //
         std::cout   <<  "Mnemonic:\t"  <<  cnt  <<  "\n";
         pcNext  = pcPrev;
+        pcWork  = manNes.getNextPC();
         for ( int i = 0; i < 8; ++i ) {
+            if ( i == 1 && pcNext != pcWork ) {
+                std::cout   <<  " --------------------------------\n";
+                pcNext  = pcWork;
+            }
             manNes.writeMnemonic(std::cout, pcNext, pcNext)
                     <<  std::endl;
         }
-        pcPrev  = manNes.getNextPC();
+        pcPrev  = pcWork;
 #endif
 
         ++ cnt;
