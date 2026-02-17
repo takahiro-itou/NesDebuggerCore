@@ -52,7 +52,7 @@ int  main(int argc, char * argv[])
     NesMan::InstExecResult  ret = NesMan::InstExecResult::SUCCESS_CONTINUE;
     NesMan::CounterInfo     ci;
     GuestMemoryAddress      gmNext  = 0;
-    int     cnt     = 0;
+    ClockCount  cnt     = 0;
 
     //  最初のレジスタをダンプ。    //
     std::cout   <<  "REGS\n";
