@@ -74,7 +74,9 @@
 #define     EOR(operand)    \
     &Cpu6502::execArithLogic<operand, ALU::OpeEOR, ALU::OpeNopR, 0, REG_A>
 
-#define     LSR(operand)    nullptr
+#define     LSR(operand)    \
+    &Cpu6502::execArithLogic<operand, ALU::OpeNopL, ALU::OpeLSR, 1>
+
 #define     NOP             nullptr
 #define     ORA(operand)    \
     &Cpu6502::execArithLogic<operand, ALU::OpeORA, ALU::OpeNopR, 0, REG_A>
