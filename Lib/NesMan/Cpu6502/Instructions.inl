@@ -63,7 +63,9 @@
 #define     AND(operand)    \
     &Cpu6502::execArithLogic<operand, ALU::OpeAND, ALU::OpeNopR, 0, REG_A>
 
-#define     ASL(operand)    nullptr
+#define     ASL(operand)    \
+    &Cpu6502::execArithLogic<operand, ALU::OpeNopL, ALU::OpeASL, 1>
+
 #define     BIT(operand)    nullptr
 #define     BRK             nullptr
 #define     CMP(or2, reg)   \
@@ -140,7 +142,7 @@ Cpu6502::execArithLogic(
         //  一回元の値を書き込む仕様。  //
         operand.writeValue(rhs);
     }
-    rhs = CODE2()(lhs, rhs, mog_cpuRegs.P);
+    rhs = CODE2()(rhs, mog_cpuRegs.P);
     if ( RMWW ) {
         operand.writeValue(rhs);
     }

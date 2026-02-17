@@ -97,11 +97,10 @@ struct  OpeNopR
 {
     const   RegType
     operator()(
-            const  RegType  lhs,
-            const  RegType  rhs,
-            RegType        &flg)
+            RegType     val,
+            RegType   & flg)
     {
-        return ( rhs );
+        return ( val );
     }
 };
 
@@ -260,6 +259,20 @@ struct  OpeSBC
 
 //--------------------------------------------------------------
 //    オペコード 000xxx10 : ASL
+
+struct  OpeASL
+{
+    const   RegType
+    operator()(
+            RegType     val,
+            RegType   & flg)
+    {
+        flg &= (flg & ~FLAG_C) | ((val >> 7) & FLAG_C);
+        val <<= 1;
+        SET_NZ_FLAGS(flg, val);
+        return ( val );
+    }
+};
 
 //--------------------------------------------------------------
 //    オペコード 001xxx10 : ROL

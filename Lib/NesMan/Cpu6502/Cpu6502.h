@@ -132,7 +132,7 @@ private:
                typename CODE1,
                typename CODE2,
                int RMWW = 0,
-               TRegPtr REGPTR = &RegBank::A>
+               TRegPtr REGPTR = &RegBank::Zr>
     inline  InstExecResult
     execArithLogic(
             const  OpeCode  opeCode);
