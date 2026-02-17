@@ -144,6 +144,21 @@ struct  OpeORA
 //------------------------------------------------------------------------
 //    オペコード 001xxx01 : AND
 
+struct  OpeAND
+{
+    const   RegType
+    operator()(
+            const  RegType  lhs,
+            const  RegType  rhs,
+            RegType        &flg)
+    {
+        const  RegType  res = (lhs & rhs);
+        flg &= ~(FLAG_N | FLAG_Z);
+        SET_NZ_FLAGS(flg, res);
+        return ( res );
+    }
+};
+
 //------------------------------------------------------------------------
 //    オペコード 010xxx01 : EOR
 

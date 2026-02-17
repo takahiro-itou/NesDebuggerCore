@@ -59,7 +59,10 @@
 
 #define     ADC(operand)    \
     &Cpu6502::execArithLogic<operand, ALU::OpeADC, ALU::OpeNopR, 0, REG_A>
+
 #define     AND(operand)    nullptr
+    &Cpu6502::execArithLogic<operand, ALU::OpeAND, ALU::OpeNopR, 0, REG_A>
+
 #define     ASL(operand)    nullptr
 #define     BIT(operand)    nullptr
 #define     BRK             nullptr
