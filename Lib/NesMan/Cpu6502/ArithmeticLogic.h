@@ -27,7 +27,7 @@ namespace  NesMan  {
 namespace  ALU  {
 
 #define     SET_NZ_FLAGS(f, r)  \
-    { f|= (r & FLAG_N); f |= (r ? 0 : FLAG_Z); }
+    { f |= (r & FLAG_N); f |= (r ? 0 : FLAG_Z); }
 
 inline  const   RegType
 checkCarryAdd(
@@ -267,7 +267,8 @@ struct  OpeASL
             RegType     val,
             RegType   & flg)
     {
-        flg &= (flg & ~FLAG_C) | ((val >> 7) & FLAG_C);
+        flg &= ~(FLAG_N | FLAG_Z | FLAG_C);
+        flg |= ((val >> 7) & FLAG_C);
         val <<= 1;
         SET_NZ_FLAGS(flg, val);
         return ( val );
