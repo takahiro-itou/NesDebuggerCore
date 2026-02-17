@@ -60,7 +60,7 @@
 #define     ADC(operand)    \
     &Cpu6502::execArithLogic<operand, ALU::OpeADC, ALU::OpeNopR, 0, REG_A>
 
-#define     AND(operand)    nullptr
+#define     AND(operand)    \
     &Cpu6502::execArithLogic<operand, ALU::OpeAND, ALU::OpeNopR, 0, REG_A>
 
 #define     ASL(operand)    nullptr
@@ -69,7 +69,7 @@
 #define     CMP(or2, reg)   \
     &Cpu6502::execArithLogic<or2, ALU::OpeCMP, ALU::OpeNopR, 0, reg>
 
-#define     EOR(operand)    nullptr
+#define     EOR(operand)    \
     &Cpu6502::execArithLogic<operand, ALU::OpeEOR, ALU::OpeNopR, 0, REG_A>
 
 #define     LSR(operand)    nullptr
