@@ -27,7 +27,7 @@ namespace  NesMan  {
 namespace  ALU  {
 
 #define     SET_NZ_FLAGS(f, r)  \
-    { f|= (r & FLAG_N); f |= (r ? 0 : FLAG_Z); }
+    { f |= (r & FLAG_N); f |= (r ? 0 : FLAG_Z); }
 
 inline  const   RegType
 checkCarryAdd(
@@ -97,11 +97,10 @@ struct  OpeNopR
 {
     const   RegType
     operator()(
-            const  RegType  lhs,
-            const  RegType  rhs,
-            RegType        &flg)
+            RegType     val,
+            RegType   & flg)
     {
-        return ( rhs );
+        return ( val );
     }
 };
 
@@ -144,8 +143,38 @@ struct  OpeORA
 //------------------------------------------------------------------------
 //    オペコード 001xxx01 : AND
 
+struct  OpeAND
+{
+    const   RegType
+    operator()(
+            const  RegType  lhs,
+            const  RegType  rhs,
+            RegType        &flg)
+    {
+        const  RegType  res = (lhs & rhs);
+        flg &= ~(FLAG_N | FLAG_Z);
+        SET_NZ_FLAGS(flg, res);
+        return ( res );
+    }
+};
+
 //------------------------------------------------------------------------
 //    オペコード 010xxx01 : EOR
+
+struct  OpeEOR
+{
+    const   RegType
+    operator()(
+            const  RegType  lhs,
+            const  RegType  rhs,
+            RegType        &flg)
+    {
+        const  RegType  res = (lhs ^ rhs);
+        flg &= ~(FLAG_N | FLAG_Z);
+        SET_NZ_FLAGS(flg, res);
+        return ( res );
+    }
+};
 
 //------------------------------------------------------------------------
 //    オペコード 011xxx01 : ADC
@@ -231,14 +260,80 @@ struct  OpeSBC
 //--------------------------------------------------------------
 //    オペコード 000xxx10 : ASL
 
+struct  OpeASL
+{
+    const   RegType
+    operator()(
+            RegType     val,
+            RegType   & flg)
+    {
+        flg &= ~(FLAG_N | FLAG_Z | FLAG_C);
+        flg |= ((val >> 7) & FLAG_C);
+        val <<= 1;
+        SET_NZ_FLAGS(flg, val);
+        return ( val );
+    }
+};
+
 //--------------------------------------------------------------
 //    オペコード 001xxx10 : ROL
+
+struct  OpeROL
+{
+    const   RegType
+    operator()(
+            RegType     val,
+            RegType   & flg)
+    {
+        const  RegType  cy  = (val >> 7) & FLAG_C;
+        val = ((val << 1) | (flg & FLAG_C));
+
+        flg &= ~(FLAG_N | FLAG_Z | FLAG_C);
+        flg |= cy;
+        SET_NZ_FLAGS(flg, val);
+
+        return ( val );
+    }
+};
 
 //--------------------------------------------------------------
 //    オペコード 010xxx10 : LSR
 
+struct  OpeLSR
+{
+    const   RegType
+    operator()(
+            RegType     val,
+            RegType   & flg)
+    {
+        flg &= ~(FLAG_N | FLAG_Z | FLAG_C);
+        flg |= (val & FLAG_C);
+        val >>= 1;
+        SET_NZ_FLAGS(flg, val);
+        return ( val );
+    }
+};
+
 //--------------------------------------------------------------
 //    オペコード 011xxx10 : ROR
+
+struct  OpeROR
+{
+    const   RegType
+    operator()(
+            RegType     val,
+            RegType   & flg)
+    {
+        const  RegType  cy  = (val & FLAG_C);
+        val = ((val >> 1) | ((flg & FLAG_C) << 7));
+
+        flg &= ~(FLAG_N | FLAG_Z | FLAG_C);
+        flg |= cy;
+        SET_NZ_FLAGS(flg, val);
+
+        return ( val );
+    }
+};
 
 //--------------------------------------------------------------
 //    オペコード 100xxx10 : STX (別途実装)
