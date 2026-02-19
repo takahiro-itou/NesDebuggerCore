@@ -200,6 +200,10 @@ BaseCpuCore::updateCounters()
 {
     mog_cpuInfo.totalCycles += mog_ctrStep.totalCycles;
     mog_cpuInfo.numOpeCodes += mog_ctrStep.numOpeCodes;
+
+    mog_ctrStep.totalCycles = 0;
+    mog_ctrStep.numOpeCodes = 0;
+
     return ( ErrCode::SUCCESS );
 }
 

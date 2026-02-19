@@ -59,18 +59,34 @@
 
 #define     ADC(operand)    \
     &Cpu6502::execArithLogic<operand, ALU::OpeADC, ALU::OpeNopR, 0, REG_A>
-#define     AND(operand)    nullptr
-#define     ASL(operand)    nullptr
+
+#define     AND(operand)    \
+    &Cpu6502::execArithLogic<operand, ALU::OpeAND, ALU::OpeNopR, 0, REG_A>
+
+#define     ASL(operand)    \
+    &Cpu6502::execArithLogic<operand, ALU::OpeNopL, ALU::OpeASL, 1>
+
 #define     BIT(operand)    nullptr
 #define     BRK             nullptr
 #define     CMP(or2, reg)   \
     &Cpu6502::execArithLogic<or2, ALU::OpeCMP, ALU::OpeNopR, 0, reg>
-#define     EOR(operand)    nullptr
-#define     LSR(operand)    nullptr
+
+#define     EOR(operand)    \
+    &Cpu6502::execArithLogic<operand, ALU::OpeEOR, ALU::OpeNopR, 0, REG_A>
+
+#define     LSR(operand)    \
+    &Cpu6502::execArithLogic<operand, ALU::OpeNopL, ALU::OpeLSR, 1>
+
 #define     NOP             nullptr
-#define     ORA(operand)    nullptr
-#define     ROL(operand)    nullptr
-#define     ROR(operand)    nullptr
+#define     ORA(operand)    \
+    &Cpu6502::execArithLogic<operand, ALU::OpeORA, ALU::OpeNopR, 0, REG_A>
+
+#define     ROL(operand)    \
+    &Cpu6502::execArithLogic<operand, ALU::OpeNopL, ALU::OpeROL, 1>
+
+#define     ROR(operand)    \
+    &Cpu6502::execArithLogic<operand, ALU::OpeNopL, ALU::OpeROR, 1>
+
 #define     SBC(operand)    \
     &Cpu6502::execArithLogic<operand, ALU::OpeSBC, ALU::OpeNopR, 0, REG_A>
 
@@ -133,7 +149,7 @@ Cpu6502::execArithLogic(
         //  一回元の値を書き込む仕様。  //
         operand.writeValue(rhs);
     }
-    rhs = CODE2()(lhs, rhs, mog_cpuRegs.P);
+    rhs = CODE2()(rhs, mog_cpuRegs.P);
     if ( RMWW ) {
         operand.writeValue(rhs);
     }

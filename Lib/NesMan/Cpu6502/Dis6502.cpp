@@ -20,9 +20,12 @@
 
 #include    "NesDbg/pch/PreCompile.h"
 
-#include    "NesDbg/NesMan/MemoryManager.h"
-
 #include    "Dis6502.h"
+
+#include    "NesDbg/NesMan/BaseCpuCore.h"
+#include    "NesDbg/NesMan/MemoryManager.h"
+#include    "NesDbg/NesMan/NesManager.h"
+
 #include    "InstTable.h"
 
 #include    <cstring>
@@ -211,17 +214,25 @@ Dis6502::writeMnemonic(
     size_t  rem = sizeof(buf) - 1;
     char *  dst = buf;
 
+    //  現時点でのレジスタのコピーを取得する。  //
+    RegBank         cpuRegs;
+    this->m_pManNes->getCurrentCpu().getRegisters(cpuRegs);
+
     const uint32_t  opeCode = this->m_pManMem->readMemory<uint32_t>(gmAddr);
     const MnemonicMap *  oc = dis6502Mnemonics;
     for ( ; (opeCode & oc->mask) != oc->cval; ++ oc );
 
-    const  BtByte   opSize  = g_opeCodeSize[opeCode & 0x000000FF];
+    const  OpeCode  ocInst  = (opeCode & 0x000000FF);
+    const  BtByte   opSize  = g_opeCodeSize[ocInst];
     const  AddressingMode::ModeValues
-        adr = AddressingMode::g_opeCodeAddrs[opeCode & 0x000000FF];
+        adr = AddressingMode::g_opeCodeAddrs[ocInst];
 
     gmNext  = gmAddr + opSize;
 
-    len = snprintf(dst, rem, "%04X:   %02X", gmAddr, (opeCode & 0xFF));
+    len = snprintf(dst, rem, "  %04X:  %02X", gmAddr, ocInst);
+    if ( gmAddr == cpuRegs.PC ) {
+        dst[0] = '>';
+    }
     dst += len;
     rem -= len;
 
@@ -259,7 +270,9 @@ Dis6502::writeMnemonic(
 
     switch ( adr ) {
     case  AddressingMode::AM_IMP:
+        break;
     case  AddressingMode::AM_ACC:
+        len = snprintf(dst, rem, "A");
         break;
     case  AddressingMode::AM_IMM:
         len = writeImmediage(opeCode, dst, rem);
@@ -268,26 +281,35 @@ Dis6502::writeMnemonic(
         len = writeZeroPage(opeCode, dst, rem, ' ', 0);
         break;
     case  AddressingMode::AM_ZPX:
-        len = writeZeroPage(opeCode, dst, rem, 'X', 0);
+        len = writeZeroPage(opeCode, dst, rem, 'X', cpuRegs.X);
         break;
     case  AddressingMode::AM_ZPY:
-        len = writeZeroPage(opeCode, dst, rem, 'Y', 0);
+        len = writeZeroPage(opeCode, dst, rem, 'Y', cpuRegs.Y);
         break;
     case  AddressingMode::AM_ABS:
+        if ( (ocInst == 0x20) || (ocInst == 0x4C) ) {
+            len = writeJumpAbsolute(opeCode, dst, rem);
+            break;
+        }
         len = writeAbsolute(opeCode, dst, rem, ' ', 0);
         break;
     case  AddressingMode::AM_ABX:
-        len = writeAbsolute(opeCode, dst, rem, 'X', 0);
+        len = writeAbsolute(opeCode, dst, rem, 'X', cpuRegs.X);
         break;
     case  AddressingMode::AM_ABY:
-        len = writeAbsolute(opeCode, dst, rem, 'Y', 0);
+        len = writeAbsolute(opeCode, dst, rem, 'Y', cpuRegs.Y);
         break;
     case  AddressingMode::AM_IDX:
+        len = writePreIndexIndirect (opeCode, dst, rem, 'X', cpuRegs.X);
+        break;
     case  AddressingMode::AM_IDY:
+        len = writePostIndexIndirect(opeCode, dst, rem, 'Y', cpuRegs.Y);
         break;
     case  AddressingMode::AM_REL:
+        len = writeRelative(opeCode, dst, rem, gmNext, cpuRegs.P);
         break;
     case  AddressingMode::AM_IND:
+        len = writeJumpIndirect(opeCode, dst, rem);
         break;
     default:
         break;
@@ -344,8 +366,14 @@ Dis6502::writeAbsolute(
         const  char     regName,
         const  RegType  idxReg)  const
 {
-    const   GuestMemoryAddress  gmAddr  = (opeCode >> 8) & 0xFFFF;
-    return  snprintf(dst, remLen, "$%04X %c", gmAddr, regName);
+    const   GuestMemoryAddress  gmShow  = (opeCode >> 8) & 0x0000FFFF;
+    const   GuestMemoryAddress  gmAddr  = (gmShow + idxReg) & 0x0000FFFF;
+    const   BtByte  cv  = this->m_pManMem->peekMemory<BtByte>(gmAddr);
+
+    return  snprintf(dst, remLen, "$%04X%c%c @ $%04X = #$%02X",
+                    gmShow, (regName != ' ' ? ',' : ' '), regName,
+                    gmAddr, cv
+    );
 }
 
 //----------------------------------------------------------------
@@ -362,6 +390,110 @@ Dis6502::writeImmediage(
 }
 
 //----------------------------------------------------------------
+//    絶対番地ジャンプ。
+//
+
+inline  size_t
+Dis6502::writeJumpAbsolute(
+        const  OpeCode  opeCode,
+        char  *  const  dst,
+        const  size_t   remLen)  const
+{
+    const   GuestMemoryAddress  gmShow  = (opeCode >> 8) & 0x0000FFFF;
+    return  snprintf(dst, remLen, "$%04X", gmShow);
+}
+
+//----------------------------------------------------------------
+//    インダイレクトジャンプ。
+//
+
+inline  size_t
+Dis6502::writeJumpIndirect(
+        const  OpeCode  opeCode,
+        char  *  const  dst,
+        const  size_t   remLen)  const
+{
+    const   GuestMemoryAddress  gmShow  = (opeCode >> 8) & 0xFFFF;
+    return  snprintf(dst, remLen, "($%04X)", gmShow);
+}
+
+//----------------------------------------------------------------
+//    インダイレクトオペランドを表示する。
+//
+
+inline  size_t
+Dis6502::writePostIndexIndirect(
+        const  OpeCode  opeCode,
+        char  *  const  dst,
+        const  size_t   remLen,
+        const  char     regName,
+        const  RegType  idxReg)  const
+{
+    const   GuestMemoryAddress  gmShow  = (opeCode >> 8) & 0x000000FF;
+    return  snprintf(dst, remLen, "($%02X),%c", gmShow, regName);
+}
+
+//----------------------------------------------------------------
+//    インダイレクトオペランドを表示する。
+//
+
+inline  size_t
+Dis6502::writePreIndexIndirect(
+        const  OpeCode  opeCode,
+        char  *  const  dst,
+        const  size_t   remLen,
+        const  char     regName,
+        const  RegType  idxReg)  const
+{
+    const   GuestMemoryAddress  gmShow  = (opeCode >> 8) & 0x000000FF;
+    return  snprintf(dst, remLen, "($%02X,%c)", gmShow, regName);
+}
+
+//----------------------------------------------------------------
+//    相対アドレスオペランドを表示する。
+//
+
+inline  size_t
+Dis6502::writeRelative(
+        const  OpeCode  opeCode,
+        char  *  const  dst,
+        const  size_t   remLen,
+        GuestMemoryAddress  regPC,
+        const  RegType  regFlag)  const
+{
+    int     flg = 2;
+    const  char  tbl[3] = { 'F', 'T', '?' };
+
+    switch ( (opeCode >> 5) & 0x07 ) {
+    case  0:        //  BPL
+        flg = ((regFlag & FLAG_N) ? 0 : 1);     break;
+    case  1:        //  BMI
+        flg = ((regFlag & FLAG_N) ? 1 : 0);     break;
+    case  2:        //  BVC
+        flg = ((regFlag & FLAG_V) ? 0 : 1);     break;
+    case  3:        //  BVS
+        flg = ((regFlag & FLAG_V) ? 1 : 0);     break;
+    case  4:        //  BCC
+        flg = ((regFlag & FLAG_C) ? 0 : 1);     break;
+    case  5:        //  BCS
+        flg = ((regFlag & FLAG_C) ? 1 : 0);     break;
+    case  6:        //  BNE
+        flg = ((regFlag & FLAG_Z) ? 0 : 1);     break;
+    case  7:        //  BEQ
+        flg = ((regFlag & FLAG_Z) ? 1 : 0);     break;
+    default:
+        flg = 2;
+    }
+
+    const   GuestMemoryAddress  gmOffs  = (opeCode >> 8) & 0x00FF;
+    const   GuestMemoryAddress  gmAddr  =
+        (regPC & 0xFF00) | ((regPC + gmOffs) & 0x00FF);
+    return  snprintf(dst, remLen, "$%04X  ; $%02X (%c)",
+                    gmAddr, gmOffs, tbl[flg]
+    );
+}
+
+//----------------------------------------------------------------
 //    ゼロページオペランドを表示する。
 //
 
@@ -373,8 +505,14 @@ Dis6502::writeZeroPage(
         const  char     regName,
         const  RegType  idxReg)  const
 {
-    const   GuestMemoryAddress  gmAddr  = (opeCode >> 8) & 0x00FF;
-    return  snprintf(dst, remLen, "<$%02X %c", gmAddr, regName);
+    const   GuestMemoryAddress  gmShow  = (opeCode >> 8) & 0x000000FF;
+    const   GuestMemoryAddress  gmAddr  = (gmShow + idxReg) & 0x000000FF;
+    const   BtByte  cv  = this->m_pManMem->peekMemory<BtByte>(gmAddr);
+
+    return  snprintf(dst, remLen, "<$%02X%c%c @ $%02X = #$%02X",
+                    gmShow, (regName != ' ' ? ',' : ' '), regName,
+                    gmAddr, cv
+    );
 }
 
 //========================================================================
