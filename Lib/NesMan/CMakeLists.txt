@@ -17,15 +17,18 @@ Include (${common_cmake_dir}/BuildCommon/ConfigTarget.cmake)
 set(library_source_files
         BaseCpuCore.cpp
         BaseDisCpu.cpp
+        BasePpuCore.cpp
         MemoryManager.cpp
         NesManager.cpp
         Cpu6502/Cpu6502.cpp
         Cpu6502/Dis6502.cpp
+        PpuNes/NesPpuImpl.cpp
 )
 
 set(inclib_header_files
         ${inclib_source_dir}/BaseCpuCore.h
         ${inclib_source_dir}/BaseDisCpu.h
+        ${inclib_source_dir}/BasePpuCore.h
         ${inclib_source_dir}/CpuUtils.h
         ${inclib_source_dir}/MemoryManager.h
         ${inclib_source_dir}/NesManger.h
