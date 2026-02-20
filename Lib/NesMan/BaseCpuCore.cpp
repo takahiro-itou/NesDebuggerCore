@@ -24,7 +24,6 @@
 #include    "NesDbg/NesMan/MemoryManager.h"
 
 #include    <cstring>
-#include    <inttypes.h>
 #include    <ostream>
 
 
