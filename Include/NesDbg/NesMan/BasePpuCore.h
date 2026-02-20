@@ -23,6 +23,12 @@
 
 
 NESDBG_NAMESPACE_BEGIN
+
+//  クラスの前方宣言。  //
+namespace  Images  {
+class   FullColorImage;
+}   //  End of namespace  Images
+
 namespace  NesMan  {
 
 //  クラスの前方宣言。  //
