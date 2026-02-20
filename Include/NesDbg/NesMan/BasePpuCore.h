@@ -25,6 +25,10 @@
 NESDBG_NAMESPACE_BEGIN
 namespace  NesMan  {
 
+//  クラスの前方宣言。  //
+class   NesManager;
+class   MemoryManager;
+
 
 //========================================================================
 //

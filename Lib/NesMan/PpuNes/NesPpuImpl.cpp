@@ -23,10 +23,6 @@
 #include    "NesPpuImpl.h"
 
 #include    "NesDbg/NesMan/MemoryManager.h"
-#include    "InstTable.h"
-#include    "AddressingMode.h"
-#include    "ArithmeticLogic.h"
-#include    "Instructions.inl"
 
 #include    <iostream>
 
@@ -57,6 +53,7 @@ namespace  {
 NesPpuImpl::NesPpuImpl(
         NesManager    & manNes,
         MemoryManager & manMem)
+    : Super(manNes, manMem)
 {
 }
 
