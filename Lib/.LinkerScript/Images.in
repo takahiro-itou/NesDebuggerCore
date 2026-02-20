@@ -2,5 +2,5 @@
 /*  Linker Script.  */
 INPUT( AS_NEEDED(Images/libsampleImages.static.a) )
 
-INPUT( AS_NEEDED(-lsampleCommon) )
+INPUT( AS_NEEDED(-lnesdbgCommon) )
 
