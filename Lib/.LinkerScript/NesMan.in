@@ -2,5 +2,6 @@
 /*  Linker Script.  */
 INPUT( AS_NEEDED(NesMan/libnesdbgNesMan.static.a) )
 
+INPUT( AS_NEEDED(-lnesdbgImages) )
 INPUT( AS_NEEDED(-lnesdbgCommon) )
 
