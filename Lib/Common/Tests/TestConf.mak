@@ -12,7 +12,7 @@ TESTS                   =  \
 ##    Test Configurations.
 ##
 
-target_testee_library       +=  -lsampleCommon
+target_testee_library       +=  -lnesdbgCommon
 
 dist_noinst_data_files      +=
 dist_noinst_header_files    +=
@@ -32,3 +32,4 @@ test_ldflags_common         +=
 ##
 
 NesDbgProjectTest_SOURCES       =  NesDbgProjectTest.cpp
+

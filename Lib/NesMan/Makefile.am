@@ -27,10 +27,12 @@ extra_noinst_header_files   =
 library_source_files        +=  \
         BaseCpuCore.cpp                 \
         BaseDisCpu.cpp                  \
+        BasePpuCore.cpp                 \
         MemoryManager.cpp               \
         NesManager.cpp                  \
         Cpu6502/Cpu6502.cpp             \
         Cpu6502/Dis6502.cpp             \
+        PpuNes/NesPpuImpl.cpp           \
         ${extra_library_source_files}
 
 library_instantiations      +=
@@ -46,11 +48,13 @@ dist_noinst_header_files    +=  \
         Cpu6502/Dis6502.h               \
         Cpu6502/Instructions.inl        \
         Cpu6502/InstTable.h             \
+        PpuNes/NesPpuImpl.h             \
         ${extra_noinst_header_files}
 
 inclib_header_files         +=  \
         ${inclib_source_dir}/BaseCpuCore.h      \
         ${inclib_source_dir}/BaseDisCpu.h       \
+        ${inclib_source_dir}/BasePpuCore.h      \
         ${inclib_source_dir}/CpuUtils.h         \
         ${inclib_source_dir}/MemoryManager.h    \
         ${inclib_source_dir}/NesManager.h       \
