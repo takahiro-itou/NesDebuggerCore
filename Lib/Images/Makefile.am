@@ -52,7 +52,7 @@ library_compile_srcfiles    +=  \
 ##    List of Libraries.
 ##
 
-static_libraries_list   +=  libsampleImages.static.a
+static_libraries_list   +=  libnesdbgImages.static.a
 shared_libraries_list   +=
 
 ##
@@ -69,5 +69,5 @@ include  $(top_srcdir)/.M4/BuildCommon/Install.inc
 ##    Build Libraries.
 ##
 
-libsampleImages_static_a_SOURCES    =  ${library_source_files}
+libnesdbgImages_static_a_SOURCES    =  ${library_source_files}
 
