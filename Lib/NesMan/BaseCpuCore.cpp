@@ -166,7 +166,7 @@ BaseCpuCore::printRegisters(
     outStr  <<  flg;
 
     snprintf(buf, sizeof(buf),
-            "\nCycles: %ld\tInstructions: %ld\n",
+            "\nCycles: %" PRId64 "\tInstructions: %" PRId64 "\n",
             mog_cpuInfo.totalCycles,
             mog_cpuInfo.numOpeCodes);
     outStr  <<  buf;

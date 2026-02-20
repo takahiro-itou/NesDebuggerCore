@@ -53,7 +53,7 @@
 //    キーワード constexpr  の検査。
 //
 
-#if ( 0 )
+#if ( 1 )
 #    define     NESDBG_ENABLE_CONSTEXPR             1
 #else
 #    undef      NESDBG_ENABLE_CONSTEXPR
