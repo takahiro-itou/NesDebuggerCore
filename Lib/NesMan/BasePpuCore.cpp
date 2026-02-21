@@ -88,6 +88,16 @@ BasePpuCore::~BasePpuCore()
 //    Public Member Functions (Virtual Functions).
 //
 
+//----------------------------------------------------------------
+//    画面を描画する。
+//
+
+ErrCode
+BasePpuCore::drawScreen()
+{
+    return ( ErrCode::SUCCESS );
+}
+
 //========================================================================
 //
 //    Public Member Functions.
