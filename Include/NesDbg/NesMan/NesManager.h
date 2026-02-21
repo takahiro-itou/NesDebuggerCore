@@ -213,7 +213,14 @@ public:
     **
     **/
     MemoryManager  &
-    getMemoryManager()
+    getMemoryManager();
+
+    //----------------------------------------------------------------
+    /**   メモリマネージャインスタンスを取得する。
+    **
+    **/
+    const  MemoryManager  &
+    getMemoryManager()  const;
 
     //----------------------------------------------------------------
     /**   CHR ROM のバンク数を取得する。

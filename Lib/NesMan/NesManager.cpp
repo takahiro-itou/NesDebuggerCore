@@ -261,6 +261,16 @@ NesManager::getMemoryManager()
 }
 
 //----------------------------------------------------------------
+//    メモリマネージャインスタンスを取得する。
+//
+
+const  MemoryManager  &
+NesManager::getMemoryManager()  const
+{
+    return ( this->m_manMem );
+}
+
+//----------------------------------------------------------------
 //    CHR ROM のバンク数を取得する。
 //
 
