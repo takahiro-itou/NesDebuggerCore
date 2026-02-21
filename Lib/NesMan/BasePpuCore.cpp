@@ -55,6 +55,7 @@ namespace  {
 BasePpuCore::BasePpuCore(
         NesManager    & manNes,
         MemoryManager & manMem)
+    : m_pImage(nullptr)
 {
 }
 
@@ -96,6 +97,28 @@ BasePpuCore::~BasePpuCore()
 //
 //    Accessors.
 //
+
+//----------------------------------------------------------------
+//    イメージオブジェクトを取得する。
+//
+
+Images::FullColorImage  *
+BasePpuCore::getImageInstance()  const
+{
+    return ( this->m_pImage );
+}
+
+//----------------------------------------------------------------
+//    イメージオブジェクトを設定する。
+//
+
+BasePpuCore  &
+BasePpuCore::setImageInstance(
+        Images::FullColorImage  *   pImage)
+{
+    this->m_pImage  = pImage;
+    return ( *this );
+}
 
 //========================================================================
 //
