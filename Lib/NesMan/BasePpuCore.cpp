@@ -23,6 +23,8 @@
 #include    "NesDbg/NesMan/BasePpuCore.h"
 #include    "NesDbg/NesMan/MemoryManager.h"
 
+#include    "NesDbg/Images/FullColorImage.h"
+
 
 NESDBG_NAMESPACE_BEGIN
 namespace  NesMan  {
@@ -95,6 +97,8 @@ BasePpuCore::~BasePpuCore()
 ErrCode
 BasePpuCore::drawScreen()
 {
+    this->m_pImage->drawSample();
+
     return ( ErrCode::SUCCESS );
 }
 
