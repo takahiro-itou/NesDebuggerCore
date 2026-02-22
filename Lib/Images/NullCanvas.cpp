@@ -13,22 +13,18 @@
 *************************************************************************/
 
 /**
-**      An Implementation of NesPpuImpl class.
+**      An Implementation of NullCanvas class.
 **
-**      @file       NesMan/NesPpuImpl.cpp
+**      @file       Images/NullCanvas.cpp
 **/
 
 #include    "NesDbg/pch/PreCompile.h"
 
-#include    "NesPpuImpl.h"
-
-#include    "NesDbg/NesMan/MemoryManager.h"
-
-#include    <iostream>
+#include    "NesDbg/Images/NullCanvas.h"
 
 
 NESDBG_NAMESPACE_BEGIN
-namespace  NesMan  {
+namespace  Images  {
 
 namespace  {
 
@@ -37,7 +33,7 @@ namespace  {
 
 //========================================================================
 //
-//    NesPpuImpl  class.
+//    NullCanvas  class.
 //
 
 //========================================================================
@@ -47,13 +43,10 @@ namespace  {
 
 //----------------------------------------------------------------
 //    インスタンスを初期化する
-//  （コンストラクタ）。
+//  （デフォルトコンストラクタ）。
 //
 
-NesPpuImpl::NesPpuImpl(
-        NesManager    & manNes,
-        MemoryManager & manMem)
-    : Super(manNes, manMem)
+NullCanvas::NullCanvas()
 {
 }
 
@@ -62,7 +55,7 @@ NesPpuImpl::NesPpuImpl(
 //  （デストラクタ）。
 //
 
-NesPpuImpl::~NesPpuImpl()
+NullCanvas::~NullCanvas()
 {
 }
 
@@ -96,17 +89,6 @@ NesPpuImpl::~NesPpuImpl()
 //    Accessors.
 //
 
-//----------------------------------------------------------------
-//    描画先のイメージを指定する。
-//
-
-ErrCode
-NesPpuImpl::setScreenImage(
-        Images::FullColorImage * const  ptrImage)
-{
-    return ( ErrCode::FAILURE );
-}
-
 //========================================================================
 //
 //    Protected Member Functions.
@@ -117,5 +99,5 @@ NesPpuImpl::setScreenImage(
 //    For Internal Use Only.
 //
 
-}   //  End of namespace  NesMan
+}   //  End of namespace  Images
 NESDBG_NAMESPACE_END

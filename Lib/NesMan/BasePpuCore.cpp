@@ -23,6 +23,8 @@
 #include    "NesDbg/NesMan/BasePpuCore.h"
 #include    "NesDbg/NesMan/MemoryManager.h"
 
+#include    "NesDbg/Images/FullColorImage.h"
+
 
 NESDBG_NAMESPACE_BEGIN
 namespace  NesMan  {
@@ -55,6 +57,7 @@ namespace  {
 BasePpuCore::BasePpuCore(
         NesManager    & manNes,
         MemoryManager & manMem)
+    : m_pImage(nullptr)
 {
 }
 
@@ -87,6 +90,18 @@ BasePpuCore::~BasePpuCore()
 //    Public Member Functions (Virtual Functions).
 //
 
+//----------------------------------------------------------------
+//    画面を描画する。
+//
+
+ErrCode
+BasePpuCore::drawScreen()
+{
+    this->m_pImage->drawSample();
+
+    return ( ErrCode::SUCCESS );
+}
+
 //========================================================================
 //
 //    Public Member Functions.
@@ -96,6 +111,28 @@ BasePpuCore::~BasePpuCore()
 //
 //    Accessors.
 //
+
+//----------------------------------------------------------------
+//    イメージオブジェクトを取得する。
+//
+
+Images::FullColorImage  *
+BasePpuCore::getImageInstance()  const
+{
+    return ( this->m_pImage );
+}
+
+//----------------------------------------------------------------
+//    イメージオブジェクトを設定する。
+//
+
+BasePpuCore  &
+BasePpuCore::setImageInstance(
+        Images::FullColorImage  *   pImage)
+{
+    this->m_pImage  = pImage;
+    return ( *this );
+}
 
 //========================================================================
 //
