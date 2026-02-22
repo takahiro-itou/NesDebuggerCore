@@ -127,9 +127,8 @@ NesPpuImpl::drawScreen()
             for ( int cy = 0; cy < 8; ++ cy ) {
                 for ( int cx = 0; cx < 8; ++ cx ) {
                     const  int  col = this->m_palette[buf[cy * 8 + cx]];
-                    this->m_pImage->fillRectangle(
+                    this->m_pImage->setPixelColor(
                             mx * 8 + cx, my * 8 + cy,
-                            mx * 8 + cx + 1, my * 8 + cy + 1,
                             col);
                 }
             }
@@ -148,6 +147,26 @@ NesPpuImpl::drawScreen()
 //
 //    Public Member Functions (Virtual Functions).
 //
+
+//----------------------------------------------------------------
+//    背景画面を描画する。
+//
+
+ErrCode
+NesPpuImpl::drawBackGroud()
+{
+    return ( ErrCode::SUCCESS );
+}
+
+//----------------------------------------------------------------
+//    スプライトを描画する。
+//
+
+ErrCode
+NesPpuImpl::drawSprite()
+{
+    return ( ErrCode::SUCCESS );
+}
 
 //----------------------------------------------------------------
 //    属性テーブルを更新する。
