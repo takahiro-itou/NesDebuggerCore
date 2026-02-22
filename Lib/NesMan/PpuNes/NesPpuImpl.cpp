@@ -87,53 +87,31 @@ NesPpuImpl::drawScreen()
     }
 
     //  パレットを適当に設定する。  //
-    for ( int i = 0; i < 32; i += 4 ){
-        this->m_palette[i + 0]  = 0x00000000;
-        this->m_palette[i + 1]  = 0x00FFFFFF;
-        this->m_palette[i + 2]  = 0x000000FF;
-        this->m_palette[i + 3]  = 0x0000FF00;
+    {
+        this->m_palette[0]  = 0x00000000;
+        this->m_palette[1]  = 0x00FFFFFF;
+        this->m_palette[2]  = 0x000000FF;
+        this->m_palette[3]  = 0x0000FF00;
+
+        this->m_palette[4]  = 0x00000000;
+        this->m_palette[5]  = 0x00FF0000;
+        this->m_palette[6]  = 0x0000FFFF;
+        this->m_palette[7]  = 0x00FFFFFF;
+
+        this->m_palette[8]  = 0x00000000;
+        this->m_palette[9]  = 0x00FF0000;
+        this->m_palette[10] = 0x0000FF00;
+        this->m_palette[11] = 0x000000FF;
+
+        this->m_palette[12] = 0x00000000;
+        this->m_palette[13] = 0x0000FFFF;
+        this->m_palette[14] = 0x00FF00FF;
+        this->m_palette[15] = 0x00FFFF00;
     }
 
-    BtByte  buf[64];
-
-    for ( int my = 0; my < 16; ++ my ) {
-        for ( int mx = 0; mx < 16; ++ mx ) {
-            //  パターンを読み出す。    //
-            for ( int cy = 0; cy < 8; ++ cy ) {
-                for ( int cx = 0; cx < 8; ++ cx ) {
-                    buf[cy * 8 + cx]    = 0;
-                }
-            }
-            LpcByteReadBuf  ptr = this->m_memPPU + (my * 16 + mx) * 16;
-            for ( int cy = 0; cy < 8; ++ cy ) {
-                BtByte  tmp = *(ptr ++);
-                for ( int cx = 0; cx < 8; ++ cx ) {
-                    if ( tmp & 0x80 ) {
-                        buf[cy * 8 + cx] |= 1;
-                    }
-                    tmp <<= 1;
-                }
-            }
-            for ( int cy = 0; cy < 8; ++ cy ) {
-                BtByte  tmp = *(ptr ++);
-                for ( int cx = 0; cx < 8; ++ cx ) {
-                    if ( tmp & 0x80 ) {
-                        buf[cy * 8 + cx] |= 2;
-                    }
-                    tmp <<= 1;
-                }
-            }
-            //  これにパレットの色を付けて転送する。    //
-            for ( int cy = 0; cy < 8; ++ cy ) {
-                for ( int cx = 0; cx < 8; ++ cx ) {
-                    const  int  col = this->m_palette[buf[cy * 8 + cx]];
-                    this->m_pImage->setPixelColor(
-                            mx * 8 + cx, my * 8 + cy,
-                            col);
-                }
-            }
-        }
-    }
+    updateNameTable();
+    updateAttributeTable();
+    drawBackGroud();
 
     return ( ErrCode::SUCCESS );
 }
@@ -155,6 +133,50 @@ NesPpuImpl::drawScreen()
 ErrCode
 NesPpuImpl::drawBackGroud()
 {
+
+    BtByte  buf[64];
+
+    LpcByteReadBuf  ptrTile = this->m_memPPU + 0x2000;
+
+    for ( int ny = 0; ny < 30; ++ ny ) {
+        for ( int nx = 0; nx < 32; ++ nx ) {
+            //  パターン番号を読み出す。    //
+            const   BtByte  tid = *(ptrTile ++);
+
+            //  パターンを読み出す。    //
+            LpcByteReadBuf  ptrPats = this->m_memPPU + (tid * 16);
+            for ( int cy = 0; cy < 8; ++ cy ) {
+                BtByte  tmp = *(ptrPats ++);
+                for ( int cx = 0; cx < 8; ++ cx ) {
+                    if ( tmp & 0x80 ) {
+                        buf[cy * 8 + cx] |= 1;
+                    }
+                    tmp <<= 1;
+                }
+            }
+            for ( int cy = 0; cy < 8; ++ cy ) {
+                BtByte  tmp = *(ptrPats ++);
+                for ( int cx = 0; cx < 8; ++ cx ) {
+                    if ( tmp & 0x80 ) {
+                        buf[cy * 8 + cx] |= 2;
+                    }
+                    tmp <<= 1;
+                }
+            }
+
+            //  これにパレットの色を付けて転送する。    //
+            const  int  pid = this->m_palIdx[ny][nx];
+            for ( int cy = 0; cy < 8; ++ cy ) {
+                for ( int cx = 0; cx < 8; ++ cx ) {
+                    const  int  col = this->m_palette[pid * 4 + buf[cy * 8 + cx]];
+                    this->m_pImage->setPixelColor(
+                            nx * 8 + cx, ny * 8 + cy,
+                            col);
+                }
+            }
+        }
+    }
+
     return ( ErrCode::SUCCESS );
 }
 
@@ -175,6 +197,44 @@ NesPpuImpl::drawSprite()
 ErrCode
 NesPpuImpl::updateAttributeTable()
 {
+    LpByteWriteBuf  ptr = this->m_memPPU + 0x23C0;
+    for ( int i = 0; i < 64; ++ i ) {
+        (* ptr) = 0;
+    }
+
+    int  nx = 0;
+    int  ny = 0;
+    LpcByteReadBuf  ptrAtrb = this->m_memPPU + 0x23C0;
+    for ( int a = 0; a < 64; ++ a ) {
+        BtByte  tmp = *(ptrAtrb ++);
+        BtByte  val = (tmp & 3);
+        this->m_palIdx[ny+0][nx+0] = val;
+        this->m_palIdx[ny+0][nx+1] = val;
+        this->m_palIdx[ny+1][nx+0] = val;
+        this->m_palIdx[ny+1][nx+1] = val;
+
+        val = (tmp >>= 2) & 3;
+        this->m_palIdx[ny+0][nx+2] = val;
+        this->m_palIdx[ny+0][nx+3] = val;
+        this->m_palIdx[ny+1][nx+2] = val;
+        this->m_palIdx[ny+1][nx+3] = val;
+
+        val = (tmp >>= 2) & 3;
+        this->m_palIdx[ny+2][nx+0] = val;
+        this->m_palIdx[ny+2][nx+1] = val;
+        this->m_palIdx[ny+3][nx+0] = val;
+        this->m_palIdx[ny+3][nx+1] = val;
+
+        val = (tmp >>= 2) & 3;
+        this->m_palIdx[ny+2][nx+2] = val;
+        this->m_palIdx[ny+2][nx+3] = val;
+        this->m_palIdx[ny+3][nx+2] = val;
+        this->m_palIdx[ny+3][nx+3] = val;
+
+        nx  += 4;
+        ny  += 4;
+    }
+
     return ( ErrCode::SUCCESS );
 }
 
@@ -185,6 +245,12 @@ NesPpuImpl::updateAttributeTable()
 ErrCode
 NesPpuImpl::updateNameTable()
 {
+    for ( int ny = 0; ny < 16; ++ ny ) {
+        LpByteWriteBuf  ptr = this->m_memPPU + 0x2000 + (ny * 32);
+        for ( int nx = 0; nx < 16; ++nx ) {
+            *(ptr ++)   = (ny * 16 + ny);
+        }
+    }
     return ( ErrCode::SUCCESS );
 }
 
