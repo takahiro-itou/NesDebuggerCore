@@ -19,6 +19,7 @@
 **/
 
 #include    "NesDbg/NesMan/BaseCpuCore.h"
+#include    "NesDbg/NesMan/BasePpuCore.h"
 #include    "NesDbg/NesMan/NesManager.h"
 
 #include    <iostream>
@@ -31,6 +32,7 @@ int  main(int argc, char * argv[])
 {
     ErrCode retCode = ErrCode::SUCCESS;;
     NesMan::NesManager  manNes;
+    NesMan::BasePpuCore manPpu(manNes, manNes.getMemoryManager());
 
     if ( argc < 2 ) {
         std::cerr   <<  "Usage "
