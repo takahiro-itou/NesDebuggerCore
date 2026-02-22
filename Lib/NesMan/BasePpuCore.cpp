@@ -57,7 +57,9 @@ namespace  {
 BasePpuCore::BasePpuCore(
         NesManager    & manNes,
         MemoryManager & manMem)
-    : m_pImage(nullptr)
+    : m_pImage(nullptr),
+      m_vMemBuf(),
+      m_memPPU(nullptr)
 {
 }
 

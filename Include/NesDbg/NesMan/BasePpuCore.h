@@ -21,6 +21,11 @@
 #if !defined( NESDBG_NESMAN_INCLUDED_BASE_PPU_CORE_H )
 #    define   NESDBG_NESMAN_INCLUDED_BASE_PPU_CORE_H
 
+#if !defined( NESDBG_SYS_STL_INCLUDED_VECTOR )
+#    include    <vector>
+#    define   NESDBG_SYS_STL_INCLUDED_VECTOR
+#endif
+
 
 NESDBG_NAMESPACE_BEGIN
 
@@ -143,6 +148,11 @@ protected:
 
     /**   イメージオブジェクト。    **/
     Images::FullColorImage  *   m_pImage;
+
+    /**   PPU メモリ空間。          **/
+    std::vector<BtByte>         m_vMemBuf;
+
+    LpByteWriteBuf              m_memPPU;
 
 //========================================================================
 //

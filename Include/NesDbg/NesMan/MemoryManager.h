@@ -21,10 +21,6 @@
 #if !defined( NESDBG_NESMAN_INCLUDED_MEMORY_MANAGER_H )
 #    define   NESDBG_NESMAN_INCLUDED_MEMORY_MANAGER_H
 
-#if !defined( NESDBG_PCH_INCLUDED_PRE_COMPILE_H )
-#    include    "NesDbg/pch/PreCompile.h"
-#endif
-
 #if !defined( NESDBG_SYS_STL_INCLUDED_VECTOR )
 #    include    <vector>
 #    define   NESDBG_SYS_STL_INCLUDED_VECTOR
