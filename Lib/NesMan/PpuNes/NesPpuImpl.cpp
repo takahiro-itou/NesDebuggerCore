@@ -96,17 +96,6 @@ NesPpuImpl::~NesPpuImpl()
 //    Accessors.
 //
 
-//----------------------------------------------------------------
-//    描画先のイメージを指定する。
-//
-
-ErrCode
-NesPpuImpl::setScreenImage(
-        Images::FullColorImage * const  ptrImage)
-{
-    return ( ErrCode::FAILURE );
-}
-
 //========================================================================
 //
 //    Protected Member Functions.

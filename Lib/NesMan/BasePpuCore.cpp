@@ -122,25 +122,25 @@ BasePpuCore::drawScreen()
 //
 
 //----------------------------------------------------------------
-//    イメージオブジェクトを取得する。
+//    描画先のイメージを取得する。
 //
 
 Images::FullColorImage  *
-BasePpuCore::getImageInstance()  const
+BasePpuCore::getScreenImage()  const
 {
     return ( this->m_pImage );
 }
 
 //----------------------------------------------------------------
-//    イメージオブジェクトを設定する。
+//    描画先のイメージを設定する。
 //
 
-BasePpuCore  &
-BasePpuCore::setImageInstance(
-        Images::FullColorImage  *   pImage)
+ErrCode
+BasePpuCore::setScreenImage(
+        Images::FullColorImage * const  ptrImg)
 {
-    this->m_pImage  = pImage;
-    return ( *this );
+    this->m_pImage  = ptrImg;
+    return ( ErrCode::SUCCESS );
 }
 
 //========================================================================

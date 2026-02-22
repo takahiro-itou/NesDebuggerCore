@@ -116,19 +116,24 @@ public:
 public:
 
     //----------------------------------------------------------------
-    /**   イメージオブジェクトを取得する。
+    /**   描画先のイメージを取得する。
     **
     **/
     Images::FullColorImage  *
-    getImageInstance()  const;
+    getScreenImage()  const;
 
     //----------------------------------------------------------------
-    /**   イメージオブジェクトを設定する。
+    /**   描画先のイメージを設定する。
     **
+    **  @param [in] ptrImg    イメージオブジェクト。
+    **  @return     エラーコードを返す。
+    **      -   異常終了の場合は、
+    **          エラーの種類を示す非ゼロ値を返す。
+    **      -   正常終了の場合は、ゼロを返す。
     **/
-    BasePpuCore  &
-    setImageInstance(
-            Images::FullColorImage  *   pImage);
+    ErrCode
+    setScreenImage(
+            Images::FullColorImage * const  ptrImg);
 
 //========================================================================
 //
