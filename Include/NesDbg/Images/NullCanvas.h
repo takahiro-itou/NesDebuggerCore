@@ -13,58 +13,49 @@
 *************************************************************************/
 
 /**
-**      An Implementation of NesPpuImpl class.
+**      An Interface of NullCanvas class.
 **
-**      @file       NesMan/NesPpuImpl.cpp
+**      @file       Images/NullCanvas.h
 **/
 
-#include    "NesDbg/pch/PreCompile.h"
+#if !defined( NESDBG_IMAGES_INCLUDED_NULL_CANVAS_H )
+#    define   NESDBG_IMAGES_INCLUDED_NULL_CANVAS_H
 
-#include    "NesPpuImpl.h"
-
-#include    "NesDbg/NesMan/MemoryManager.h"
-
-#include    <iostream>
+#if !defined( NESDBG_IMAGES_INCLUDED_FULL_COLOR_IMAGE_H )
+#    include    "FullColorImage.h"
+#endif
 
 
 NESDBG_NAMESPACE_BEGIN
-namespace  NesMan  {
-
-namespace  {
-
-}   //  End of (Unnamed) namespace.
-
+namespace  Images  {
 
 //========================================================================
 //
-//    NesPpuImpl  class.
+//    NullCanvas  class.
 //
+
+class  NullCanvas
+{
 
 //========================================================================
 //
 //    Constructor(s) and Destructor.
 //
+public:
 
-//----------------------------------------------------------------
-//    インスタンスを初期化する
-//  （コンストラクタ）。
-//
+    //----------------------------------------------------------------
+    /**   インスタンスを初期化する
+    **  （デフォルトコンストラクタ）。
+    **
+    **/
+    NullCanvas();
 
-NesPpuImpl::NesPpuImpl(
-        NesManager    & manNes,
-        MemoryManager & manMem)
-    : Super(manNes, manMem)
-{
-}
-
-//----------------------------------------------------------------
-//    インスタンスを破棄する
-//  （デストラクタ）。
-//
-
-NesPpuImpl::~NesPpuImpl()
-{
-}
+    //----------------------------------------------------------------
+    /**   インスタンスを破棄する
+    **  （デストラクタ）。
+    **
+    **/
+    virtual  ~NullCanvas();
 
 //========================================================================
 //
@@ -85,6 +76,25 @@ NesPpuImpl::~NesPpuImpl()
 //
 //    Public Member Functions (Virtual Functions).
 //
+public:
+
+    //----------------------------------------------------------------
+    /**   イメージを作成する。
+    **
+    **  @param [in] nWidth    イメージの幅
+    **  @param [in] nHeight   イメージの高さ
+    **  @param [in] cbPixel   ピクセル当たりのバイト数。
+    **  @param [in] lStride   行当たりのバイト数。
+    **  @param [in] lpBits    イメージデータ。
+    **/
+    virtual  void
+    createImage(
+            const  int  nWidth,
+            const  int  nHeight,
+            const  int  cbPixel,
+            const  int  lStride,
+            void  *     lpBits);
+
 
 //========================================================================
 //
@@ -96,17 +106,6 @@ NesPpuImpl::~NesPpuImpl()
 //    Accessors.
 //
 
-//----------------------------------------------------------------
-//    描画先のイメージを指定する。
-//
-
-ErrCode
-NesPpuImpl::setScreenImage(
-        Images::FullColorImage * const  ptrImage)
-{
-    return ( ErrCode::FAILURE );
-}
-
 //========================================================================
 //
 //    Protected Member Functions.
@@ -117,5 +116,25 @@ NesPpuImpl::setScreenImage(
 //    For Internal Use Only.
 //
 
-}   //  End of namespace  NesMan
+//========================================================================
+//
+//    Member Variables.
+//
+
+//========================================================================
+//
+//    Other Features.
+//
+private:
+    typedef     NullCanvas      This;
+    NullCanvas          (const  This  &);
+    This &  operator =  (const  This  &);
+public:
+    //  テストクラス。  //
+    friend  class   NullCanvasTest;
+};
+
+}   //  End of namespace  Images
 NESDBG_NAMESPACE_END
+
+#endif

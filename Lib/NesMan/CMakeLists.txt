@@ -34,6 +34,11 @@ set(inclib_header_files
         ${inclib_source_dir}/NesManger.h
 )
 
+set(module_needs_libraries
+        ${project_target_prefix}Images
+        ${project_target_prefix}Common
+)
+
 ##----------------------------------------------------------------
 ##
 ##    ビルドとインストールの設定。

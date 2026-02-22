@@ -23,6 +23,12 @@
 
 
 NESDBG_NAMESPACE_BEGIN
+
+//  クラスの前方宣言。  //
+namespace  Images  {
+class   FullColorImage;
+}   //  End of namespace  Images
+
 namespace  NesMan  {
 
 //  クラスの前方宣言。  //
@@ -84,6 +90,14 @@ public:
 //
 //    Public Member Functions (Virtual Functions).
 //
+public:
+
+    //----------------------------------------------------------------
+    /**   画面を描画する。
+    **
+    **/
+    virtual  ErrCode
+    drawScreen();
 
 //========================================================================
 //
@@ -94,6 +108,22 @@ public:
 //
 //    Accessors.
 //
+public:
+
+    //----------------------------------------------------------------
+    /**   イメージオブジェクトを取得する。
+    **
+    **/
+    Images::FullColorImage  *
+    getImageInstance()  const;
+
+    //----------------------------------------------------------------
+    /**   イメージオブジェクトを設定する。
+    **
+    **/
+    BasePpuCore  &
+    setImageInstance(
+            Images::FullColorImage  *   pImage);
 
 //========================================================================
 //
@@ -110,6 +140,9 @@ public:
 //    Member Variables.
 //
 protected:
+
+    /**   イメージオブジェクト。    **/
+    Images::FullColorImage  *   m_pImage;
 
 //========================================================================
 //
