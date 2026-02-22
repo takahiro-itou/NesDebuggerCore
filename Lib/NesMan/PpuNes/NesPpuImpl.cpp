@@ -82,6 +82,14 @@ NesPpuImpl::~NesPpuImpl()
 ErrCode
 NesPpuImpl::drawScreen()
 {
+    //  パレットを適当に設定する。  //
+    for ( int i = 0; i < 32; i += 4 ){
+        this->m_palette[i + 0]  = 0x00000000;
+        this->m_palette[i + 1]  = 0x00FFFFFF;
+        this->m_palette[i + 2]  = 0x000000FF;
+        this->m_palette[i + 3]  = 0x0000FF00;
+    }
+
     this->m_pImage->drawSample();
 
     return ( ErrCode::SUCCESS );
