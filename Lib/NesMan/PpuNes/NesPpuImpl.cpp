@@ -83,6 +83,8 @@ NesPpuImpl::~NesPpuImpl()
 ErrCode
 NesPpuImpl::drawScreen()
 {
+    this->m_pImage->drawSample();
+
     return ( ErrCode::SUCCESS );
 }
 
