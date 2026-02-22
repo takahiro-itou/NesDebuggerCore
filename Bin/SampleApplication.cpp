@@ -21,6 +21,7 @@
 #include    "NesDbg/NesMan/BaseCpuCore.h"
 #include    "NesDbg/NesMan/BasePpuCore.h"
 #include    "NesDbg/NesMan/NesManager.h"
+#include    "../Lib/NesMan/PpuNes/NesPpuImpl.h"
 
 #include    <iostream>
 #include    <time.h>
@@ -32,7 +33,6 @@ int  main(int argc, char * argv[])
 {
     ErrCode retCode = ErrCode::SUCCESS;;
     NesMan::NesManager  manNes;
-    NesMan::BasePpuCore manPpu(manNes, manNes.getMemoryManager());
 
     if ( argc < 2 ) {
         std::cerr   <<  "Usage "
@@ -47,6 +47,9 @@ int  main(int argc, char * argv[])
                     <<  argv[1] <<  std::endl;
         return ( 1 );
     }
+
+    //  PPU を初期化する。  //
+    NesMan::NesPpuImpl  manPpu(manNes, manNes.getMemoryManager());
 
     //  ハードリセットを行う。  //
     manNes.doHardReset();

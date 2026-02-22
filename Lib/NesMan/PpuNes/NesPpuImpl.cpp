@@ -82,6 +82,10 @@ NesPpuImpl::~NesPpuImpl()
 ErrCode
 NesPpuImpl::drawScreen()
 {
+    if ( this->m_pImage == nullptr ) {
+        return ( ErrCode::FAILURE );
+    }
+
     //  パレットを適当に設定する。  //
     for ( int i = 0; i < 32; i += 4 ){
         this->m_palette[i + 0]  = 0x00000000;
@@ -144,6 +148,26 @@ NesPpuImpl::drawScreen()
 //
 //    Public Member Functions (Virtual Functions).
 //
+
+//----------------------------------------------------------------
+//    属性テーブルを更新する。
+//
+
+ErrCode
+NesPpuImpl::updateAttributeTable()
+{
+    return ( ErrCode::SUCCESS );
+}
+
+//----------------------------------------------------------------
+//    ネームテーブルを更新する。
+//
+
+ErrCode
+NesPpuImpl::updateNameTable()
+{
+    return ( ErrCode::SUCCESS );
+}
 
 //========================================================================
 //
