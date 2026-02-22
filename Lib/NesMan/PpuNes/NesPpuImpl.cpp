@@ -149,7 +149,9 @@ NesPpuImpl::drawBackGroud()
                 BtByte  tmp = *(ptrPats ++);
                 for ( int cx = 0; cx < 8; ++ cx ) {
                     if ( tmp & 0x80 ) {
-                        buf[cy * 8 + cx] |= 1;
+                        buf[cy * 8 + cx] = 1;
+                    } else {
+                        buf[cy * 8 + cx] = 0;
                     }
                     tmp <<= 1;
                 }
@@ -165,10 +167,12 @@ NesPpuImpl::drawBackGroud()
             }
 
             //  これにパレットの色を付けて転送する。    //
-            const  int  pid = this->m_palIdx[ny][nx];
+            const  int  pid = (this->m_palIdx[ny][nx]) & 3;
             for ( int cy = 0; cy < 8; ++ cy ) {
                 for ( int cx = 0; cx < 8; ++ cx ) {
-                    const  int  col = this->m_palette[pid * 4 + buf[cy * 8 + cx]];
+                    const  int  col = this->m_palette[
+                            pid * 4 + buf[cy * 8 + cx]
+                    ];
                     this->m_pImage->setPixelColor(
                             nx * 8 + cx, ny * 8 + cy,
                             col);
@@ -199,7 +203,13 @@ NesPpuImpl::updateAttributeTable()
 {
     LpByteWriteBuf  ptr = this->m_memPPU + 0x23C0;
     for ( int i = 0; i < 64; ++ i ) {
-        (* ptr) = 0;
+        * (ptr ++)  = i;
+    }
+
+    for ( int ny = 0; ny < 32; ++ ny ) {
+        for ( int nx = 0; nx < 32; ++ nx ) {
+            this->m_palIdx[ny][nx]  = 0;
+        }
     }
 
     int  nx = 0;
@@ -232,7 +242,10 @@ NesPpuImpl::updateAttributeTable()
         this->m_palIdx[ny+3][nx+3] = val;
 
         nx  += 4;
-        ny  += 4;
+        if ( nx >= 32 ) {
+            ny  += 4;
+            nx  -= 32;
+        }
     }
 
     return ( ErrCode::SUCCESS );
@@ -247,8 +260,8 @@ NesPpuImpl::updateNameTable()
 {
     for ( int ny = 0; ny < 16; ++ ny ) {
         LpByteWriteBuf  ptr = this->m_memPPU + 0x2000 + (ny * 32);
-        for ( int nx = 0; nx < 16; ++nx ) {
-            *(ptr ++)   = (ny * 16 + ny);
+        for ( int nx = 0; nx < 16; ++ nx ) {
+            *(ptr ++)   = (ny * 16 + nx);
         }
     }
     return ( ErrCode::SUCCESS );
