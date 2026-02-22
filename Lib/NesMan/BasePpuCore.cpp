@@ -25,6 +25,8 @@
 
 #include    "NesDbg/Images/FullColorImage.h"
 
+#include    <cstring>
+
 
 NESDBG_NAMESPACE_BEGIN
 namespace  NesMan  {
@@ -61,6 +63,11 @@ BasePpuCore::BasePpuCore(
       m_vMemBuf(),
       m_memPPU(nullptr)
 {
+    this->m_vMemBuf.clear();
+    this->m_vMemBuf.resize(65536);
+    this->m_memPPU  = &(this->m_vMemBuf[0]);
+
+    memcpy(this->m_memPPU, manMem.getChrBank(), 0x2000);
 }
 
 //----------------------------------------------------------------

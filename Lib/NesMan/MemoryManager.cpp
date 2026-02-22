@@ -186,6 +186,16 @@ MemoryManager::getNumPrgBanks()  const
     return ( this->m_numPrgBanks );
 }
 
+//----------------------------------------------------------------
+//    CHR ROM バンクの内容を取得する。
+//
+
+const   LpcByteReadBuf
+MemoryManager::getChrBank()  const
+{
+    return ( this->m_pChrRom );
+}
+
 //========================================================================
 //
 //    Protected Member Functions.

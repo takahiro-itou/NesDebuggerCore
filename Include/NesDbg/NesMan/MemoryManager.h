@@ -196,6 +196,13 @@ public:
     const   size_t
     getNumPrgBanks()  const;
 
+    //----------------------------------------------------------------
+    /**   CHR ROM バンクの内容を取得する。
+    **
+    **/
+    const   LpcByteReadBuf
+    getChrBank()  const;
+
 //========================================================================
 //
 //    Protected Member Functions.
