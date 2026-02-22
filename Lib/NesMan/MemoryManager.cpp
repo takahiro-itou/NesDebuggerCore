@@ -108,6 +108,9 @@ MemoryManager::allocateMemory(
     this->m_memPPU  = new BtByte [65536];
 
     this->m_pRomImg = &(this->m_vRomBuf[0]);
+    this->m_pPrgRom = &(this->m_vRomBuf[0]);
+    this->m_pChrRom = &(this->m_vRomBuf[numPrgBanks * 0x4000]);
+
     return ( this->m_pRomImg );
 }
 
