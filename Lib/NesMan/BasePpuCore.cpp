@@ -106,7 +106,10 @@ BasePpuCore::~BasePpuCore()
 ErrCode
 BasePpuCore::drawScreen()
 {
-    this->m_pImage->drawSample();
+    const  int  iW  = this->m_pImage->getWidth();
+    const  int  iH  = this->m_pImage->getHeight();
+
+    this->m_pImage->fillRectangle(0, 0, iW, iH, 0x00FFFFFF);
 
     return ( ErrCode::SUCCESS );
 }

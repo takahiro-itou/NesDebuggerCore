@@ -169,6 +169,18 @@ public:
         return ( this->m_lpBits + getOffset(x, y) );
     }
 
+    inline  int
+    getWidth()  const
+    {
+        return ( this->m_iWidth );
+    }
+
+    inline  int
+    getHeight()  const
+    {
+        return ( this->m_iHeight );
+    }
+
 //========================================================================
 //
 //    Protected Member Functions.
