@@ -76,6 +76,16 @@ NesPpuImpl::~NesPpuImpl()
 //    Public Member Functions (Overrides).
 //
 
+//----------------------------------------------------------------
+//    画面を描画する。
+//
+
+ErrCode
+NesPpuImpl::drawScreen()
+{
+    return ( ErrCode::SUCCESS );
+}
+
 //========================================================================
 //
 //    Public Member Functions (Pure Virtual Functions).
