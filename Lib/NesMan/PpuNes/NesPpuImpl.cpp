@@ -23,8 +23,7 @@
 #include    "NesPpuImpl.h"
 
 #include    "NesDbg/NesMan/MemoryManager.h"
-
-#include    <iostream>
+#include    "NesDbg/Images/FullColorImage.h"
 
 
 NESDBG_NAMESPACE_BEGIN
