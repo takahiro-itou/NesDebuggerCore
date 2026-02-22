@@ -90,7 +90,47 @@ NesPpuImpl::drawScreen()
         this->m_palette[i + 3]  = 0x0000FF00;
     }
 
-    this->m_pImage->drawSample();
+    BtByte  buf[64];
+
+    for ( int my = 0; my < 16; ++ my ) {
+        for ( int mx = 0; mx < 16; ++ mx ) {
+            //  パターンを読み出す。    //
+            for ( int cy = 0; cy < 8; ++ cy ) {
+                for ( int cx = 0; cx < 8; ++ cx ) {
+                    buf[cy * 8 + cx]    = 0;
+                }
+            }
+            LpcByteReadBuf  ptr = this->m_memPPU + (my * 16 + mx) * 16;
+            for ( int cy = 0; cy < 8; ++ cy ) {
+                BtByte  tmp = *(ptr ++);
+                for ( int cx = 0; cx < 8; ++ cx ) {
+                    if ( tmp & 0x80 ) {
+                        buf[cy * 8 + cx] |= 1;
+                    }
+                    tmp <<= 1;
+                }
+            }
+            for ( int cy = 0; cy < 8; ++ cy ) {
+                BtByte  tmp = *(ptr ++);
+                for ( int cx = 0; cx < 8; ++ cx ) {
+                    if ( tmp & 0x80 ) {
+                        buf[cy * 8 + cx] |= 2;
+                    }
+                    tmp <<= 1;
+                }
+            }
+            //  これにパレットの色を付けて転送する。    //
+            for ( int cy = 0; cy < 8; ++ cy ) {
+                for ( int cx = 0; cx < 8; ++ cx ) {
+                    const  int  col = this->m_palette[buf[cy * 8 + cx]];
+                    this->m_pImage->fillRectangle(
+                            mx * 8 + cx, my * 8 + cy,
+                            mx * 8 + cx + 1, my * 8 + cy + 1,
+                            col);
+                }
+            }
+        }
+    }
 
     return ( ErrCode::SUCCESS );
 }
