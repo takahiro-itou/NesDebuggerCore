@@ -114,6 +114,22 @@ public:
             const  int  sx,
             const  int  sy);
 
+    //----------------------------------------------------------------
+    /**   イメージをデバイスに表示する。
+    **
+    **/
+    virtual  int
+    drawImage(
+            const  HDC  hDC,
+            const  int  dx,
+            const  int  dy,
+            const  int  dw,
+            const  int  dh,
+            const  int  sx,
+            const  int  sy,
+            const  int  sw,
+            const  int  sh);
+
 //========================================================================
 //
 //    Public Member Functions.
