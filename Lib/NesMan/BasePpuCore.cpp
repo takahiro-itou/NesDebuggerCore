@@ -25,6 +25,8 @@
 
 #include    "NesDbg/Images/FullColorImage.h"
 
+#include    <cstring>
+
 
 NESDBG_NAMESPACE_BEGIN
 namespace  NesMan  {
@@ -57,8 +59,15 @@ namespace  {
 BasePpuCore::BasePpuCore(
         NesManager    & manNes,
         MemoryManager & manMem)
-    : m_pImage(nullptr)
+    : m_pImage(nullptr),
+      m_vMemBuf(),
+      m_memPPU(nullptr)
 {
+    this->m_vMemBuf.clear();
+    this->m_vMemBuf.resize(65536);
+    this->m_memPPU  = &(this->m_vMemBuf[0]);
+
+    memcpy(this->m_memPPU, manMem.getChrBank(), 0x2000);
 }
 
 //----------------------------------------------------------------
@@ -97,7 +106,10 @@ BasePpuCore::~BasePpuCore()
 ErrCode
 BasePpuCore::drawScreen()
 {
-    this->m_pImage->drawSample();
+    const  int  iW  = this->m_pImage->getWidth();
+    const  int  iH  = this->m_pImage->getHeight();
+
+    this->m_pImage->fillRectangle(0, 0, iW, iH, 0x00FFFFFF);
 
     return ( ErrCode::SUCCESS );
 }
@@ -113,25 +125,25 @@ BasePpuCore::drawScreen()
 //
 
 //----------------------------------------------------------------
-//    イメージオブジェクトを取得する。
+//    描画先のイメージを取得する。
 //
 
 Images::FullColorImage  *
-BasePpuCore::getImageInstance()  const
+BasePpuCore::getScreenImage()  const
 {
     return ( this->m_pImage );
 }
 
 //----------------------------------------------------------------
-//    イメージオブジェクトを設定する。
+//    描画先のイメージを設定する。
 //
 
-BasePpuCore  &
-BasePpuCore::setImageInstance(
-        Images::FullColorImage  *   pImage)
+ErrCode
+BasePpuCore::setScreenImage(
+        Images::FullColorImage * const  ptrImg)
 {
-    this->m_pImage  = pImage;
-    return ( *this );
+    this->m_pImage  = ptrImg;
+    return ( ErrCode::SUCCESS );
 }
 
 //========================================================================

@@ -125,6 +125,16 @@ public:
             const  int  y2,
             const  int  color);
 
+    //----------------------------------------------------------------
+    /**   指定したピクセルの色を設定する。
+    **
+    **/
+    void
+    setPixelColor(
+            const  int  x,
+            const  int  y,
+            const  int  color);
+
 //========================================================================
 //
 //    Accessors.
@@ -167,6 +177,18 @@ public:
             const  int  y)
     {
         return ( this->m_lpBits + getOffset(x, y) );
+    }
+
+    inline  int
+    getWidth()  const
+    {
+        return ( this->m_iWidth );
+    }
+
+    inline  int
+    getHeight()  const
+    {
+        return ( this->m_iHeight );
     }
 
 //========================================================================

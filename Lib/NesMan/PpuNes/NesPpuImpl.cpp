@@ -23,8 +23,7 @@
 #include    "NesPpuImpl.h"
 
 #include    "NesDbg/NesMan/MemoryManager.h"
-
-#include    <iostream>
+#include    "NesDbg/Images/FullColorImage.h"
 
 
 NESDBG_NAMESPACE_BEGIN
@@ -76,6 +75,47 @@ NesPpuImpl::~NesPpuImpl()
 //    Public Member Functions (Overrides).
 //
 
+//----------------------------------------------------------------
+//    画面を描画する。
+//
+
+ErrCode
+NesPpuImpl::drawScreen()
+{
+    if ( this->m_pImage == nullptr ) {
+        return ( ErrCode::FAILURE );
+    }
+
+    //  パレットを適当に設定する。  //
+    {
+        this->m_palette[0]  = 0x00000000;
+        this->m_palette[1]  = 0x00FFFFFF;
+        this->m_palette[2]  = 0x000000FF;
+        this->m_palette[3]  = 0x0000FF00;
+
+        this->m_palette[4]  = 0x00000000;
+        this->m_palette[5]  = 0x00FF0000;
+        this->m_palette[6]  = 0x0000FFFF;
+        this->m_palette[7]  = 0x00FFFFFF;
+
+        this->m_palette[8]  = 0x00000000;
+        this->m_palette[9]  = 0x00FF0000;
+        this->m_palette[10] = 0x0000FF00;
+        this->m_palette[11] = 0x000000FF;
+
+        this->m_palette[12] = 0x00000000;
+        this->m_palette[13] = 0x0000FFFF;
+        this->m_palette[14] = 0x00FF00FF;
+        this->m_palette[15] = 0x00FFFF00;
+    }
+
+    updateNameTable();
+    updateAttributeTable();
+    drawBackGroud();
+
+    return ( ErrCode::SUCCESS );
+}
+
 //========================================================================
 //
 //    Public Member Functions (Pure Virtual Functions).
@@ -86,6 +126,147 @@ NesPpuImpl::~NesPpuImpl()
 //    Public Member Functions (Virtual Functions).
 //
 
+//----------------------------------------------------------------
+//    背景画面を描画する。
+//
+
+ErrCode
+NesPpuImpl::drawBackGroud()
+{
+
+    BtByte  buf[64];
+
+    LpcByteReadBuf  ptrTile = this->m_memPPU + 0x2000;
+
+    for ( int ny = 0; ny < 30; ++ ny ) {
+        for ( int nx = 0; nx < 32; ++ nx ) {
+            //  パターン番号を読み出す。    //
+            const   BtByte  tid = *(ptrTile ++);
+
+            //  パターンを読み出す。    //
+            LpcByteReadBuf  ptrPats = this->m_memPPU + (tid * 16);
+            for ( int cy = 0; cy < 8; ++ cy ) {
+                BtByte  tmp = *(ptrPats ++);
+                for ( int cx = 0; cx < 8; ++ cx ) {
+                    if ( tmp & 0x80 ) {
+                        buf[cy * 8 + cx] = 1;
+                    } else {
+                        buf[cy * 8 + cx] = 0;
+                    }
+                    tmp <<= 1;
+                }
+            }
+            for ( int cy = 0; cy < 8; ++ cy ) {
+                BtByte  tmp = *(ptrPats ++);
+                for ( int cx = 0; cx < 8; ++ cx ) {
+                    if ( tmp & 0x80 ) {
+                        buf[cy * 8 + cx] |= 2;
+                    }
+                    tmp <<= 1;
+                }
+            }
+
+            //  これにパレットの色を付けて転送する。    //
+            const  int  pid = (this->m_palIdx[ny][nx]) & 3;
+            for ( int cy = 0; cy < 8; ++ cy ) {
+                for ( int cx = 0; cx < 8; ++ cx ) {
+                    const  int  col = this->m_palette[
+                            pid * 4 + buf[cy * 8 + cx]
+                    ];
+                    this->m_pImage->setPixelColor(
+                            nx * 8 + cx, ny * 8 + cy,
+                            col);
+                }
+            }
+        }
+    }
+
+    return ( ErrCode::SUCCESS );
+}
+
+//----------------------------------------------------------------
+//    スプライトを描画する。
+//
+
+ErrCode
+NesPpuImpl::drawSprite()
+{
+    return ( ErrCode::SUCCESS );
+}
+
+//----------------------------------------------------------------
+//    属性テーブルを更新する。
+//
+
+ErrCode
+NesPpuImpl::updateAttributeTable()
+{
+    LpByteWriteBuf  ptr = this->m_memPPU + 0x23C0;
+    for ( int i = 0; i < 64; ++ i ) {
+        * (ptr ++)  = i;
+    }
+
+    for ( int ny = 0; ny < 32; ++ ny ) {
+        for ( int nx = 0; nx < 32; ++ nx ) {
+            this->m_palIdx[ny][nx]  = 0;
+        }
+    }
+
+    int  nx = 0;
+    int  ny = 0;
+    LpcByteReadBuf  ptrAtrb = this->m_memPPU + 0x23C0;
+    for ( int a = 0; a < 64; ++ a ) {
+        BtByte  tmp = *(ptrAtrb ++);
+        BtByte  val = (tmp & 3);
+        this->m_palIdx[ny+0][nx+0] = val;
+        this->m_palIdx[ny+0][nx+1] = val;
+        this->m_palIdx[ny+1][nx+0] = val;
+        this->m_palIdx[ny+1][nx+1] = val;
+
+        val = (tmp >>= 2) & 3;
+        this->m_palIdx[ny+0][nx+2] = val;
+        this->m_palIdx[ny+0][nx+3] = val;
+        this->m_palIdx[ny+1][nx+2] = val;
+        this->m_palIdx[ny+1][nx+3] = val;
+
+        val = (tmp >>= 2) & 3;
+        this->m_palIdx[ny+2][nx+0] = val;
+        this->m_palIdx[ny+2][nx+1] = val;
+        this->m_palIdx[ny+3][nx+0] = val;
+        this->m_palIdx[ny+3][nx+1] = val;
+
+        val = (tmp >>= 2) & 3;
+        this->m_palIdx[ny+2][nx+2] = val;
+        this->m_palIdx[ny+2][nx+3] = val;
+        this->m_palIdx[ny+3][nx+2] = val;
+        this->m_palIdx[ny+3][nx+3] = val;
+
+        nx  += 4;
+        if ( nx >= 32 ) {
+            ny  += 4;
+            nx  -= 32;
+        }
+    }
+
+    return ( ErrCode::SUCCESS );
+}
+
+//----------------------------------------------------------------
+//    ネームテーブルを更新する。
+//
+
+ErrCode
+NesPpuImpl::updateNameTable()
+{
+    for ( int ny = 0; ny < 16; ++ ny ) {
+        LpByteWriteBuf  ptr = this->m_memPPU + 0x2000 + (ny * 32);
+        for ( int nx = 0; nx < 16; ++ nx ) {
+            *(ptr ++)   = (ny * 16 + nx);
+        }
+    }
+    return ( ErrCode::SUCCESS );
+}
+
 //========================================================================
 //
 //    Public Member Functions.
@@ -95,17 +276,6 @@ NesPpuImpl::~NesPpuImpl()
 //
 //    Accessors.
 //
-
-//----------------------------------------------------------------
-//    描画先のイメージを指定する。
-//
-
-ErrCode
-NesPpuImpl::setScreenImage(
-        Images::FullColorImage * const  ptrImage)
-{
-    return ( ErrCode::FAILURE );
-}
 
 //========================================================================
 //

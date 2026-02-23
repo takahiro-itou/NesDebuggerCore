@@ -21,6 +21,11 @@
 #if !defined( NESDBG_NESMAN_INCLUDED_BASE_PPU_CORE_H )
 #    define   NESDBG_NESMAN_INCLUDED_BASE_PPU_CORE_H
 
+#if !defined( NESDBG_SYS_STL_INCLUDED_VECTOR )
+#    include    <vector>
+#    define   NESDBG_SYS_STL_INCLUDED_VECTOR
+#endif
+
 
 NESDBG_NAMESPACE_BEGIN
 
@@ -111,19 +116,24 @@ public:
 public:
 
     //----------------------------------------------------------------
-    /**   イメージオブジェクトを取得する。
+    /**   描画先のイメージを取得する。
     **
     **/
     Images::FullColorImage  *
-    getImageInstance()  const;
+    getScreenImage()  const;
 
     //----------------------------------------------------------------
-    /**   イメージオブジェクトを設定する。
+    /**   描画先のイメージを設定する。
     **
+    **  @param [in] ptrImg    イメージオブジェクト。
+    **  @return     エラーコードを返す。
+    **      -   異常終了の場合は、
+    **          エラーの種類を示す非ゼロ値を返す。
+    **      -   正常終了の場合は、ゼロを返す。
     **/
-    BasePpuCore  &
-    setImageInstance(
-            Images::FullColorImage  *   pImage);
+    ErrCode
+    setScreenImage(
+            Images::FullColorImage * const  ptrImg);
 
 //========================================================================
 //
@@ -143,6 +153,11 @@ protected:
 
     /**   イメージオブジェクト。    **/
     Images::FullColorImage  *   m_pImage;
+
+    /**   PPU メモリ空間。          **/
+    std::vector<BtByte>         m_vMemBuf;
+
+    LpByteWriteBuf              m_memPPU;
 
 //========================================================================
 //
