@@ -109,8 +109,12 @@ NesPpuImpl::drawScreen()
         this->m_palette[15] = 0x00FFFF00;
     }
 
+    initializeAttributeTable();
     updateNameTable();
-    updateAttributeTable();
+    updateAttributeTable(0);
+    updateAttributeTable(1);
+    updateAttributeTable(2);
+    updateAttributeTable(3);
     drawBackGroud();
 
     return ( ErrCode::SUCCESS );
@@ -195,57 +199,46 @@ NesPpuImpl::drawSprite()
 }
 
 //----------------------------------------------------------------
-//    属性テーブルを更新する。
+//    属性テーブルを初期化する。
 //
 
 ErrCode
-NesPpuImpl::updateAttributeTable()
+NesPpuImpl::initializeAttributeTable()
 {
-    LpByteWriteBuf  ptr = this->m_memPPU + 0x23C0;
-    for ( int i = 0; i < 64; ++ i ) {
-        * (ptr ++)  = i;
-    }
-
-    for ( int ny = 0; ny < 32; ++ ny ) {
-        for ( int nx = 0; nx < 32; ++ nx ) {
+    //  テスト用ダミーコード。  //
+    for ( int ny = 0; ny < 64; ++ ny ) {
+        for ( int nx = 0; nx < 64; ++ nx ) {
             this->m_palIdx[ny][nx]  = 0;
         }
     }
 
-    int  nx = 0;
-    int  ny = 0;
-    LpcByteReadBuf  ptrAtrb = this->m_memPPU + 0x23C0;
-    for ( int a = 0; a < 64; ++ a ) {
-        BtByte  tmp = *(ptrAtrb ++);
-        BtByte  val = (tmp & 3);
-        this->m_palIdx[ny+0][nx+0] = val;
-        this->m_palIdx[ny+0][nx+1] = val;
-        this->m_palIdx[ny+1][nx+0] = val;
-        this->m_palIdx[ny+1][nx+1] = val;
+    for ( int i = 0; i < 64; ++ i ) {
+        this->m_memPPU[0 * 0x0400 + 0x23C0 + i] = i;
+        this->m_memPPU[1 * 0x0400 + 0x23C0 + i] = i;
+        this->m_memPPU[2 * 0x0400 + 0x23C0 + i] = i;
+        this->m_memPPU[3 * 0x0400 + 0x23C0 + i] = i;
 
-        val = (tmp >>= 2) & 3;
-        this->m_palIdx[ny+0][nx+2] = val;
-        this->m_palIdx[ny+0][nx+3] = val;
-        this->m_palIdx[ny+1][nx+2] = val;
-        this->m_palIdx[ny+1][nx+3] = val;
+        writeAttribute(0, i, i);
+        writeAttribute(1, i, i);
+        writeAttribute(2, i, i);
+        writeAttribute(3, i, i);
+    }
 
-        val = (tmp >>= 2) & 3;
-        this->m_palIdx[ny+2][nx+0] = val;
-        this->m_palIdx[ny+2][nx+1] = val;
-        this->m_palIdx[ny+3][nx+0] = val;
-        this->m_palIdx[ny+3][nx+1] = val;
+    return ( ErrCode::SUCCESS );
+}
 
-        val = (tmp >>= 2) & 3;
-        this->m_palIdx[ny+2][nx+2] = val;
-        this->m_palIdx[ny+2][nx+3] = val;
-        this->m_palIdx[ny+3][nx+2] = val;
-        this->m_palIdx[ny+3][nx+3] = val;
+//----------------------------------------------------------------
+//    属性テーブルを更新する。
+//
 
-        nx  += 4;
-        if ( nx >= 32 ) {
-            ny  += 4;
-            nx  -= 32;
-        }
+ErrCode
+NesPpuImpl::updateAttributeTable(
+        const  int  scr)
+{
+    LpcByteReadBuf  ptrAtrb = this->m_memPPU + (scr * 0x0400) + 0x23C0;
+
+    for ( int i = 0; i < 64; ++ i ){
+        writeAttribute(scr, i, *(ptrAtrb ++) );
     }
 
     return ( ErrCode::SUCCESS );
@@ -264,6 +257,58 @@ NesPpuImpl::updateNameTable()
             *(ptr ++)   = (ny * 16 + nx);
         }
     }
+    return ( ErrCode::SUCCESS );
+}
+
+//----------------------------------------------------------------
+//    属性テーブルに値を書き込む。
+//
+
+ErrCode
+NesPpuImpl::writeAttribute(
+        const   int     scr,
+        const   int     idx,
+        const   BtByte  val)
+{
+    //  インデックスは 00..63 の値をとる。  //
+    //  8 で割った剰余で横方向。            //
+    //  8 で割った商  で縦方向の番号。      //
+    int  nx  = ((idx     ) & 7);
+    int  ny  = ((idx >> 3) & 7);
+
+    //  これに画面番号 *8 を加算する。      //
+    nx  |= ((scr & 1) << 3);
+    ny  |= ((scr >> 1) & 1) << 3;
+
+    //  １バイトで 4*4 マス分を指定する。   //
+    nx  *= 4;
+    ny  *= 4;
+
+    //  テーブルに書き込む。    //
+    BtByte  wrt = (val & 3);
+    this->m_palIdx[ny+0][nx+0]  = wrt;
+    this->m_palIdx[ny+0][nx+1]  = wrt;
+    this->m_palIdx[ny+1][nx+0]  = wrt;
+    this->m_palIdx[ny+1][nx+1]  = wrt;
+
+    wrt = (val >> 2) & 3;
+    this->m_palIdx[ny+0][nx+2]  = wrt;
+    this->m_palIdx[ny+0][nx+3]  = wrt;
+    this->m_palIdx[ny+1][nx+2]  = wrt;
+    this->m_palIdx[ny+1][nx+3]  = wrt;
+
+    wrt = (val >> 4) & 3;
+    this->m_palIdx[ny+2][nx+0]  = wrt;
+    this->m_palIdx[ny+2][nx+1]  = wrt;
+    this->m_palIdx[ny+3][nx+0]  = wrt;
+    this->m_palIdx[ny+3][nx+1]  = wrt;
+
+    wrt = (val >> 6) & 3;
+    this->m_palIdx[ny+2][nx+2]  = wrt;
+    this->m_palIdx[ny+2][nx+3]  = wrt;
+    this->m_palIdx[ny+2][nx+2]  = wrt;
+    this->m_palIdx[ny+2][nx+3]  = wrt;
+
     return ( ErrCode::SUCCESS );
 }
 
