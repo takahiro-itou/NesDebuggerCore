@@ -111,10 +111,10 @@ NesPpuImpl::drawScreen()
 
     initializeAttributeTable();
     updateNameTable();
-    updateAttributeTable(0);
-    updateAttributeTable(1);
-    updateAttributeTable(2);
-    updateAttributeTable(3);
+    // updateAttributeTable(0);
+    // updateAttributeTable(1);
+    // updateAttributeTable(2);
+    // updateAttributeTable(3);
     drawBackGroud();
 
     return ( ErrCode::SUCCESS );
