@@ -156,6 +156,29 @@ FullColorImage::fillRectangle(
     return;
 }
 
+//----------------------------------------------------------------
+//    指定したピクセルの色を設定する。
+//
+
+void
+FullColorImage::setPixelColor(
+        const  int  x,
+        const  int  y,
+        const  int  color)
+{
+    const   unsigned  char  cB  = ( color        & 0xFF);
+    const   unsigned  char  cG  = ((color >>  8) & 0xFF);
+    const   unsigned  char  cR  = ((color >> 16) & 0xFF);
+
+    unsigned char * ptr = getPixel(x, y);
+
+    *(ptr ++) = cB;
+    *(ptr ++) = cG;
+    *(ptr ++) = cR;
+
+    return;
+}
+
 //========================================================================
 //
 //    Accessors.
