@@ -143,6 +143,34 @@ BitmapRenderer::drawImage(
     return ( 0 );
 }
 
+//----------------------------------------------------------------
+//    イメージをデバイスに表示する。
+//
+
+int
+BitmapRenderer::drawImage(
+        const  HDC  hDC,
+        const  int  dx,
+        const  int  dy,
+        const  int  dw,
+        const  int  dh,
+        const  int  sx,
+        const  int  sy,
+        const  int  sw,
+        const  int  sh)
+{
+    HDC     hMemDC  = ::CreateCompatibleDC(hDC);
+    HGDIOBJ hOldBmp = ::SelectObject(hMemDC, this->m_hBitmap);
+
+    ::StretchBlt(hDC, dx, dy, dw, dh, hMemDC, sx, sy, sw, sh, SRCCOPY);
+    ::GdiFlush();
+
+    ::SelectObject(hMemDC, hOldBmp);
+    ::DeleteDC(hMemDC);
+
+    return ( 0 );
+}
+
 //========================================================================
 //
 //    Public Member Functions.
