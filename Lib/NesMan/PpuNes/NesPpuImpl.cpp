@@ -267,6 +267,58 @@ NesPpuImpl::updateNameTable()
     return ( ErrCode::SUCCESS );
 }
 
+//----------------------------------------------------------------
+//    属性テーブルを書き込む。
+//
+
+ErrCode
+NesPpuImpl::writeAttribute(
+        const   int     scr,
+        const   int     idx,
+        const   BtByte  val)
+{
+    //  インデックスは 00..63 の値をとる。  //
+    //  8 で割った剰余で横方向。            //
+    //  8 で割った商  で縦方向の番号。      //
+    int  nx  = ((idx     ) & 7);
+    int  ny  = ((idx >> 3) & 7);
+
+    //  これに画面番号 *8 を加算する。      //
+    nx  |= ((scr & 1) << 3);
+    ny  |= ((scr >> 1) & 1) << 3;
+
+    //  １バイトで 4*4 マス分を指定する。   //
+    nx  *= 4;
+    ny  *= 4;
+
+    //  テーブルに書き込む。    //
+    BtByte  wrt = (val & 3);
+    this->m_palIdx[ny+0][nx+0]  = wrt;
+    this->m_palIdx[ny+0][nx+1]  = wrt;
+    this->m_palIdx[ny+1][nx+0]  = wrt;
+    this->m_palIdx[ny+1][nx+1]  = wrt;
+
+    wrt = (val >> 2) & 3;
+    this->m_palIdx[ny+0][nx+2]  = wrt;
+    this->m_palIdx[ny+0][nx+3]  = wrt;
+    this->m_palIdx[ny+1][nx+2]  = wrt;
+    this->m_palIdx[ny+1][nx+3]  = wrt;
+
+    wrt = (val >> 4) & 3;
+    this->m_palIdx[ny+2][nx+0]  = wrt;
+    this->m_palIdx[ny+2][nx+1]  = wrt;
+    this->m_palIdx[ny+3][nx+0]  = wrt;
+    this->m_palIdx[ny+3][nx+1]  = wrt;
+
+    wrt = (val >> 6) & 3;
+    this->m_palIdx[ny+2][nx+2]  = wrt;
+    this->m_palIdx[ny+2][nx+3]  = wrt;
+    this->m_palIdx[ny+2][nx+2]  = wrt;
+    this->m_palIdx[ny+2][nx+3]  = wrt;
+
+    return ( ErrCode::SUCCESS );
+}
+
 //========================================================================
 //
 //    Public Member Functions.

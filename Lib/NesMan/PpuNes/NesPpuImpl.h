@@ -125,6 +125,16 @@ public:
     virtual  ErrCode
     updateNameTable();
 
+    //----------------------------------------------------------------
+    /**   属性テーブルを書き込む。
+    **
+    **/
+    virtual  ErrCode
+    writeAttribute(
+            const   int     scr,
+            const   int     idx,
+            const   BtByte  val);
+
 //========================================================================
 //
 //    Public Member Functions.
@@ -155,7 +165,7 @@ private:
     int         m_palette[32];
 
     /**   パレット番号。    **/
-    BtByte      m_palIdx[32][32];
+    BtByte      m_palIdx[64][64];
 
 //========================================================================
 //
