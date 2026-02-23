@@ -201,16 +201,20 @@ NesPpuImpl::drawSprite()
 ErrCode
 NesPpuImpl::updateAttributeTable()
 {
-    LpByteWriteBuf  ptr = this->m_memPPU + 0x23C0;
-    for ( int i = 0; i < 64; ++ i ) {
-        * (ptr ++)  = i;
-    }
-
     for ( int ny = 0; ny < 32; ++ ny ) {
         for ( int nx = 0; nx < 32; ++ nx ) {
             this->m_palIdx[ny][nx]  = 0;
         }
     }
+
+    for ( int i = 0; i < 64; ++ i ) {
+        writeAttribute(0, i, i);
+        writeAttribute(1, i, i);
+        writeAttribute(2, i, i);
+        writeAttribute(3, i, i);
+    }
+
+    return ( ErrCode::SUCCESS );
 
     int  nx = 0;
     int  ny = 0;
@@ -277,6 +281,8 @@ NesPpuImpl::writeAttribute(
         const   int     idx,
         const   BtByte  val)
 {
+    this->m_memPPU[0x23C0 + scr * 0x0400 + idx] = val;
+
     //  インデックスは 00..63 の値をとる。  //
     //  8 で割った剰余で横方向。            //
     //  8 で割った商  で縦方向の番号。      //
