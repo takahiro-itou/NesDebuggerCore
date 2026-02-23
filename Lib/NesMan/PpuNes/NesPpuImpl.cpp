@@ -109,8 +109,12 @@ NesPpuImpl::drawScreen()
         this->m_palette[15] = 0x00FFFF00;
     }
 
+    initializeAttributeTable();
     updateNameTable();
-    updateAttributeTable();
+    updateAttributeTable(0);
+    updateAttributeTable(1);
+    updateAttributeTable(2);
+    updateAttributeTable(3);
     drawBackGroud();
 
     return ( ErrCode::SUCCESS );
@@ -195,14 +199,15 @@ NesPpuImpl::drawSprite()
 }
 
 //----------------------------------------------------------------
-//    属性テーブルを更新する。
+//    属性テーブルを初期化する。
 //
 
 ErrCode
-NesPpuImpl::updateAttributeTable()
+NesPpuImpl::initializeAttributeTable()
 {
-    for ( int ny = 0; ny < 32; ++ ny ) {
-        for ( int nx = 0; nx < 32; ++ nx ) {
+    //  テスト用ダミーコード。  //
+    for ( int ny = 0; ny < 64; ++ ny ) {
+        for ( int nx = 0; nx < 64; ++ nx ) {
             this->m_palIdx[ny][nx]  = 0;
         }
     }
@@ -215,41 +220,20 @@ NesPpuImpl::updateAttributeTable()
     }
 
     return ( ErrCode::SUCCESS );
+}
 
-    int  nx = 0;
-    int  ny = 0;
-    LpcByteReadBuf  ptrAtrb = this->m_memPPU + 0x23C0;
-    for ( int a = 0; a < 64; ++ a ) {
-        BtByte  tmp = *(ptrAtrb ++);
-        BtByte  val = (tmp & 3);
-        this->m_palIdx[ny+0][nx+0] = val;
-        this->m_palIdx[ny+0][nx+1] = val;
-        this->m_palIdx[ny+1][nx+0] = val;
-        this->m_palIdx[ny+1][nx+1] = val;
+//----------------------------------------------------------------
+//    属性テーブルを更新する。
+//
 
-        val = (tmp >>= 2) & 3;
-        this->m_palIdx[ny+0][nx+2] = val;
-        this->m_palIdx[ny+0][nx+3] = val;
-        this->m_palIdx[ny+1][nx+2] = val;
-        this->m_palIdx[ny+1][nx+3] = val;
+ErrCode
+NesPpuImpl::updateAttributeTable(
+        const  int  scr)
+{
+    LpcByteReadBuf  ptrAtrb = this->m_memPPU + (scr * 0x0400) + 0x23C0;
 
-        val = (tmp >>= 2) & 3;
-        this->m_palIdx[ny+2][nx+0] = val;
-        this->m_palIdx[ny+2][nx+1] = val;
-        this->m_palIdx[ny+3][nx+0] = val;
-        this->m_palIdx[ny+3][nx+1] = val;
-
-        val = (tmp >>= 2) & 3;
-        this->m_palIdx[ny+2][nx+2] = val;
-        this->m_palIdx[ny+2][nx+3] = val;
-        this->m_palIdx[ny+3][nx+2] = val;
-        this->m_palIdx[ny+3][nx+3] = val;
-
-        nx  += 4;
-        if ( nx >= 32 ) {
-            ny  += 4;
-            nx  -= 32;
-        }
+    for ( int i = 0; i < 64; ++ i ){
+        writeAttribute(scr, i, *(ptrAtrb ++) );
     }
 
     return ( ErrCode::SUCCESS );
@@ -272,7 +256,7 @@ NesPpuImpl::updateNameTable()
 }
 
 //----------------------------------------------------------------
-//    属性テーブルを書き込む。
+//    属性テーブルに値を書き込む。
 //
 
 ErrCode
@@ -281,8 +265,6 @@ NesPpuImpl::writeAttribute(
         const   int     idx,
         const   BtByte  val)
 {
-    this->m_memPPU[0x23C0 + scr * 0x0400 + idx] = val;
-
     //  インデックスは 00..63 の値をとる。  //
     //  8 で割った剰余で横方向。            //
     //  8 で割った商  で縦方向の番号。      //
