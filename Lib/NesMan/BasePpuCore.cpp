@@ -63,13 +63,9 @@ BasePpuCore::BasePpuCore(
         MemoryManager & manMem)
     : m_pImage(nullptr),
       m_vMemBuf(),
-      m_memPPU(nullptr)
+      m_memPPU(nullptr),
+      m_manMem(manMem)
 {
-    this->m_vMemBuf.clear();
-    this->m_vMemBuf.resize(65536);
-    this->m_memPPU  = &(this->m_vMemBuf[0]);
-
-    memcpy(this->m_memPPU, manMem.getChrBank(), 0x2000);
 }
 
 //----------------------------------------------------------------
@@ -100,6 +96,26 @@ BasePpuCore::~BasePpuCore()
 //
 //    Public Member Functions (Virtual Functions).
 //
+
+//----------------------------------------------------------------
+//    プロセッサをリセットする。
+//
+
+ErrCode
+BasePpuCore::doHardReset()
+{
+    this->m_vMemBuf.clear();
+    this->m_vMemBuf.resize(65536);
+    this->m_memPPU  = &(this->m_vMemBuf[0]);
+
+    const   LpcByteReadBuf  chrBank = this->m_manMem.getChrBank();
+    if ( chrBank == nullptr ) {
+        return ( ErrCode::FAILURE );
+    }
+
+    memcpy(this->m_memPPU, chrBank, 0x2000);
+    return ( ErrCode::SUCCESS );
+}
 
 //----------------------------------------------------------------
 //    画面を描画する。

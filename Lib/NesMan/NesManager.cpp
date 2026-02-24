@@ -123,6 +123,8 @@ NesManager::doHardReset()
     this->m_cpuCur  = this->m_cpu6502;
     this->m_cpuCur->doHardReset();
 
+    this->m_ppuCur->doHardReset();
+
     return ( ErrCode::SUCCESS );
 }
 
