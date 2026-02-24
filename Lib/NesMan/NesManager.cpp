@@ -65,10 +65,8 @@ NesManager::NesManager()
       m_cpu6502(nullptr),
       m_disCur (&g_disCpu6502)
 {
-    this->m_cpu6502 = new Cpu6502(*this, this->m_manMem);
-    this->m_cpuCur  = this->m_cpu6502;
-
-    this->m_ppuCur  = new NesPpuImpl(*this, this->m_manMem);
+    getOrCreateCpuInstance();
+    getOrCreatePpuInstance();
 
     g_disCpu6502.setNesDbgManager(*this);
     g_disCpu6502.setMemoryManager(this->m_manMem);
@@ -156,6 +154,32 @@ GuestMemoryAddress
 NesManager::getNextPC()  const
 {
     return  this->m_cpuCur->getNextPC();
+}
+
+//----------------------------------------------------------------
+//    CPU インスタンスを取得する。
+//
+
+BaseCpuCore  &
+NesManager::getOrCreateCpuInstance()
+{
+    if ( this->m_cpu6502 != nullptr ) {
+        this->m_cpu6502 = new Cpu6502(*this, this->m_manMem);
+    }
+    return ( *(this->m_cpu6502) );
+}
+
+//----------------------------------------------------------------
+//    PPU インスタンスを取得する。
+//
+
+BasePpuCore  &
+NesManager::getOrCreatePpuInstance()
+{
+    if ( this->m_ppuCur != nullptr ) {
+        this->m_ppuCur  = new NesPpuImpl(*this, this->m_manMem);
+    }
+    return ( *(this->m_ppuCur) );
 }
 
 //----------------------------------------------------------------
