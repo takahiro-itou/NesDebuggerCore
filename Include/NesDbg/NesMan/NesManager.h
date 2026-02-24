@@ -41,6 +41,7 @@ namespace  NesMan  {
 //  クラスの前方宣言。  //
 class   BaseCpuCore;
 class   BaseDisCpu;
+class   BasePpuCore;
 class   Cpu6502;
 class   Dis6502;
 
@@ -257,8 +258,11 @@ private:
     /**   メモリ空間。  **/
     MemoryManager   m_manMem;
 
-    /**   プロセッサ。  **/
+    /**   現在の CPU .  **/
     BaseCpuCore  *  m_cpuCur;
+
+    /**   現在の PPU .  **/
+    BasePpuCore  *  m_ppuCur;
 
     Cpu6502  *      m_cpu6502;
 

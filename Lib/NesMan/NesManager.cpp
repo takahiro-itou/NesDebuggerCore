@@ -24,6 +24,7 @@
 
 #include    "Cpu6502/Cpu6502.h"
 #include    "Cpu6502/Dis6502.h"
+#include    "PpuNes/NesPpuImpl.h"
 
 #include    "NesDbg/Common/NesDbgUtils.h"
 
@@ -60,11 +61,14 @@ Dis6502     g_disCpu6502;
 NesManager::NesManager()
     : m_manMem(),
       m_cpuCur (nullptr),
+      m_ppuCur (nullptr),
       m_cpu6502(nullptr),
       m_disCur (&g_disCpu6502)
 {
     this->m_cpu6502 = new Cpu6502(*this, this->m_manMem);
     this->m_cpuCur  = this->m_cpu6502;
+
+    this->m_ppuCur  = new NesPpuImpl(*this, this->m_manMem);
 
     g_disCpu6502.setNesDbgManager(*this);
     g_disCpu6502.setMemoryManager(this->m_manMem);
