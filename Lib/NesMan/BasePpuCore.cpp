@@ -116,6 +116,17 @@ BasePpuCore::drawScreen()
     return ( ErrCode::SUCCESS );
 }
 
+//----------------------------------------------------------------
+//    カウンタ情報を更新する。
+//
+
+ErrCode
+BasePpuCore::updateCounters(
+        const  CounterInfo  &ctrStep)
+{
+    return ( ErrCode::SUCCESS );
+}
+
 //========================================================================
 //
 //    Public Member Functions.
