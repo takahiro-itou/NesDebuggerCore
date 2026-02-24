@@ -108,6 +108,19 @@ public:
 //
 //    Public Member Functions.
 //
+public:
+
+    //----------------------------------------------------------------
+    /**   PPU インスタンスを生成する。
+    **
+    **  @param [in] manNes
+    **  @param [in] manMem
+    **  @return     生成したインスタンスを返す。
+    **/
+    static  BasePpuCore  *
+    createInstance(
+            NesManager    & manNes,
+            MemoryManager & manMem);
 
 //========================================================================
 //

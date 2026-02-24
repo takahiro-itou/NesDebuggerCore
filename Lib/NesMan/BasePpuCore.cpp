@@ -23,6 +23,8 @@
 #include    "NesDbg/NesMan/BasePpuCore.h"
 #include    "NesDbg/NesMan/MemoryManager.h"
 
+#include    "PpuNes/NesPpuImpl.h"
+
 #include    "NesDbg/Images/FullColorImage.h"
 
 #include    <cstring>
@@ -118,6 +120,18 @@ BasePpuCore::drawScreen()
 //
 //    Public Member Functions.
 //
+
+//----------------------------------------------------------------
+//    PPU インスタンスを生成する。
+//
+
+BasePpuCore  *
+BasePpuCore::createInstance(
+        NesManager    & manNes,
+        MemoryManager & manMem)
+{
+    return  new NesPpuImpl(manNes, manMem);
+}
 
 //========================================================================
 //
