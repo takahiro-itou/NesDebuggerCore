@@ -63,10 +63,11 @@ NesManager::NesManager()
       m_cpuCur (nullptr),
       m_ppuCur (nullptr),
       m_cpu6502(nullptr),
+      m_ppuNes (nullptr),
       m_disCur (&g_disCpu6502)
 {
-    getOrCreateCpuInstance();
-    getOrCreatePpuInstance();
+    this->m_cpuCur  = &getOrCreateCpuInstance();
+    this->m_ppuCur  = &getOrCreatePpuInstance();
 
     g_disCpu6502.setNesDbgManager(*this);
     g_disCpu6502.setMemoryManager(this->m_manMem);
@@ -176,10 +177,10 @@ NesManager::getOrCreateCpuInstance()
 BasePpuCore  &
 NesManager::getOrCreatePpuInstance()
 {
-    if ( this->m_ppuCur != nullptr ) {
-        this->m_ppuCur  = new NesPpuImpl(*this, this->m_manMem);
+    if ( this->m_ppuNes != nullptr ) {
+        this->m_ppuNes  = new NesPpuImpl(*this, this->m_manMem);
     }
-    return ( *(this->m_ppuCur) );
+    return ( *(this->m_ppuNes) );
 }
 
 //----------------------------------------------------------------

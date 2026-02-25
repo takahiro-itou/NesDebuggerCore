@@ -44,6 +44,7 @@ class   BaseDisCpu;
 class   BasePpuCore;
 class   Cpu6502;
 class   Dis6502;
+class   NesPpuImpl;
 
 
 //========================================================================
@@ -282,8 +283,9 @@ private:
 
     Cpu6502  *      m_cpu6502;
 
-    BaseDisCpu  *   m_disCur;
+    NesPpuImpl  *   m_ppuNes;
 
+    BaseDisCpu  *   m_disCur;
 
 //========================================================================
 //
