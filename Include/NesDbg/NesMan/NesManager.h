@@ -281,9 +281,9 @@ private:
     /**   現在の PPU .  **/
     BasePpuCore  *  m_ppuCur;
 
-    std::shared_ptr<Cpu6502>    m_cpu6502;
+    std::shared_ptr<Cpu6502>        m_cpu6502;
 
-    NesPpuImpl  *   m_ppuNes;
+    std::shared_ptr<NesPpuImpl>     m_ppuNes;
 
     BaseDisCpu  *   m_disCur;
 

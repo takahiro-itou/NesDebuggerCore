@@ -178,8 +178,8 @@ NesManager::getOrCreateCpuInstance()
 BasePpuCore  &
 NesManager::getOrCreatePpuInstance()
 {
-    if ( this->m_ppuNes != nullptr ) {
-        this->m_ppuNes  = new NesPpuImpl(*this, this->m_manMem);
+    if ( this->m_ppuNes ) {
+        this->m_ppuNes  = std::make_shared<NesPpuImpl>(*this, this->m_manMem);
     }
     return ( *(this->m_ppuNes) );
 }
