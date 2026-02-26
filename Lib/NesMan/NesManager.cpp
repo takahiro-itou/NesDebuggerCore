@@ -119,9 +119,10 @@ NesManager::closeInstance()
 ErrCode
 NesManager::doHardReset()
 {
-    this->m_cpuCur  = this->m_cpu6502;
-    this->m_cpuCur->doHardReset();
+    this->m_cpuCur  = &getOrCreateCpuInstance();
+    this->m_ppuCur  = &getOrCreatePpuInstance();
 
+    this->m_cpuCur->doHardReset();
     this->m_ppuCur->doHardReset();
 
     return ( ErrCode::SUCCESS );
@@ -164,8 +165,8 @@ NesManager::getNextPC()  const
 BaseCpuCore  &
 NesManager::getOrCreateCpuInstance()
 {
-    if ( this->m_cpu6502 != nullptr ) {
-        this->m_cpu6502 = new Cpu6502(*this, this->m_manMem);
+    if ( this->m_cpu6502 ) {
+        this->m_cpu6502 = std::make_shared<Cpu6502>(*this, this->m_manMem);
     }
     return ( *(this->m_cpu6502) );
 }
