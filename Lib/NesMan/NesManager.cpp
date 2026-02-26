@@ -66,8 +66,8 @@ NesManager::NesManager()
       m_ppuNes (nullptr),
       m_disCur (&g_disCpu6502)
 {
-    this->m_cpuCur  = &getOrCreateCpuInstance();
-    this->m_ppuCur  = &getOrCreatePpuInstance();
+    this->m_cpuCur  = getOrCreateCpuInstance();
+    this->m_ppuCur  = getOrCreatePpuInstance();
 
     g_disCpu6502.setNesDbgManager(*this);
     g_disCpu6502.setMemoryManager(this->m_manMem);
@@ -119,8 +119,8 @@ NesManager::closeInstance()
 ErrCode
 NesManager::doHardReset()
 {
-    this->m_cpuCur  = &getOrCreateCpuInstance();
-    this->m_ppuCur  = &getOrCreatePpuInstance();
+    this->m_cpuCur  = getOrCreateCpuInstance();
+    this->m_ppuCur  = getOrCreatePpuInstance();
 
     this->m_cpuCur->doHardReset();
     this->m_ppuCur->doHardReset();
@@ -162,26 +162,26 @@ NesManager::getNextPC()  const
 //    CPU インスタンスを取得する。
 //
 
-BaseCpuCore  &
+NesManager::BaseCpuCoreRef
 NesManager::getOrCreateCpuInstance()
 {
     if ( this->m_cpu6502 ) {
         this->m_cpu6502 = std::make_shared<Cpu6502>(*this, this->m_manMem);
     }
-    return ( *(this->m_cpu6502) );
+    return ( this->m_cpu6502 );
 }
 
 //----------------------------------------------------------------
 //    PPU インスタンスを取得する。
 //
 
-BasePpuCore  &
+NesManager::BasePpuCoreRef
 NesManager::getOrCreatePpuInstance()
 {
     if ( this->m_ppuNes ) {
         this->m_ppuNes  = std::make_shared<NesPpuImpl>(*this, this->m_manMem);
     }
-    return ( *(this->m_ppuNes) );
+    return ( this->m_ppuNes );
 }
 
 //----------------------------------------------------------------

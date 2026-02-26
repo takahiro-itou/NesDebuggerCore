@@ -59,6 +59,11 @@ class  NesManager
 //
 //    Internal Type Definitions.
 //
+public:
+
+    typedef     std::shared_ptr<BaseCpuCore>    BaseCpuCoreRef;
+
+    typedef     std::shared_ptr<BasePpuCore>    BasePpuCoreRef;
 
 //========================================================================
 //
@@ -149,7 +154,7 @@ public:
     **
     **  インスタンスが存在しない場合は新規作成する。
     **/
-    virtual  BaseCpuCore  &
+    virtual  BaseCpuCoreRef
     getOrCreateCpuInstance();
 
     //----------------------------------------------------------------
@@ -157,7 +162,7 @@ public:
     **
     **  インスタンスが存在しない場合は新規作成する。
     **/
-    virtual  BasePpuCore  &
+    virtual  BasePpuCoreRef
     getOrCreatePpuInstance();
 
     //----------------------------------------------------------------
@@ -276,10 +281,10 @@ private:
     MemoryManager   m_manMem;
 
     /**   現在の CPU .  **/
-    BaseCpuCore  *  m_cpuCur;
+    BaseCpuCoreRef  m_cpuCur;
 
     /**   現在の PPU .  **/
-    BasePpuCore  *  m_ppuCur;
+    BasePpuCoreRef  m_ppuCur;
 
     std::shared_ptr<Cpu6502>        m_cpu6502;
 
