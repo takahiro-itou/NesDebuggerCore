@@ -61,9 +61,13 @@ class  NesManager
 //
 public:
 
-    typedef     std::shared_ptr<BaseCpuCore>    BaseCpuCoreRef;
-
-    typedef     std::shared_ptr<BasePpuCore>    BasePpuCoreRef;
+#if defined( NESDBG_DISABLE_SHAREDPTR )
+    typedef     BaseCpuCore  *                  BaseCpuCorePtr;
+    typedef     BasePpuCore  *                  BasePpuCorePtr;
+#else
+    typedef     std::shared_ptr<BaseCpuCore>    BaseCpuCorePtr;
+    typedef     std::shared_ptr<BasePpuCore>    BasePpuCorePtr;
+#endif
 
 //========================================================================
 //
@@ -154,7 +158,7 @@ public:
     **
     **  インスタンスが存在しない場合は新規作成する。
     **/
-    virtual  BaseCpuCoreRef
+    virtual  BaseCpuCorePtr
     getOrCreateCpuInstance();
 
     //----------------------------------------------------------------
@@ -162,7 +166,7 @@ public:
     **
     **  インスタンスが存在しない場合は新規作成する。
     **/
-    virtual  BasePpuCoreRef
+    virtual  BasePpuCorePtr
     getOrCreatePpuInstance();
 
     //----------------------------------------------------------------
@@ -281,10 +285,10 @@ private:
     MemoryManager   m_manMem;
 
     /**   現在の CPU .  **/
-    BaseCpuCoreRef  m_cpuCur;
+    BaseCpuCorePtr      m_cpuCur;
 
     /**   現在の PPU .  **/
-    BasePpuCoreRef  m_ppuCur;
+    BasePpuCorePtr      m_ppuCur;
 
     std::shared_ptr<Cpu6502>        m_cpu6502;
 

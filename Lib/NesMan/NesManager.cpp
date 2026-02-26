@@ -162,7 +162,7 @@ NesManager::getNextPC()  const
 //    CPU インスタンスを取得する。
 //
 
-NesManager::BaseCpuCoreRef
+NesManager::BaseCpuCorePtr
 NesManager::getOrCreateCpuInstance()
 {
     if ( this->m_cpu6502 ) {
@@ -175,7 +175,7 @@ NesManager::getOrCreateCpuInstance()
 //    PPU インスタンスを取得する。
 //
 
-NesManager::BasePpuCoreRef
+NesManager::BasePpuCorePtr
 NesManager::getOrCreatePpuInstance()
 {
     if ( this->m_ppuNes ) {
