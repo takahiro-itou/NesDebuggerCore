@@ -64,9 +64,15 @@ public:
 #if defined( NESDBG_DISABLE_SHAREDPTR )
     typedef     BaseCpuCore  *                  BaseCpuCorePtr;
     typedef     BasePpuCore  *                  BasePpuCorePtr;
+
+    typedef     Cpu6502  *                      CpuImplPtr;
+    typedef     NesPpuImpl  *                   PpuImplPtr;
 #else
     typedef     std::shared_ptr<BaseCpuCore>    BaseCpuCorePtr;
     typedef     std::shared_ptr<BasePpuCore>    BasePpuCorePtr;
+
+    typedef     std::shared_ptr<Cpu6502>        CpuImplPtr;
+    typedef     std::shared_ptr<NesPpuImpl>     PpuImplPtr;
 #endif
 
 //========================================================================
