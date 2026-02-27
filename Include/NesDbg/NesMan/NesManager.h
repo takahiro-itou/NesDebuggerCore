@@ -21,6 +21,10 @@
 #if !defined( NESDBG_NESMAN_INCLUDED_NES_MANAGER_H )
 #    define   NESDBG_NESMAN_INCLUDED_NES_MANAGER_H
 
+#if !defined( NESDBG_NESMAN_INCLUDED_TYPE_DEFS_H )
+#    include    "TypeDefs.h"
+#endif
+
 #if !defined( NESDBG_NESMAN_INCLUDED_CPU_UTILS_H )
 #    include    "CpuUtils.h"
 #endif
@@ -39,9 +43,7 @@ NESDBG_NAMESPACE_BEGIN
 namespace  NesMan  {
 
 //  クラスの前方宣言。  //
-class   BaseCpuCore;
 class   BaseDisCpu;
-class   BasePpuCore;
 class   Cpu6502;
 class   Dis6502;
 class   NesPpuImpl;
@@ -62,15 +64,9 @@ class  NesManager
 public:
 
 #if defined( NESDBG_DISABLE_SHAREDPTR )
-    typedef     BaseCpuCore  *                  BaseCpuCorePtr;
-    typedef     BasePpuCore  *                  BasePpuCorePtr;
-
     typedef     Cpu6502  *                      CpuImplPtr;
     typedef     NesPpuImpl  *                   PpuImplPtr;
 #else
-    typedef     std::shared_ptr<BaseCpuCore>    BaseCpuCorePtr;
-    typedef     std::shared_ptr<BasePpuCore>    BasePpuCorePtr;
-
     typedef     std::shared_ptr<Cpu6502>        CpuImplPtr;
     typedef     std::shared_ptr<NesPpuImpl>     PpuImplPtr;
 #endif
