@@ -165,7 +165,7 @@ NesManager::getNextPC()  const
 NesManager::BaseCpuCorePtr
 NesManager::getOrCreateCpuInstance()
 {
-    if ( this->m_cpu6502 ) {
+    if ( ! this->m_cpu6502 ) {
         this->m_cpu6502 = std::make_shared<Cpu6502>(*this, this->m_manMem);
     }
     return ( this->m_cpu6502 );
@@ -178,7 +178,7 @@ NesManager::getOrCreateCpuInstance()
 NesManager::BasePpuCorePtr
 NesManager::getOrCreatePpuInstance()
 {
-    if ( this->m_ppuNes ) {
+    if ( ! this->m_ppuNes ) {
         this->m_ppuNes  = std::make_shared<NesPpuImpl>(*this, this->m_manMem);
     }
     return ( this->m_ppuNes );
