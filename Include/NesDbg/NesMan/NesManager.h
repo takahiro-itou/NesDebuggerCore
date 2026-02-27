@@ -291,14 +291,14 @@ private:
     MemoryManager   m_manMem;
 
     /**   現在の CPU .  **/
-    BaseCpuCorePtr      m_cpuCur;
+    BaseCpuCorePtr  m_cpuCur;
 
     /**   現在の PPU .  **/
-    BasePpuCorePtr      m_ppuCur;
+    BasePpuCorePtr  m_ppuCur;
 
-    std::shared_ptr<Cpu6502>        m_cpu6502;
+    CpuImplPtr      m_cpu6502;
 
-    std::shared_ptr<NesPpuImpl>     m_ppuNes;
+    PpuImplPtr      m_ppuNes;
 
     BaseDisCpu  *   m_disCur;
 
