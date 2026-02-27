@@ -234,7 +234,7 @@ NesManager::openRomFile(
 
     fclose(fp);
 
-    return ( ErrCode::SUCCESS );
+    return  doHardReset();
 }
 
 //----------------------------------------------------------------
