@@ -80,29 +80,32 @@
     <ClInclude Include="Include\NesDbg\NesMan\NesManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Include\NesDbg\NesMan\TypeDefs.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
 
-    <ClInclude Include="Include\NesDbg\NesMan\Cpu6502\AddressingMode.h">
+    <ClInclude Include="Lib\NesDbg\NesMan\Cpu6502\AddressingMode.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Include\NesDbg\NesMan\Cpu6502\ArithmeticLogic.h">
+    <ClInclude Include="Lib\NesDbg\NesMan\Cpu6502\ArithmeticLogic.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Include\NesDbg\NesMan\Cpu6502\Cpu6502.h">
+    <ClInclude Include="Lib\NesDbg\NesMan\Cpu6502\Cpu6502.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Include\NesDbg\NesMan\Cpu6502\Dis6502.h">
+    <ClInclude Include="Lib\NesDbg\NesMan\Cpu6502\Dis6502.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Include\NesDbg\NesMan\Cpu6502\Dis6502.h">
+    <ClInclude Include="Lib\NesDbg\NesMan\Cpu6502\Dis6502.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Include\NesDbg\NesMan\Cpu6502\Instructions.inl">
+    <ClInclude Include="Lib\NesDbg\NesMan\Cpu6502\Instructions.inl">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Include\NesDbg\NesMan\Cpu6502\InstTable.h">
+    <ClInclude Include="Lib\NesDbg\NesMan\Cpu6502\InstTable.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Include\NesDbg\NesMan\PpuNes\NesPpuImpl.h">
+    <ClInclude Include="Lib\NesDbg\NesMan\PpuNes\NesPpuImpl.h">
       <Filter>Header Files</Filter>
     </ClInclude>
 
