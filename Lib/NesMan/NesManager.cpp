@@ -24,6 +24,7 @@
 
 #include    "Cpu6502/Cpu6502.h"
 #include    "Cpu6502/Dis6502.h"
+#include    "PpuNes/NesPpuImpl.h"
 
 #include    "NesDbg/Common/NesDbgUtils.h"
 
@@ -60,11 +61,13 @@ Dis6502     g_disCpu6502;
 NesManager::NesManager()
     : m_manMem(),
       m_cpuCur (nullptr),
+      m_ppuCur (nullptr),
       m_cpu6502(nullptr),
+      m_ppuNes (nullptr),
       m_disCur (&g_disCpu6502)
 {
-    this->m_cpu6502 = new Cpu6502(*this, this->m_manMem);
-    this->m_cpuCur  = this->m_cpu6502;
+    this->m_cpuCur  = getOrCreateCpuInstance();
+    this->m_ppuCur  = getOrCreatePpuInstance();
 
     g_disCpu6502.setNesDbgManager(*this);
     g_disCpu6502.setMemoryManager(this->m_manMem);
@@ -116,8 +119,11 @@ NesManager::closeInstance()
 ErrCode
 NesManager::doHardReset()
 {
-    this->m_cpuCur  = this->m_cpu6502;
+    this->m_cpuCur  = getOrCreateCpuInstance();
+    this->m_ppuCur  = getOrCreatePpuInstance();
+
     this->m_cpuCur->doHardReset();
+    this->m_ppuCur->doHardReset();
 
     return ( ErrCode::SUCCESS );
 }
@@ -150,6 +156,32 @@ GuestMemoryAddress
 NesManager::getNextPC()  const
 {
     return  this->m_cpuCur->getNextPC();
+}
+
+//----------------------------------------------------------------
+//    CPU インスタンスを取得する。
+//
+
+BaseCpuCorePtr
+NesManager::getOrCreateCpuInstance()
+{
+    if ( ! this->m_cpu6502 ) {
+        this->m_cpu6502 = std::make_shared<Cpu6502>(*this, this->m_manMem);
+    }
+    return ( this->m_cpu6502 );
+}
+
+//----------------------------------------------------------------
+//    PPU インスタンスを取得する。
+//
+
+BasePpuCorePtr
+NesManager::getOrCreatePpuInstance()
+{
+    if ( ! this->m_ppuNes ) {
+        this->m_ppuNes  = std::make_shared<NesPpuImpl>(*this, this->m_manMem);
+    }
+    return ( this->m_ppuNes );
 }
 
 //----------------------------------------------------------------
@@ -202,7 +234,7 @@ NesManager::openRomFile(
 
     fclose(fp);
 
-    return ( ErrCode::SUCCESS );
+    return  doHardReset();
 }
 
 //----------------------------------------------------------------

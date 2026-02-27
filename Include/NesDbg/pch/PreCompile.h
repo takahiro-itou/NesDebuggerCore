@@ -45,6 +45,11 @@
 #    define   NESDBG_SYS_STL_INCLUDED_IOSFWD
 #endif
 
+#if !defined( NESDBG_SYS_STL_INCLUDED_MEMORY )
+#    include    <memory>
+#    define   NESDBG_SYS_STL_INCLUDED_MEMORY
+#endif
+
 #if !defined( NESDBG_SYS_INCLUDED_STDDEF_H )
 #    include    <stddef.h>
 #    define   NESDBG_SYS_INCLUDED_STDDEF_H

@@ -104,14 +104,15 @@
     <ClInclude Include="Include\NesDbg\NesMan\BasePpuCore.h" />
     <ClInclude Include="Include\NesDbg\NesMan\MemoryManager.h" />
     <ClInclude Include="Include\NesDbg\NesMan\NesManager.h" />
-    <ClInclude Include="Include\NesDbg\NesMan\Cpu6502\AddressingMode.h" />
-    <ClInclude Include="Include\NesDbg\NesMan\Cpu6502\ArithmeticLogic.h" />
-    <ClInclude Include="Include\NesDbg\NesMan\Cpu6502\Cpu6502.h" />
-    <ClInclude Include="Include\NesDbg\NesMan\Cpu6502\Dis6502.h" />
-    <ClInclude Include="Include\NesDbg\NesMan\Cpu6502\Instructions.inl" />
-    <ClInclude Include="Include\NesDbg\NesMan\Cpu6502\InstTable.h" />
-    <ClInclude Include="Include\NesDbg\NesMan\PpuNes\NesPpuImpl.h" />
+    <ClInclude Include="Include\NesDbg\NesMan\TypeDefs.h" />
     <ClInclude Include="Include\NesDbg\pch\PreCompile.h" />
+    <ClInclude Include="Lib\NesDbg\NesMan\Cpu6502\AddressingMode.h" />
+    <ClInclude Include="Lib\NesDbg\NesMan\Cpu6502\ArithmeticLogic.h" />
+    <ClInclude Include="Lib\NesDbg\NesMan\Cpu6502\Cpu6502.h" />
+    <ClInclude Include="Lib\NesDbg\NesMan\Cpu6502\Dis6502.h" />
+    <ClInclude Include="Lib\NesDbg\NesMan\Cpu6502\Instructions.inl" />
+    <ClInclude Include="Lib\NesDbg\NesMan\Cpu6502\InstTable.h" />
+    <ClInclude Include="Lib\NesDbg\NesMan\PpuNes\NesPpuImpl.h" />
     <ClInclude Include="WinAPI\Images\BitmapRenderer.h" />
   </ItemGroup>
 

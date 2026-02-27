@@ -23,6 +23,8 @@
 #include    "NesDbg/NesMan/BasePpuCore.h"
 #include    "NesDbg/NesMan/MemoryManager.h"
 
+#include    "PpuNes/NesPpuImpl.h"
+
 #include    "NesDbg/Images/FullColorImage.h"
 
 #include    <cstring>
@@ -61,13 +63,9 @@ BasePpuCore::BasePpuCore(
         MemoryManager & manMem)
     : m_pImage(nullptr),
       m_vMemBuf(),
-      m_memPPU(nullptr)
+      m_memPPU(nullptr),
+      m_manMem(manMem)
 {
-    this->m_vMemBuf.clear();
-    this->m_vMemBuf.resize(65536);
-    this->m_memPPU  = &(this->m_vMemBuf[0]);
-
-    memcpy(this->m_memPPU, manMem.getChrBank(), 0x2000);
 }
 
 //----------------------------------------------------------------
@@ -100,6 +98,26 @@ BasePpuCore::~BasePpuCore()
 //
 
 //----------------------------------------------------------------
+//    プロセッサをリセットする。
+//
+
+ErrCode
+BasePpuCore::doHardReset()
+{
+    this->m_vMemBuf.clear();
+    this->m_vMemBuf.resize(65536);
+    this->m_memPPU  = &(this->m_vMemBuf[0]);
+
+    const   LpcByteReadBuf  chrBank = this->m_manMem.getChrBank();
+    if ( chrBank == nullptr ) {
+        return ( ErrCode::FAILURE );
+    }
+
+    memcpy(this->m_memPPU, chrBank, 0x2000);
+    return ( ErrCode::SUCCESS );
+}
+
+//----------------------------------------------------------------
 //    画面を描画する。
 //
 
@@ -114,10 +132,33 @@ BasePpuCore::drawScreen()
     return ( ErrCode::SUCCESS );
 }
 
+//----------------------------------------------------------------
+//    カウンタ情報を更新する。
+//
+
+ErrCode
+BasePpuCore::updateCounters(
+        const  CounterInfo  &ctrStep)
+{
+    return ( ErrCode::SUCCESS );
+}
+
 //========================================================================
 //
 //    Public Member Functions.
 //
+
+//----------------------------------------------------------------
+//    PPU インスタンスを生成する。
+//
+
+BasePpuCore  *
+BasePpuCore::createInstance(
+        NesManager    & manNes,
+        MemoryManager & manMem)
+{
+    return  new NesPpuImpl(manNes, manMem);
+}
 
 //========================================================================
 //
