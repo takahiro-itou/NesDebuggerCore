@@ -32,6 +32,7 @@ set(inclib_header_files
         ${inclib_source_dir}/CpuUtils.h
         ${inclib_source_dir}/MemoryManager.h
         ${inclib_source_dir}/NesManger.h
+        ${inclib_source_dir}/TypeDefs.h
 )
 
 set(module_needs_libraries

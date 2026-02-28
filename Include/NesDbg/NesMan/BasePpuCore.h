@@ -21,6 +21,10 @@
 #if !defined( NESDBG_NESMAN_INCLUDED_BASE_PPU_CORE_H )
 #    define   NESDBG_NESMAN_INCLUDED_BASE_PPU_CORE_H
 
+#if !defined( NESDBG_NESMAN_INCLUDED_CPU_UTILS_H )
+#    include    "CpuUtils.h"
+#endif
+
 #if !defined( NESDBG_SYS_STL_INCLUDED_VECTOR )
 #    include    <vector>
 #    define   NESDBG_SYS_STL_INCLUDED_VECTOR
@@ -98,16 +102,53 @@ public:
 public:
 
     //----------------------------------------------------------------
+    /**   プロセッサをリセットする。
+    **
+    **  @return     エラーコードを返す。
+    **      -   異常終了の場合は、
+    **          エラーの種類を示す非ゼロ値を返す。
+    **      -   正常終了の場合は、ゼロを返す。
+    **/
+    virtual  ErrCode
+    doHardReset();
+
+    //----------------------------------------------------------------
     /**   画面を描画する。
     **
     **/
     virtual  ErrCode
     drawScreen();
 
+    //----------------------------------------------------------------
+    /**   カウンタ情報を更新する。
+    **
+    **  @param [in] ctrStep   CPU 側のカウンタ情報。
+    **  @return     エラーコードを返す。
+    **      -   異常終了の場合は、
+    **          エラーの種類を示す非ゼロ値を返す。
+    **      -   正常終了の場合は、ゼロを返す。
+    **/
+    virtual  ErrCode
+    updateCounters(
+            const  CounterInfo  &ctrStep);
+
 //========================================================================
 //
 //    Public Member Functions.
 //
+public:
+
+    //----------------------------------------------------------------
+    /**   PPU インスタンスを生成する。
+    **
+    **  @param [in] manNes
+    **  @param [in] manMem
+    **  @return     生成したインスタンスを返す。
+    **/
+    static  BasePpuCore  *
+    createInstance(
+            NesManager    & manNes,
+            MemoryManager & manMem);
 
 //========================================================================
 //
@@ -158,6 +199,9 @@ protected:
     std::vector<BtByte>         m_vMemBuf;
 
     LpByteWriteBuf              m_memPPU;
+
+    /**  メモリマネージャ。     **/
+    MemoryManager  &            m_manMem;
 
 //========================================================================
 //

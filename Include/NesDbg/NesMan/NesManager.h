@@ -21,6 +21,10 @@
 #if !defined( NESDBG_NESMAN_INCLUDED_NES_MANAGER_H )
 #    define   NESDBG_NESMAN_INCLUDED_NES_MANAGER_H
 
+#if !defined( NESDBG_NESMAN_INCLUDED_TYPE_DEFS_H )
+#    include    "TypeDefs.h"
+#endif
+
 #if !defined( NESDBG_NESMAN_INCLUDED_CPU_UTILS_H )
 #    include    "CpuUtils.h"
 #endif
@@ -39,10 +43,10 @@ NESDBG_NAMESPACE_BEGIN
 namespace  NesMan  {
 
 //  クラスの前方宣言。  //
-class   BaseCpuCore;
 class   BaseDisCpu;
 class   Cpu6502;
 class   Dis6502;
+class   NesPpuImpl;
 
 
 //========================================================================
@@ -57,6 +61,15 @@ class  NesManager
 //
 //    Internal Type Definitions.
 //
+public:
+
+#if defined( NESDBG_DISABLE_SHAREDPTR )
+    typedef     Cpu6502  *                      CpuImplPtr;
+    typedef     NesPpuImpl  *                   PpuImplPtr;
+#else
+    typedef     std::shared_ptr<Cpu6502>        CpuImplPtr;
+    typedef     std::shared_ptr<NesPpuImpl>     PpuImplPtr;
+#endif
 
 //========================================================================
 //
@@ -141,6 +154,22 @@ public:
     **/
     virtual  GuestMemoryAddress
     getNextPC()  const;
+
+    //----------------------------------------------------------------
+    /**   CPU インスタンスを取得する。
+    **
+    **  インスタンスが存在しない場合は新規作成する。
+    **/
+    virtual  BaseCpuCorePtr
+    getOrCreateCpuInstance();
+
+    //----------------------------------------------------------------
+    /**   PPU インスタンスを取得する。
+    **
+    **  インスタンスが存在しない場合は新規作成する。
+    **/
+    virtual  BasePpuCorePtr
+    getOrCreatePpuInstance();
 
     //----------------------------------------------------------------
     /**   ROM ファイルを読み込む。
@@ -257,13 +286,17 @@ private:
     /**   メモリ空間。  **/
     MemoryManager   m_manMem;
 
-    /**   プロセッサ。  **/
-    BaseCpuCore  *  m_cpuCur;
+    /**   現在の CPU .  **/
+    BaseCpuCorePtr  m_cpuCur;
 
-    Cpu6502  *      m_cpu6502;
+    /**   現在の PPU .  **/
+    BasePpuCorePtr  m_ppuCur;
+
+    CpuImplPtr      m_cpu6502;
+
+    PpuImplPtr      m_ppuNes;
 
     BaseDisCpu  *   m_disCur;
-
 
 //========================================================================
 //
