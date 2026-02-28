@@ -123,12 +123,9 @@ public:
     /**   カウンタ情報を更新する。
     **
     **  @param [in] ctrStep   CPU 側のカウンタ情報。
-    **  @return     エラーコードを返す。
-    **      -   異常終了の場合は、
-    **          エラーの種類を示す非ゼロ値を返す。
-    **      -   正常終了の場合は、ゼロを返す。
+    **  @return     スキャンラインに関する情報を返す。
     **/
-    virtual  ErrCode
+    virtual  PpuScanLine
     updateCounters(
             const  CounterInfo  &ctrStep);
 

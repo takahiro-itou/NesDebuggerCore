@@ -124,7 +124,7 @@ NesPpuImpl::drawScreen()
 //    カウンタ情報を更新する。
 //
 
-ErrCode
+PpuScanLine
 NesPpuImpl::updateCounters(
         const  CounterInfo  &ctrStep)
 {
@@ -134,18 +134,30 @@ NesPpuImpl::updateCounters(
 
     while ( this->m_cScanX >= 341 ) {
         this->m_cScanX  -= 341;
+
         if ( ++ this->m_cScanY == 241 ) {
-            //  Start V-BLANK.  //
+            //  Start V-BLANK.                  //
             //  ここで VBLANK フラグを立てる。  //
-        }
-        if ( this->m_cScanY >= 261 ) {
-            //  pre-render scanline.    //
-            //  ここで VBLANK フラグを下ろす。  //
-            this->m_cScanY  -= 262;
+            return ( PpuScanLine::START_VERTICAL_BLANK );
         }
     }
 
-    return ( ErrCode::SUCCESS );
+    if ( this->m_cScanY >= 261 ) {
+        //  pre-render scanline.            //
+        //  ここで VBLANK フラグを下ろす。  //
+        this->m_cScanY  -= 262;
+    }
+    if ( this->m_cScanY < 0 ) {
+        return ( PpuScanLine::PRE_RENDER_SCANLINE );
+    }
+    if ( this->m_cScanY >= 241 && this->m_cScanY <= 260 ) {
+        return ( PpuScanLine::VERTICAL_BLANKING_LINE );
+    }
+    if ( this->m_cScanY >= 240 ) {
+        return ( PpuScanLine::POST_RENDER_SCANLINE );
+    }
+
+    return ( PpuScanLine::VISIBLE_SCANLINE );
 }
 
 //========================================================================

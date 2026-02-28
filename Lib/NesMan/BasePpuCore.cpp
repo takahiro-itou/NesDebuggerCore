@@ -136,11 +136,11 @@ BasePpuCore::drawScreen()
 //    カウンタ情報を更新する。
 //
 
-ErrCode
+PpuScanLine
 BasePpuCore::updateCounters(
         const  CounterInfo  &ctrStep)
 {
-    return ( ErrCode::SUCCESS );
+    return ( PpuScanLine::VISIBLE_SCANLINE );
 }
 
 //========================================================================
