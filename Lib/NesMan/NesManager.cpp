@@ -256,6 +256,11 @@ NesManager::printRegisters(
 ErrCode
 NesManager::updateCounters()
 {
+    //  CPU カウンタを取得して、PPU に増分を通知する。  //
+    const   CounterInfo  &  ctrStep = this->m_cpuCur->getStepCounters();
+    this->m_ppuCur->updateCounters();
+
+    //  CPU カウンタを更新する。    //
     return  this->m_cpuCur->updateCounters();
 }
 
