@@ -76,6 +76,7 @@ int  main(int argc, char * argv[])
     clock_t clkSta  = clock();
     while ( ret != NesMan::InstExecResult::UNDEFINED_OPECODE ) {
         ret = manNes.executeCurrentInst();
+        manNes.updateCounters();
 
 #if defined( _DEBUG )
         //  レジスタをダンプ。  //
@@ -100,7 +101,6 @@ int  main(int argc, char * argv[])
 
         ++ cnt;
         if ( !(cnt & 0x07FFFFFF) ) {
-            manNes.updateCounters();
             ci  = manNes.getCpuCounters();
             ClockCount  cc  = ci.totalCycles;
             clock_t clkEnd  = clock();

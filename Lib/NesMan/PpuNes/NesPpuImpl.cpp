@@ -24,6 +24,7 @@
 
 #include    "NesDbg/NesMan/MemoryManager.h"
 #include    "NesDbg/Images/FullColorImage.h"
+#include    <iostream>
 
 
 NESDBG_NAMESPACE_BEGIN
@@ -147,6 +148,10 @@ NesPpuImpl::updateCounters(
         //  ここで VBLANK フラグを下ろす。  //
         this->m_cScanY  -= 262;
     }
+    std::cout   <<  "PPU : "    <<  this->m_cScanX
+                <<  ", "        <<  this->m_cScanY
+                <<  std::endl;
+
     if ( this->m_cScanY < 0 ) {
         return ( PpuScanLine::PRE_RENDER_SCANLINE );
     }

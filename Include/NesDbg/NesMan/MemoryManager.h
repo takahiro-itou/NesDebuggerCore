@@ -151,10 +151,6 @@ public:
     readMemory(
             const   GuestMemoryAddress  gmAddr)  const
     {
-        if ( gmAddr == 0x2002 ) {
-            //  PPU の VBLANK 待ちでよく使われるのでダミーを返す。  //
-            return ( static_cast<T>(0x80) );
-        }
         const T  *  ptr = static_cast<const T *>(getMemoryAddress(gmAddr));
         return ( *ptr );
     }
