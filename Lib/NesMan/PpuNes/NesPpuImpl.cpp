@@ -120,6 +120,34 @@ NesPpuImpl::drawScreen()
     return ( ErrCode::SUCCESS );
 }
 
+//----------------------------------------------------------------
+//    カウンタ情報を更新する。
+//
+
+ErrCode
+NesPpuImpl::updateCounters(
+        const  CounterInfo  &ctrStep)
+{
+    //  PPU カウンタを更新する。                //
+    //  CPU の３倍のクロックが入力されている。  //
+    this->m_cScanX  += (ctrStep.totalCycles * 3);
+
+    while ( this->m_cScanX >= 341 ) {
+        this->m_cScanX  -= 341;
+        if ( ++ this->m_cScanY == 241 ) {
+            //  Start V-BLANK.  //
+            //  ここで VBLANK フラグを立てる。  //
+        }
+        if ( this->m_cScanY >= 261 ) {
+            //  pre-render scanline.    //
+            //  ここで VBLANK フラグを下ろす。  //
+            this->m_cScanY  -= 262;
+        }
+    }
+
+    return ( ErrCode::SUCCESS );
+}
+
 //========================================================================
 //
 //    Public Member Functions (Pure Virtual Functions).

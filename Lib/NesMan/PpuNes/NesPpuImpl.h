@@ -86,6 +86,19 @@ public:
     virtual  ErrCode
     drawScreen()  override;
 
+    //----------------------------------------------------------------
+    /**   カウンタ情報を更新する。
+    **
+    **  @param [in] ctrStep   CPU 側のカウンタ情報。
+    **  @return     エラーコードを返す。
+    **      -   異常終了の場合は、
+    **          エラーの種類を示す非ゼロ値を返す。
+    **      -   正常終了の場合は、ゼロを返す。
+    **/
+    virtual  ErrCode
+    updateCounters(
+            const  CounterInfo  &ctrStep)  override;
+
 //========================================================================
 //
 //    Public Member Functions (Pure Virtual Functions).
