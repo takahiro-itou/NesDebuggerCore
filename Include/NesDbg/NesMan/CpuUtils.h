@@ -136,6 +136,29 @@ struct  CounterInfo
 };
 
 
+//----------------------------------------------------------------
+/**
+**    PPU カウンタの状態。
+**/
+
+enum class  PpuScanLine
+{
+    /**   通常の描画中。        **/
+    VISIBLE_SCANLINE        = 0,
+
+    /**   アイドル期間。        **/
+    POST_RENDER_SCANLINE    = 1,
+
+    /**   垂直帰線期間の開始。  **/
+    START_VERTICAL_BLANK    = 2,
+
+    /**   垂直帰線期間中。      **/
+    VERTICAL_BLANKING_LINE  = 3,
+
+    /**   垂直帰線期間の終了。  **/
+    PRE_RENDER_SCANLINE     = 4,
+};
+
 }   //  End of namespace  NesMan
 NESDBG_NAMESPACE_END
 
