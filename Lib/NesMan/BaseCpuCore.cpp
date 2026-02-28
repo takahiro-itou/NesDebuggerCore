@@ -130,6 +130,17 @@ BaseCpuCore::getRegisters(
 }
 
 //----------------------------------------------------------------
+//    V-BLANK 割り込みを発生させる。
+//
+
+ErrCode
+BaseCpuCore::performVBlankInterupt(
+        const  PpuScanLine  ppuScan)
+{
+    return ( ErrCode::SUCCESS );
+}
+
+//----------------------------------------------------------------
 //    レジスタの内容をダンプする。
 //
 
