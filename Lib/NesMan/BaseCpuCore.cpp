@@ -142,7 +142,7 @@ BaseCpuCore::performVBlankInterupt(
     }
     if ( ppuScan == PpuScanLine::START_VERTICAL_BLANK ) {
         this->m_manMem.writeMemory(0x2002, 0x80);
-        mog_cpuRegs.PC  = this->m_manMem.readMemory<BtWord>(0xFFFA);
+        execNmi(0xFFFA);
     }
 
     return ( ErrCode::SUCCESS );
