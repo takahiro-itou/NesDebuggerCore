@@ -76,6 +76,39 @@ Cpu6502::~Cpu6502()
 //
 
 //----------------------------------------------------------------
+//    BRK 割り込みを実行する。
+//
+
+InstExecResult
+Cpu6502::execBrk(
+        const  OpeCode  opeCode)
+{
+    return ( InstExecResult::SUCCESS_CONTINUE );
+}
+
+//----------------------------------------------------------------
+//    IRQ 割り込みを実行する。
+//
+
+InstExecResult
+Cpu6502::execIrq(
+        const  OpeCode  opeCode)
+{
+    return ( InstExecResult::SUCCESS_CONTINUE );
+}
+
+//----------------------------------------------------------------
+//    NMI 割り込みを実行する。
+//
+
+InstExecResult
+Cpu6502::execNmi(
+        const  OpeCode  opeCode)
+{
+    return ( InstExecResult::SUCCESS_CONTINUE );
+}
+
+//----------------------------------------------------------------
 //    現在の命令を実行する。
 //
 
