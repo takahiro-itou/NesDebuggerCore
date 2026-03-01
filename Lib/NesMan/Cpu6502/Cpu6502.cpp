@@ -83,7 +83,7 @@ InstExecResult
 Cpu6502::execBrk(
         const  OpeCode  opeCode)
 {
-    return ( InstExecResult::SUCCESS_CONTINUE );
+    return ( InstExecResult::UNDEFINED_OPECODE );
 }
 
 //----------------------------------------------------------------
@@ -94,7 +94,7 @@ InstExecResult
 Cpu6502::execIrq(
         const  OpeCode  opeCode)
 {
-    return ( InstExecResult::SUCCESS_CONTINUE );
+    return ( InstExecResult::UNDEFINED_OPECODE );
 }
 
 //----------------------------------------------------------------
@@ -105,6 +105,12 @@ InstExecResult
 Cpu6502::execNmi(
         const  OpeCode  opeCode)
 {
+    pushValue(mog_cpuRegs.P);
+    pushValue((mog_cpuRegs.PC >> 8) & 0x000000FF);
+    pushValue((mog_cpuRegs.PC     ) & 0x000000FF);
+
+    mog_cpuRegs.PC  = this->m_manMem.readMemory<BtWord>(0xFFFA);
+
     return ( InstExecResult::SUCCESS_CONTINUE );
 }
 
