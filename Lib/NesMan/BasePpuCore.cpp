@@ -104,16 +104,6 @@ BasePpuCore::~BasePpuCore()
 ErrCode
 BasePpuCore::doHardReset()
 {
-    this->m_vMemBuf.clear();
-    this->m_vMemBuf.resize(65536);
-    this->m_memPPU  = &(this->m_vMemBuf[0]);
-
-    const   LpcByteReadBuf  chrBank = this->m_manMem.getChrBank();
-    if ( chrBank == nullptr ) {
-        return ( ErrCode::FAILURE );
-    }
-
-    memcpy(this->m_memPPU, chrBank, 0x2000);
     return ( ErrCode::SUCCESS );
 }
 
@@ -139,6 +129,17 @@ BasePpuCore::drawScreen()
 ErrCode
 BasePpuCore::postprocessOpenRom()
 {
+    this->m_vMemBuf.clear();
+    this->m_vMemBuf.resize(65536);
+    this->m_memPPU  = &(this->m_vMemBuf[0]);
+
+    const   LpcByteReadBuf  chrBank = this->m_manMem.getChrBank();
+    if ( chrBank == nullptr ) {
+        return ( ErrCode::FAILURE );
+    }
+
+    memcpy(this->m_memPPU, chrBank, 0x2000);
+
     return ( ErrCode::SUCCESS );
 }
 

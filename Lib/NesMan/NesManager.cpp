@@ -234,7 +234,7 @@ NesManager::openRomFile(
 
     fclose(fp);
 
-    return  doHardReset();
+    return  postprocessOpenRom();
 }
 
 //----------------------------------------------------------------
@@ -244,6 +244,9 @@ NesManager::openRomFile(
 ErrCode
 NesManager::postprocessOpenRom()
 {
+    this->m_cpuCur->postprocessOpenRom();
+    this->m_ppuCur->postprocessOpenRom();
+
     return ( ErrCode::SUCCESS );
 }
 
