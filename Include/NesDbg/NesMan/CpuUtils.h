@@ -128,6 +128,9 @@ struct  CounterInfo
     /**   実行した命令の総数。  **/
     ClockCount          numOpeCodes;
 
+    /**   最後に実行した命令のサイクル数。  **/
+    ClockCount          lastCycles;
+
     /**   最後の VBlank からのサイクル数。  **/
     ClockCount          clockCycles;
 

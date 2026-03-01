@@ -94,7 +94,9 @@ Cpu6502::executeNextInst()
     mog_cpuRegs.PC  += opSize;
 
     //  クロックサイクル数を更新する。  //
-    mog_ctrStep.totalCycles += g_opeCodeCycles[ocInst];
+    const   ClockCount  cycles  = g_opeCodeCycles[ocInst];
+    mog_ctrStep.totalCycles += cycles;
+    mog_ctrStep.lastCycles  =  cycles;
     ++ mog_ctrStep.numOpeCodes;
 
     FnInst  pfInst  = s_cpuInstTable[ocInst];
