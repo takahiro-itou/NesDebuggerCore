@@ -144,11 +144,11 @@ BasePpuCore::postprocessOpenRom()
 }
 
 //----------------------------------------------------------------
-//    カウンタ情報を更新する。
+//    スキャンライン情報を更新する。
 //
 
 PpuScanLine
-BasePpuCore::updateCounters(
+BasePpuCore::updateScanLine(
         const  CounterInfo  &ctrStep)
 {
     return ( PpuScanLine::VISIBLE_SCANLINE );

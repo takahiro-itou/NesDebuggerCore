@@ -131,13 +131,13 @@ public:
     postprocessOpenRom();
 
     //----------------------------------------------------------------
-    /**   カウンタ情報を更新する。
+    /**   スキャンライン情報を更新する。
     **
     **  @param [in] ctrStep   CPU 側のカウンタ情報。
     **  @return     スキャンラインに関する情報を返す。
     **/
     virtual  PpuScanLine
-    updateCounters(
+    updateScanLine(
             const  CounterInfo  &ctrStep);
 
 //========================================================================

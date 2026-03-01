@@ -122,11 +122,11 @@ NesPpuImpl::drawScreen()
 }
 
 //----------------------------------------------------------------
-//    カウンタ情報を更新する。
+//    スキャンライン情報を更新する。
 //
 
 PpuScanLine
-NesPpuImpl::updateCounters(
+NesPpuImpl::updateScanLine(
         const  CounterInfo  &ctrStep)
 {
     //  PPU カウンタを更新する。                //
