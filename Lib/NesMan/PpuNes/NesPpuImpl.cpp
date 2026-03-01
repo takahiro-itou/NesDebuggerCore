@@ -24,6 +24,7 @@
 
 #include    "NesDbg/NesMan/MemoryManager.h"
 #include    "NesDbg/Images/FullColorImage.h"
+#include    <iostream>
 
 
 NESDBG_NAMESPACE_BEGIN
@@ -118,6 +119,50 @@ NesPpuImpl::drawScreen()
     drawBackGroud();
 
     return ( ErrCode::SUCCESS );
+}
+
+//----------------------------------------------------------------
+//    スキャンライン情報を更新する。
+//
+
+PpuScanLine
+NesPpuImpl::updateScanLine(
+        const  CounterInfo  &ctrStep)
+{
+    //  PPU カウンタを更新する。                //
+    //  CPU の３倍のクロックが入力されている。  //
+    this->m_cScanX  += (ctrStep.totalCycles * 3);
+
+    while ( this->m_cScanX >= 341 ) {
+        this->m_cScanX  -= 341;
+
+        if ( ++ this->m_cScanY == 241 ) {
+            //  Start V-BLANK.                  //
+            //  ここで VBLANK フラグを立てる。  //
+            return ( PpuScanLine::START_VERTICAL_BLANK );
+        }
+    }
+
+    if ( this->m_cScanY >= 261 ) {
+        //  pre-render scanline.            //
+        //  ここで VBLANK フラグを下ろす。  //
+        this->m_cScanY  -= 262;
+    }
+    std::cout   <<  "PPU : "    <<  this->m_cScanX
+                <<  ", "        <<  this->m_cScanY
+                <<  std::endl;
+
+    if ( this->m_cScanY < 0 ) {
+        return ( PpuScanLine::PRE_RENDER_SCANLINE );
+    }
+    if ( this->m_cScanY >= 241 && this->m_cScanY <= 260 ) {
+        return ( PpuScanLine::VERTICAL_BLANKING_LINE );
+    }
+    if ( this->m_cScanY >= 240 ) {
+        return ( PpuScanLine::POST_RENDER_SCANLINE );
+    }
+
+    return ( PpuScanLine::VISIBLE_SCANLINE );
 }
 
 //========================================================================

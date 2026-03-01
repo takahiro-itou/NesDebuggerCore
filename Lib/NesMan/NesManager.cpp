@@ -135,7 +135,17 @@ NesManager::doHardReset()
 InstExecResult
 NesManager::executeCurrentInst()
 {
-    return  this->m_cpuCur->executeNextInst();
+    //  命令を実行する。    //
+    const   InstExecResult  ret = this->m_cpuCur->executeNextInst();
+
+    //  CPU が消費したサイクルを通知。  //
+    const  CounterInfo &ctrStep = this->m_cpuCur->getStepCounters();
+    const  PpuScanLine  ppuScan = this->m_ppuCur->updateScanLine(ctrStep);
+
+    //  状況に応じて VBLANK 割り込み等を処理する。  //
+    this->m_cpuCur->performVBlankInterupt(ppuScan);
+
+    return ( ret );
 }
 
 //----------------------------------------------------------------
@@ -234,7 +244,20 @@ NesManager::openRomFile(
 
     fclose(fp);
 
-    return  doHardReset();
+    return  postprocessOpenRom();
+}
+
+//----------------------------------------------------------------
+//    ROM ファイルをロードした後の処理を行う。
+//
+
+ErrCode
+NesManager::postprocessOpenRom()
+{
+    this->m_cpuCur->postprocessOpenRom();
+    this->m_ppuCur->postprocessOpenRom();
+
+    return ( ErrCode::SUCCESS );
 }
 
 //----------------------------------------------------------------
@@ -256,7 +279,14 @@ NesManager::printRegisters(
 ErrCode
 NesManager::updateCounters()
 {
-    return  this->m_cpuCur->updateCounters();
+    //  CPU カウンタを取得して、PPU に増分を通知する。  //
+    const  CounterInfo &ctrStep = this->m_cpuCur->getStepCounters();
+
+    //  CPU カウンタを更新する。    //
+    this->m_cpuCur->updateCounters();
+
+    //  状況に応じて VBLANK 割り込み等を処理する。  //
+    return ( ErrCode::SUCCESS );
 }
 
 //----------------------------------------------------------------

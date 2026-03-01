@@ -104,16 +104,6 @@ BasePpuCore::~BasePpuCore()
 ErrCode
 BasePpuCore::doHardReset()
 {
-    this->m_vMemBuf.clear();
-    this->m_vMemBuf.resize(65536);
-    this->m_memPPU  = &(this->m_vMemBuf[0]);
-
-    const   LpcByteReadBuf  chrBank = this->m_manMem.getChrBank();
-    if ( chrBank == nullptr ) {
-        return ( ErrCode::FAILURE );
-    }
-
-    memcpy(this->m_memPPU, chrBank, 0x2000);
     return ( ErrCode::SUCCESS );
 }
 
@@ -133,14 +123,35 @@ BasePpuCore::drawScreen()
 }
 
 //----------------------------------------------------------------
-//    カウンタ情報を更新する。
+//    ROM ファイルをロードした後の処理を行う。
 //
 
 ErrCode
-BasePpuCore::updateCounters(
+BasePpuCore::postprocessOpenRom()
+{
+    this->m_vMemBuf.clear();
+    this->m_vMemBuf.resize(65536);
+    this->m_memPPU  = &(this->m_vMemBuf[0]);
+
+    const   LpcByteReadBuf  chrBank = this->m_manMem.getChrBank();
+    if ( chrBank == nullptr ) {
+        return ( ErrCode::FAILURE );
+    }
+
+    memcpy(this->m_memPPU, chrBank, 0x2000);
+
+    return ( ErrCode::SUCCESS );
+}
+
+//----------------------------------------------------------------
+//    スキャンライン情報を更新する。
+//
+
+PpuScanLine
+BasePpuCore::updateScanLine(
         const  CounterInfo  &ctrStep)
 {
-    return ( ErrCode::SUCCESS );
+    return ( PpuScanLine::VISIBLE_SCANLINE );
 }
 
 //========================================================================

@@ -86,6 +86,16 @@ public:
     virtual  ErrCode
     drawScreen()  override;
 
+    //----------------------------------------------------------------
+    /**   スキャンライン情報を更新する。
+    **
+    **  @param [in] ctrStep   CPU 側のカウンタ情報。
+    **  @return     スキャンラインに関する情報を返す。
+    **/
+    virtual  PpuScanLine
+    updateScanLine(
+            const  CounterInfo  &ctrStep)  override;
+
 //========================================================================
 //
 //    Public Member Functions (Pure Virtual Functions).

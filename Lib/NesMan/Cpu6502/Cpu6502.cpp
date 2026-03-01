@@ -76,6 +76,45 @@ Cpu6502::~Cpu6502()
 //
 
 //----------------------------------------------------------------
+//    BRK 割り込みを実行する。
+//
+
+InstExecResult
+Cpu6502::execBrk(
+        const  OpeCode  opeCode)
+{
+    return ( InstExecResult::UNDEFINED_OPECODE );
+}
+
+//----------------------------------------------------------------
+//    IRQ 割り込みを実行する。
+//
+
+InstExecResult
+Cpu6502::execIrq(
+        const  OpeCode  opeCode)
+{
+    return ( InstExecResult::UNDEFINED_OPECODE );
+}
+
+//----------------------------------------------------------------
+//    NMI 割り込みを実行する。
+//
+
+InstExecResult
+Cpu6502::execNmi(
+        const  OpeCode  opeCode)
+{
+    pushValue(mog_cpuRegs.P);
+    pushValue((mog_cpuRegs.PC >> 8) & 0x000000FF);
+    pushValue((mog_cpuRegs.PC     ) & 0x000000FF);
+
+    mog_cpuRegs.PC  = this->m_manMem.readMemory<BtWord>(0xFFFA);
+
+    return ( InstExecResult::SUCCESS_CONTINUE );
+}
+
+//----------------------------------------------------------------
 //    現在の命令を実行する。
 //
 
@@ -94,7 +133,9 @@ Cpu6502::executeNextInst()
     mog_cpuRegs.PC  += opSize;
 
     //  クロックサイクル数を更新する。  //
-    mog_ctrStep.totalCycles += g_opeCodeCycles[ocInst];
+    const   ClockCount  cycles  = g_opeCodeCycles[ocInst];
+    mog_ctrStep.totalCycles += cycles;
+    mog_ctrStep.lastCycles  =  cycles;
     ++ mog_ctrStep.numOpeCodes;
 
     FnInst  pfInst  = s_cpuInstTable[ocInst];

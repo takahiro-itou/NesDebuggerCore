@@ -82,6 +82,27 @@ public:
 public:
 
     //----------------------------------------------------------------
+    /**   BRK 割り込みを実行する。
+    **
+    **/
+    virtual  InstExecResult
+    execBrk(const  OpeCode  opeCode)  override;
+
+    //----------------------------------------------------------------
+    /**   IRQ 割り込みを実行する。
+    **
+    **/
+    virtual  InstExecResult
+    execIrq(const  OpeCode  opeCode)  override;
+
+    //----------------------------------------------------------------
+    /**   NMI 割り込みを実行する。
+    **
+    **/
+    virtual  InstExecResult
+    execNmi(const  OpeCode  opeCode)  override;
+
+    //----------------------------------------------------------------
     /**   現在の命令を実行する。
     **
     **/
