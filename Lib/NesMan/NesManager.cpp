@@ -135,7 +135,17 @@ NesManager::doHardReset()
 InstExecResult
 NesManager::executeCurrentInst()
 {
-    return  this->m_cpuCur->executeNextInst();
+    //  命令を実行する。    //
+    const   InstExecResult  ret = this->m_cpuCur->executeNextInst();
+
+    //  CPU が消費したサイクルを通知。  //
+    const  CounterInfo &ctrStep = this->m_cpuCur->getStepCounters();
+    const  PpuScanLine  ppuScan = this->m_ppuCur->updateScanLine(ctrStep);
+
+    //  状況に応じて VBLANK 割り込み等を処理する。  //
+    this->m_cpuCur->performVBlankInterupt(ppuScan);
+
+    return ( ret );
 }
 
 //----------------------------------------------------------------
@@ -271,13 +281,12 @@ NesManager::updateCounters()
 {
     //  CPU カウンタを取得して、PPU に増分を通知する。  //
     const  CounterInfo &ctrStep = this->m_cpuCur->getStepCounters();
-    const  PpuScanLine  ppuScan = this->m_ppuCur->updateScanLine(ctrStep);
 
     //  CPU カウンタを更新する。    //
     this->m_cpuCur->updateCounters();
 
     //  状況に応じて VBLANK 割り込み等を処理する。  //
-    return  this->m_cpuCur->performVBlankInterupt(ppuScan);
+    return ( ErrCode::SUCCESS );
 }
 
 //----------------------------------------------------------------
