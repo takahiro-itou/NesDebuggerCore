@@ -189,6 +189,16 @@ private:
     int         m_cScanX;
     int         m_cScanY;
 
+    /**   内部レジスタ。    **/
+    GuestMemoryAddress  m_regAddr;
+
+    /**   スクロールレジスタ。  **/
+    int                 m_scrollX;
+    int                 m_scrollY;
+
+    /**   内部フラグレジスタ。  **/
+    int                 m_regWrt;
+
 //========================================================================
 //
 //    Other Features.
