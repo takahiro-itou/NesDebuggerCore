@@ -86,6 +86,16 @@ public:
     virtual  ErrCode
     drawScreen()  override;
 
+    //----------------------------------------------------------------
+    /**   スキャンライン情報を更新する。
+    **
+    **  @param [in] ctrStep   CPU 側のカウンタ情報。
+    **  @return     スキャンラインに関する情報を返す。
+    **/
+    virtual  PpuScanLine
+    updateScanLine(
+            const  CounterInfo  &ctrStep)  override;
+
 //========================================================================
 //
 //    Public Member Functions (Pure Virtual Functions).
@@ -178,6 +188,16 @@ private:
     /**   現在のスキャン位置。  **/
     int         m_cScanX;
     int         m_cScanY;
+
+    /**   内部レジスタ。    **/
+    GuestMemoryAddress  m_regAddr;
+
+    /**   スクロールレジスタ。  **/
+    int                 m_scrollX;
+    int                 m_scrollY;
+
+    /**   内部フラグレジスタ。  **/
+    int                 m_regWrt;
 
 //========================================================================
 //

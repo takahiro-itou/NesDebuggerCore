@@ -130,6 +130,35 @@ BaseCpuCore::getRegisters(
 }
 
 //----------------------------------------------------------------
+//    V-BLANK 割り込みを発生させる。
+//
+
+ErrCode
+BaseCpuCore::performVBlankInterupt(
+        const  PpuScanLine  ppuScan)
+{
+    if ( ppuScan == PpuScanLine::PRE_RENDER_SCANLINE ) {
+        this->m_manMem.writeMemory(0x2002, 0x00);
+    }
+    if ( ppuScan == PpuScanLine::START_VERTICAL_BLANK ) {
+        this->m_manMem.writeMemory(0x2002, 0x80);
+        execNmi(0xFFFA);
+    }
+
+    return ( ErrCode::SUCCESS );
+}
+
+//----------------------------------------------------------------
+//    ROM ファイルをロードした後の処理を行う。
+//
+
+ErrCode
+BaseCpuCore::postprocessOpenRom()
+{
+    return ( ErrCode::SUCCESS );
+}
+
+//----------------------------------------------------------------
 //    レジスタの内容をダンプする。
 //
 
