@@ -142,6 +142,19 @@ MemoryManager::releaseMemory()
     return ( ErrCode::SUCCESS );
 }
 
+//----------------------------------------------------------------
+//    メモリマップド IO を設定する。
+//
+
+ErrCode
+MemoryManager::setMemoryMappedIO(
+        const   GuestMemoryAddress  addrStart,
+        const   GuestMemoryAddress  addrLast,
+        IMemoryMappedIO  *  const   ptrMmio)
+{
+    return ( ErrCode::FAILURE );
+}
+
 //========================================================================
 //
 //    Public Member Functions.

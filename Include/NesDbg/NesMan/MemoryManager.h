@@ -30,6 +30,10 @@
 NESDBG_NAMESPACE_BEGIN
 namespace  NesMan  {
 
+//  クラスの前方宣言。  //
+class   IMemoryMappedIO;
+
+
 //========================================================================
 //
 //    MemoryManager  class.
@@ -111,6 +115,21 @@ public:
     **/
     virtual  ErrCode
     releaseMemory();
+
+    //----------------------------------------------------------------
+    /**   メモリマップド IO を設定する。
+    **
+    **  @param [in] addrStart   開始アドレス。
+    **  @param [in] addrEnd     終了アドレス。
+    **  @param [in] ptrMmio     読み書きを処理するインスタンス。
+    **  @return     エラーコードを返す。
+    **/
+    virtual  ErrCode
+    setMemoryMappedIO(
+            const   GuestMemoryAddress  addrStart,
+            const   GuestMemoryAddress  addrLast,
+            IMemoryMappedIO  *  const   ptrMmio);
+
 
 //========================================================================
 //
