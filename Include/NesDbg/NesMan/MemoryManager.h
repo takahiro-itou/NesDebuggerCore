@@ -163,7 +163,7 @@ public:
     {
         IMemoryMappedIO * const pIO = this->m_vMMIOs[gmAddr];
         if ( pIO != nullptr ) {
-            return  pIO->readFromRegister(gmAddr);
+            return  pIO->peekRegister(gmAddr);
         }
 
         const T  *  ptr = static_cast<const T *>(getMemoryAddress(gmAddr));
@@ -181,7 +181,7 @@ public:
     {
         IMemoryMappedIO * const pIO = this->m_vMMIOs[gmAddr];
         if ( pIO != nullptr ) {
-            return  pIO->readFromRegister(gmAddr);
+            return  pIO->readRegister(gmAddr);
         }
 
         const T  *  ptr = static_cast<const T *>(getMemoryAddress(gmAddr));
@@ -200,7 +200,7 @@ public:
     {
         IMemoryMappedIO * const pIO = this->m_vMMIOs[gmAddr];
         if ( pIO != nullptr ) {
-            pIO->writeToRegister(gmAddr, wValue);
+            pIO->writeRegister(gmAddr, wValue);
             return;
         }
 

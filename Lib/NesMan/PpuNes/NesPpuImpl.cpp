@@ -24,6 +24,8 @@
 
 #include    "NesDbg/NesMan/MemoryManager.h"
 #include    "NesDbg/Images/FullColorImage.h"
+
+#include    <cassert>
 #include    <iostream>
 
 
@@ -80,14 +82,55 @@ NesPpuImpl::~NesPpuImpl()
 //
 
 //----------------------------------------------------------------
+//    レジスタの内容を覗く。
+//
+
+BtByte
+NesPpuImpl::peekRegister(
+        const   GuestMemoryAddress  ioAddr)  const
+{
+#if defined( _DEBUG )
+    if ( (ioAddr < 0x2000) || (0x3FFF > ioAddr) ) {
+        //  範囲外のアドレス。  //
+        std::cerr   <<  "Invalid I/O Address for PPU: "
+                    <<  ioAddr  <<  std::endl;
+    }
+#endif
+    assert( (0x2000 <= ioAddr) && (ioAddr <= 0x3FFF) );
+
+    const   GuestMemoryAddress  reg = (ioAddr & 0x0007);
+    switch ( reg ) {
+    case  0:    /*  PPU 制御レジスタ 1 .    */
+    case  1:    /*  PPU 制御レジスタ 2 .    */
+    case  2:    /*  PPU ステータスレジスタ  */
+    case  3:    /*  スプライトアドレスレジスタ  */
+    case  4:    /*  スプライトアクセスレジスタ  */
+    case  5:    /*  スクロールレジスタ      */
+    case  6:    /*  VRAM  アドレスレジスタ  */
+    case  7:    /*  VRAM  アクセスレジスタ  */
+        break;
+    }
+
+    {
+        char    buf[1024];
+        snprintf(buf, sizeof(buf),
+                "Not Implemented PPU I/O (Read) : $%04X\n", ioAddr);
+        std::cerr   <<  buf;
+    }
+
+    return ( 0 );
+}
+
+//----------------------------------------------------------------
 //    レジスタを読み出す。
 //
 
 BtByte
-NesPpuImpl::readFromRegister(
+NesPpuImpl::readRegister(
         const   GuestMemoryAddress  ioAddr)
 {
-    return ( 0 );
+    const   BtByte  val = peekRegister(ioAddr);
+    return ( val );
 }
 
 //----------------------------------------------------------------
@@ -95,10 +138,40 @@ NesPpuImpl::readFromRegister(
 //
 
 void
-NesPpuImpl::writeToRegister(
+NesPpuImpl::writeRegister(
         const   GuestMemoryAddress  ioAddr,
         const   BtByte              regVal)
 {
+#if defined( _DEBUG )
+    if ( (ioAddr < 0x2000) || (0x3FFF > ioAddr) ) {
+        //  範囲外のアドレス。  //
+        std::cerr   <<  "Invalid I/O Address for PPU: "
+                    <<  ioAddr  <<  std::endl;
+    }
+#endif
+    assert( (0x2000 <= ioAddr) && (ioAddr <= 0x3FFF) );
+
+    const   GuestMemoryAddress  reg = (ioAddr & 0x0007);
+    switch ( reg ) {
+    case  0:    /*  PPU 制御レジスタ 1 .    */
+    case  1:    /*  PPU 制御レジスタ 2 .    */
+    case  2:    /*  PPU ステータスレジスタ  */
+    case  3:    /*  スプライトアドレスレジスタ  */
+    case  4:    /*  スプライトアクセスレジスタ  */
+    case  5:    /*  スクロールレジスタ      */
+    case  6:    /*  VRAM  アドレスレジスタ  */
+    case  7:    /*  VRAM  アクセスレジスタ  */
+        break;
+    }
+
+    {
+        char    buf[1024];
+        snprintf(buf, sizeof(buf),
+                "Not Implemented PPU I/O (Write) : $%04X\n", ioAddr);
+        std::cerr   <<  buf;
+    }
+
+    return;
 }
 
 //========================================================================
