@@ -21,6 +21,10 @@
 #if !defined( NESDBG_NESMAN_INCLUDED_BASE_PPU_CORE_H )
 #    define   NESDBG_NESMAN_INCLUDED_BASE_PPU_CORE_H
 
+#if !defined( NESDBG_NESMAN_INCLUDED_MEMORY_MAPPED_IO_H )
+#    include    "MemoryMappedIO.h"
+#endif
+
 #if !defined( NESDBG_NESMAN_INCLUDED_CPU_UTILS_H )
 #    include    "CpuUtils.h"
 #endif
@@ -50,7 +54,7 @@ class   MemoryManager;
 //    BasePpuCore  class.
 //
 
-class  BasePpuCore
+class  BasePpuCore : public IMemoryMappedIO
 {
 
 //========================================================================
