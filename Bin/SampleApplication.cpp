@@ -56,7 +56,11 @@ int  main(int argc, char * argv[])
 
     NesMan::InstExecResult  ret = NesMan::InstExecResult::SUCCESS_CONTINUE;
     NesMan::CounterInfo     ci;
-    GuestMemoryAddress      pcPrev, pcWork;
+
+#if defined( _DEBUG )
+    GuestMemoryAddress      pcWork;
+#endif
+    GuestMemoryAddress      pcPrev;
     GuestMemoryAddress      pcNext  = 0;
     ClockCount  cnt     = 0;
 
