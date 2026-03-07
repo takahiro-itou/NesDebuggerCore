@@ -90,7 +90,7 @@ NesPpuImpl::peekRegister(
         const   GuestMemoryAddress  ioAddr)  const
 {
 #if defined( _DEBUG )
-    if ( (ioAddr < 0x2000) || (0x3FFF > ioAddr) ) {
+    if ( (ioAddr < 0x2000) || (0x3FFF < ioAddr) ) {
         //  範囲外のアドレス。  //
         std::cerr   <<  "Invalid I/O Address for PPU: "
                     <<  ioAddr  <<  std::endl;
@@ -143,7 +143,7 @@ NesPpuImpl::writeRegister(
         const   BtByte              regVal)
 {
 #if defined( _DEBUG )
-    if ( (ioAddr < 0x2000) || (0x3FFF > ioAddr) ) {
+    if ( (ioAddr < 0x2000) || (0x3FFF < ioAddr) ) {
         //  範囲外のアドレス。  //
         std::cerr   <<  "Invalid I/O Address for PPU: "
                     <<  ioAddr  <<  std::endl;
