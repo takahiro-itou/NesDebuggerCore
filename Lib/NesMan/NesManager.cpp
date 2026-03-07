@@ -257,6 +257,10 @@ NesManager::postprocessOpenRom()
     this->m_cpuCur->postprocessOpenRom();
     this->m_ppuCur->postprocessOpenRom();
 
+    this->m_manMem.setMemoryMappedIO(0x0000, 0xFFFF, nullptr);
+    this->m_manMem.setMemoryMappedIO(
+            0x2000, 0x3FFF, getPointer(this->m_ppuCur));
+
     return ( ErrCode::SUCCESS );
 }
 
