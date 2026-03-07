@@ -258,6 +258,9 @@ private:
     LpByteWriteBuf  m_memIOM;
     LpByteWriteBuf  m_memROM;
 
+    /**   メモリマップド IO テーブル。  **/
+    IMemoryMappedIO *   m_vMMIOs[65536];
+
 
 //========================================================================
 //

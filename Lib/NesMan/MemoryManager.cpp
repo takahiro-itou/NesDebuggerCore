@@ -56,7 +56,8 @@ MemoryManager::MemoryManager()
       m_memPPU(nullptr),
       m_memRAM(nullptr),
       m_memIOM(nullptr),
-      m_memROM(nullptr)
+      m_memROM(nullptr),
+      m_vMMIOs()
 {
 }
 
@@ -152,7 +153,11 @@ MemoryManager::setMemoryMappedIO(
         const   GuestMemoryAddress  addrLast,
         IMemoryMappedIO  *  const   ptrMmio)
 {
-    return ( ErrCode::FAILURE );
+    for ( GuestMemoryAddress idx = addrStart; idx != addrLast; ++ idx ) {
+        this->m_vMMIOs[idx] = ptrMmio;
+    }
+
+    return ( ErrCode::SUCCESS );
 }
 
 //========================================================================
