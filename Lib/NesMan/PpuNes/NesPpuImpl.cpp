@@ -53,7 +53,15 @@ namespace  {
 NesPpuImpl::NesPpuImpl(
         NesManager    & manNes,
         MemoryManager & manMem)
-    : Super(manNes, manMem)
+    : Super(manNes, manMem),
+      m_palette(),
+      m_palIdx(),
+      m_cScanX(0),
+      m_cScanY(0),
+      m_regAddr(0),
+      m_scrollX(0),
+      m_scrollY(0),
+      m_regWrt(0)
 {
 }
 
