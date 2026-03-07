@@ -21,6 +21,10 @@
 #if !defined( NESDBG_NESMAN_INCLUDED_MEMORY_MANAGER_H )
 #    define   NESDBG_NESMAN_INCLUDED_MEMORY_MANAGER_H
 
+#if !defined( NESDBG_NESMAN_INCLUDED_MEMORY_MAPPED_IO_H )
+#    include    "MemoryMappedIO.h"
+#endif
+
 #if !defined( NESDBG_SYS_STL_INCLUDED_VECTOR )
 #    include    <vector>
 #    define   NESDBG_SYS_STL_INCLUDED_VECTOR
@@ -29,6 +33,10 @@
 
 NESDBG_NAMESPACE_BEGIN
 namespace  NesMan  {
+
+//  クラスの前方宣言。  //
+class   IMemoryMappedIO;
+
 
 //========================================================================
 //
@@ -112,6 +120,21 @@ public:
     virtual  ErrCode
     releaseMemory();
 
+    //----------------------------------------------------------------
+    /**   メモリマップド IO を設定する。
+    **
+    **  @param [in] addrStart   開始アドレス。
+    **  @param [in] addrEnd     終了アドレス。
+    **  @param [in] ptrMmio     読み書きを処理するインスタンス。
+    **  @return     エラーコードを返す。
+    **/
+    virtual  ErrCode
+    setMemoryMappedIO(
+            const   GuestMemoryAddress  addrStart,
+            const   GuestMemoryAddress  addrLast,
+            IMemoryMappedIO  *  const   ptrMmio);
+
+
 //========================================================================
 //
 //    Public Member Functions.
@@ -138,6 +161,11 @@ public:
     peekMemory(
             const   GuestMemoryAddress  gmAddr)  const
     {
+        IMemoryMappedIO * const pIO = this->m_vMMIOs[gmAddr];
+        if ( pIO != nullptr ) {
+            return  pIO->peekRegister(gmAddr);
+        }
+
         const T  *  ptr = static_cast<const T *>(getMemoryAddress(gmAddr));
         return ( *ptr );
     }
@@ -151,6 +179,11 @@ public:
     readMemory(
             const   GuestMemoryAddress  gmAddr)  const
     {
+        IMemoryMappedIO * const pIO = this->m_vMMIOs[gmAddr];
+        if ( pIO != nullptr ) {
+            return  pIO->readRegister(gmAddr);
+        }
+
         const T  *  ptr = static_cast<const T *>(getMemoryAddress(gmAddr));
         return ( *ptr );
     }
@@ -165,6 +198,12 @@ public:
             const   GuestMemoryAddress  gmAddr,
             const   T                   wValue)  const
     {
+        IMemoryMappedIO * const pIO = this->m_vMMIOs[gmAddr];
+        if ( pIO != nullptr ) {
+            pIO->writeRegister(gmAddr, wValue);
+            return;
+        }
+
         T * ptr = static_cast<T *>(getMemoryAddress(gmAddr));
         (* ptr) = wValue;
     }
@@ -238,6 +277,9 @@ private:
     LpByteWriteBuf  m_memRAM;
     LpByteWriteBuf  m_memIOM;
     LpByteWriteBuf  m_memROM;
+
+    /**   メモリマップド IO テーブル。  **/
+    IMemoryMappedIO *   m_vMMIOs[65536];
 
 
 //========================================================================

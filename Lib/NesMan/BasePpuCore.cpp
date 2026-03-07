@@ -62,8 +62,7 @@ BasePpuCore::BasePpuCore(
         NesManager    & manNes,
         MemoryManager & manMem)
     : m_pImage(nullptr),
-      m_vMemBuf(),
-      m_memPPU(nullptr),
+      m_memPPU(),
       m_manMem(manMem)
 {
 }
@@ -129,9 +128,7 @@ BasePpuCore::drawScreen()
 ErrCode
 BasePpuCore::postprocessOpenRom()
 {
-    this->m_vMemBuf.clear();
-    this->m_vMemBuf.resize(65536);
-    this->m_memPPU  = &(this->m_vMemBuf[0]);
+    memset(this->m_memPPU, 0, sizeof(this->m_memPPU));
 
     const   LpcByteReadBuf  chrBank = this->m_manMem.getChrBank();
     if ( chrBank == nullptr ) {
