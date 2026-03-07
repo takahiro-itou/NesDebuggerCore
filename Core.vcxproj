@@ -103,6 +103,8 @@
     <ClInclude Include="Include\NesDbg\NesMan\BaseDisCpu.h" />
     <ClInclude Include="Include\NesDbg\NesMan\BasePpuCore.h" />
     <ClInclude Include="Include\NesDbg\NesMan\MemoryManager.h" />
+    <ClInclude Include="Include\NesDbg\NesMan\MemoryMappedIO.h" />
+    <ClInclude Include="Include\NesDbg\NesMan\MemoryTable.h" />
     <ClInclude Include="Include\NesDbg\NesMan\NesManager.h" />
     <ClInclude Include="Include\NesDbg\NesMan\TypeDefs.h" />
     <ClInclude Include="Include\NesDbg\pch\PreCompile.h" />

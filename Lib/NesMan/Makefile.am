@@ -57,6 +57,8 @@ inclib_header_files         +=  \
         ${inclib_source_dir}/BasePpuCore.h      \
         ${inclib_source_dir}/CpuUtils.h         \
         ${inclib_source_dir}/MemoryManager.h    \
+        ${inclib_source_dir}/MemoryMappedIO.h   \
+        ${inclib_source_dir}/MemoryTable.h      \
         ${inclib_source_dir}/NesManager.h       \
         ${inclib_source_dir}/TypeDefs.h         \
         ${extra_library_header_files}

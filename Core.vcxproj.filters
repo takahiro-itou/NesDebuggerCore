@@ -77,6 +77,12 @@
     <ClInclude Include="Include\NesDbg\NesMan\MemoryManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Include\NesDbg\NesMan\MemoryMappedIO.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\NesDbg\NesMan\MemoryTable.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
     <ClInclude Include="Include\NesDbg\NesMan\NesManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
