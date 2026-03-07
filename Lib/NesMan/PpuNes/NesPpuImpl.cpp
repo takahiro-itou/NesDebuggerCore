@@ -178,9 +178,11 @@ NesPpuImpl::updateScanLine(
         //  ここで VBLANK フラグを下ろす。  //
         this->m_cScanY  -= 262;
     }
+#if defined( _DEBUG )
     std::cout   <<  "PPU : "    <<  this->m_cScanX
                 <<  ", "        <<  this->m_cScanY
                 <<  std::endl;
+#endif
 
     if ( this->m_cScanY < 0 ) {
         return ( PpuScanLine::PRE_RENDER_SCANLINE );
