@@ -21,6 +21,10 @@
 #if !defined( NESDBG_NESMAN_INCLUDED_MEMORY_MANAGER_H )
 #    define   NESDBG_NESMAN_INCLUDED_MEMORY_MANAGER_H
 
+#if !defined( NESDBG_NESMAN_INCLUDED_MEMORY_MAPPED_IO_H )
+#    include    "MemoryMappedIO.h"
+#endif
+
 #if !defined( NESDBG_SYS_STL_INCLUDED_VECTOR )
 #    include    <vector>
 #    define   NESDBG_SYS_STL_INCLUDED_VECTOR
@@ -157,6 +161,11 @@ public:
     peekMemory(
             const   GuestMemoryAddress  gmAddr)  const
     {
+        IMemoryMappedIO * const pIO = this->m_vMMIOs[gmAddr];
+        if ( pIO != nullptr ) {
+            return  pIO->readFromRegister(gmAddr);
+        }
+
         const T  *  ptr = static_cast<const T *>(getMemoryAddress(gmAddr));
         return ( *ptr );
     }
@@ -170,6 +179,11 @@ public:
     readMemory(
             const   GuestMemoryAddress  gmAddr)  const
     {
+        IMemoryMappedIO * const pIO = this->m_vMMIOs[gmAddr];
+        if ( pIO != nullptr ) {
+            return  pIO->readFromRegister(gmAddr);
+        }
+
         const T  *  ptr = static_cast<const T *>(getMemoryAddress(gmAddr));
         return ( *ptr );
     }
@@ -184,6 +198,12 @@ public:
             const   GuestMemoryAddress  gmAddr,
             const   T                   wValue)  const
     {
+        IMemoryMappedIO * const pIO = this->m_vMMIOs[gmAddr];
+        if ( pIO != nullptr ) {
+            pIO->writeToRegister(gmAddr, wValue);
+            return;
+        }
+
         T * ptr = static_cast<T *>(getMemoryAddress(gmAddr));
         (* ptr) = wValue;
     }
