@@ -281,6 +281,7 @@ NesManager::updateCounters()
 {
     //  CPU カウンタを取得して、PPU に増分を通知する。  //
     const  CounterInfo &ctrStep = this->m_cpuCur->getStepCounters();
+    NESDBG_UNUSED_VAR(ctrStep);
 
     //  CPU カウンタを更新する。    //
     this->m_cpuCur->updateCounters();
