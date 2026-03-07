@@ -75,13 +75,23 @@ public:
 public:
 
     //----------------------------------------------------------------
+    /**   レジスタの内容を覗く。
+    **
+    **  @param [in] ioAddr    I/O アドレス。
+    **  @return     読み出したバイトを返す。
+    **/
+    virtual  BtByte
+    peekRegister(
+            const   GuestMemoryAddress  ioAddr)  const  override;
+
+    //----------------------------------------------------------------
     /**   レジスタを読み出す。
     **
     **  @param [in] ioAddr    I/O アドレス。
     **  @return     読み出したバイトを返す。
     **/
     virtual  BtByte
-    readFromRegister(
+    readRegister(
             const   GuestMemoryAddress  ioAddr)  override;
 
     //----------------------------------------------------------------
@@ -92,7 +102,7 @@ public:
     **  @return     void.
     **/
     virtual  void
-    writeToRegister(
+    writeRegister(
             const   GuestMemoryAddress  ioAddr,
             const   BtByte              regVal)  override;
 
@@ -212,6 +222,9 @@ private:
     /**   現在のスキャン位置。  **/
     int         m_cScanX;
     int         m_cScanY;
+
+    /**   ステータスレジスタ。  **/
+    BtByte              m_regStat;
 
     /**   内部レジスタ。    **/
     GuestMemoryAddress  m_regAddr;

@@ -56,7 +56,8 @@ MemoryManager::MemoryManager()
       m_memPPU(nullptr),
       m_memRAM(nullptr),
       m_memIOM(nullptr),
-      m_memROM(nullptr)
+      m_memROM(nullptr),
+      m_vMMIOs()
 {
 }
 
@@ -138,6 +139,23 @@ MemoryManager::releaseMemory()
     delete []   this->m_memPPU;     this->m_memPPU  = nullptr;
 
     this->m_vRomBuf.clear();
+
+    return ( ErrCode::SUCCESS );
+}
+
+//----------------------------------------------------------------
+//    メモリマップド IO を設定する。
+//
+
+ErrCode
+MemoryManager::setMemoryMappedIO(
+        const   GuestMemoryAddress  addrStart,
+        const   GuestMemoryAddress  addrLast,
+        IMemoryMappedIO  *  const   ptrMmio)
+{
+    for ( GuestMemoryAddress idx = addrStart; idx != addrLast; ++ idx ) {
+        this->m_vMMIOs[idx] = ptrMmio;
+    }
 
     return ( ErrCode::SUCCESS );
 }

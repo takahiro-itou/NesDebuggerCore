@@ -32,7 +32,6 @@ using   namespace   NESDBG_NAMESPACE;
 int  main(int argc, char * argv[])
 {
     ErrCode retCode = ErrCode::SUCCESS;;
-    NesMan::NesManager  manNes;
 
     if ( argc < 2 ) {
         std::cerr   <<  "Usage "
@@ -42,21 +41,26 @@ int  main(int argc, char * argv[])
         return ( 1 );
     }
 
+    //  NES を初期化する。  //
+    std::shared_ptr<NesMan::NesManager> pManNes(new NesMan::NesManager());
+    NesMan::NesManager  &manNes = *pManNes;
+
     if ( (retCode = manNes.openRomFile(argv[1])) != ErrCode::SUCCESS ) {
         std::cerr   <<  "ERROR : Open ROM "
                     <<  argv[1] <<  std::endl;
         return ( 1 );
     }
 
-    //  PPU を初期化する。  //
-    NesMan::NesPpuImpl  manPpu(manNes, manNes.getMemoryManager());
-
     //  ハードリセットを行う。  //
     manNes.doHardReset();
 
     NesMan::InstExecResult  ret = NesMan::InstExecResult::SUCCESS_CONTINUE;
     NesMan::CounterInfo     ci;
-    GuestMemoryAddress      pcPrev, pcWork;
+
+#if defined( _DEBUG )
+    GuestMemoryAddress      pcWork;
+#endif
+    GuestMemoryAddress      pcPrev;
     GuestMemoryAddress      pcNext  = 0;
     ClockCount  cnt     = 0;
 

@@ -208,9 +208,7 @@ protected:
     Images::FullColorImage  *   m_pImage;
 
     /**   PPU メモリ空間。          **/
-    std::vector<BtByte>         m_vMemBuf;
-
-    LpByteWriteBuf              m_memPPU;
+    BtByte                      m_memPPU[16384];
 
     /**  メモリマネージャ。     **/
     MemoryManager  &            m_manMem;
