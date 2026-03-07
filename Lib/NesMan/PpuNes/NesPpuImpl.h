@@ -213,6 +213,9 @@ public:
 //
 private:
 
+    /**   PPU メモリ。      **/
+    BtByte      m_memPPU[16384];
+
     /**   カラーパレット。  **/
     int         m_palette[32];
 
@@ -222,6 +225,9 @@ private:
     /**   現在のスキャン位置。  **/
     int         m_cScanX;
     int         m_cScanY;
+
+    /**   ステータスレジスタ。  **/
+    BtByte              m_regStat;
 
     /**   内部レジスタ。    **/
     GuestMemoryAddress  m_regAddr;

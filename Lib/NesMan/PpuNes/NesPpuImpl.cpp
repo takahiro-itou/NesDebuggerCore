@@ -102,20 +102,19 @@ NesPpuImpl::peekRegister(
     switch ( reg ) {
     case  0:    /*  PPU 制御レジスタ 1 .    */
     case  1:    /*  PPU 制御レジスタ 2 .    */
-    case  2:    /*  PPU ステータスレジスタ  */
-    case  3:    /*  スプライトアドレスレジスタ  */
-    case  4:    /*  スプライトアクセスレジスタ  */
-    case  5:    /*  スクロールレジスタ      */
-    case  6:    /*  VRAM  アドレスレジスタ  */
-    case  7:    /*  VRAM  アクセスレジスタ  */
         break;
-    }
-
-    {
-        char    buf[1024];
-        snprintf(buf, sizeof(buf),
-                "Not Implemented PPU I/O (Read) : $%04X\n", ioAddr);
-        std::cerr   <<  buf;
+    case  2:    /*  PPU ステータスレジスタ  */
+        return ( this->m_regStat );
+    case  3:    /*  スプライトアドレスレジスタ  */
+        break;
+    case  4:    /*  スプライトアクセスレジスタ  */
+        break;
+    case  5:    /*  スクロールレジスタ      */
+        break;
+    case  6:    /*  VRAM  アドレスレジスタ  */
+        break;
+    case  7:    /*  VRAM  アクセスレジスタ  */
+        return ( this->m_memPPU[this->m_regAddr] );
     }
 
     return ( 0 );
@@ -130,6 +129,35 @@ NesPpuImpl::readRegister(
         const   GuestMemoryAddress  ioAddr)
 {
     const   BtByte  val = peekRegister(ioAddr);
+
+    const   GuestMemoryAddress  reg = (ioAddr & 0x0007);
+    switch ( reg ) {
+    case  0:    /*  PPU 制御レジスタ 1 .    */
+        break;      //  WRITE ONLY
+    case  1:    /*  PPU 制御レジスタ 2 .    */
+        break;      //  WRITE ONLY
+    case  2:    /*  PPU ステータスレジスタ  */
+        return ( val );
+    case  3:    /*  スプライトアドレスレジスタ  */
+        break;      //  WRITE ONLY
+    case  4:    /*  スプライトアクセスレジスタ  */
+        break;
+    case  5:    /*  スクロールレジスタ      */
+        break;      //  WRITE ONLY
+    case  6:    /*  VRAM  アドレスレジスタ  */
+        break;      //  WRITE ONLY
+    case  7:    /*  VRAM  アクセスレジスタ  */
+        this->m_regAddr = (this->m_regAddr + 1) & 0x00003FFF;
+        return ( val );
+    }
+
+    {
+        char    buf[1024];
+        snprintf(buf, sizeof(buf),
+                "Not Implemented PPU I/O (Read) : $%04X\n", ioAddr);
+        std::cerr   <<  buf;
+    }
+
     return ( val );
 }
 
@@ -160,7 +188,18 @@ NesPpuImpl::writeRegister(
     case  4:    /*  スプライトアクセスレジスタ  */
     case  5:    /*  スクロールレジスタ      */
     case  6:    /*  VRAM  アドレスレジスタ  */
+        if ( this->m_regWrt == 0 ) {
+            //  PPU のメモリ空間は 14 ビット。  //
+            this->m_regAddr = (regVal << 8) & 0x00003F00;
+            this->m_regWrt  = 1;
+        } else {
+            this->m_regAddr |= (regVal & 0x000000FF);
+            this->m_regWrt  = 0;
+        }
+        return;
     case  7:    /*  VRAM  アクセスレジスタ  */
+        this->m_memPPU[this->m_regAddr] = regVal;
+        this->m_regAddr = (this->m_regAddr + 1) & 0x00003FFF;
         break;
     }
 
