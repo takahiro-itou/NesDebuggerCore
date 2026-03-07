@@ -21,6 +21,10 @@
 #if !defined( NESDBG_NESMAN_INCLUDED_BASE_PPU_CORE_H )
 #    define   NESDBG_NESMAN_INCLUDED_BASE_PPU_CORE_H
 
+#if !defined( NESDBG_NESMAN_INCLUDED_MEMORY_MAPPED_IO_H )
+#    include    "MemoryMappedIO.h"
+#endif
+
 #if !defined( NESDBG_NESMAN_INCLUDED_CPU_UTILS_H )
 #    include    "CpuUtils.h"
 #endif
@@ -50,7 +54,7 @@ class   MemoryManager;
 //    BasePpuCore  class.
 //
 
-class  BasePpuCore
+class  BasePpuCore : public IMemoryMappedIO
 {
 
 //========================================================================
@@ -94,29 +98,6 @@ public:
 //
 //    Public Member Functions (Pure Virtual Functions).
 //
-public:
-
-    //----------------------------------------------------------------
-    /**   レジスタを読み出す。
-    **
-    **  @param [in] ioAddr    I/O アドレス。
-    **  @return     読み出したバイトを返す。
-    **/
-    virtual  BtByte
-    readFromRegister(
-            const   GuestMemoryAddress  ioAddr)  = 0;
-
-    //----------------------------------------------------------------
-    /**   レジスタに書き込む。
-    **
-    **  @param [in] ioAddr    I/O アドレス。
-    **  @param [in] regVal    書き込む値。
-    **  @return     void.
-    **/
-    virtual  void
-    writeToRegister(
-            const   GuestMemoryAddress  ioAddr,
-            const   BtByte              regVal)  = 0;
 
 //========================================================================
 //
