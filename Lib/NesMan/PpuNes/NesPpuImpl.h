@@ -213,9 +213,6 @@ public:
 //
 private:
 
-    /**   PPU メモリ。      **/
-    BtByte      m_memPPU[16384];
-
     /**   カラーパレット。  **/
     int         m_palette[32];
 
