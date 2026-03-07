@@ -183,6 +183,26 @@ T  pointer_cast(const  void  *  p)
     return ( static_cast<T>(p) );
 }
 
+//========================================================================
+//
+//    ポインタの取得。
+//
+
+template  <typename  T>
+inline  T *
+getPointer(T * const p)
+{
+    return ( p );
+}
+
+template  <typename  T>
+inline  T *
+getPointer(
+        const  std::shared_ptr<T> & p)
+{
+    return ( p.get() );
+}
+
 
 NESDBG_NAMESPACE_END
 
