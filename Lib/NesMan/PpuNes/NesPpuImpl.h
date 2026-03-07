@@ -72,6 +72,30 @@ public:
 //
 //    Public Member Functions (Implement Pure Virtual).
 //
+public:
+
+    //----------------------------------------------------------------
+    /**   レジスタを読み出す。
+    **
+    **  @param [in] ioAddr    I/O アドレス。
+    **  @return     読み出したバイトを返す。
+    **/
+    virtual  BtByte
+    readFromRegister(
+            const   GuestMemoryAddress  ioAddr)  override;
+
+    //----------------------------------------------------------------
+    /**   レジスタに書き込む。
+    **
+    **  @param [in] ioAddr    I/O アドレス。
+    **  @param [in] regVal    書き込む値。
+    **  @return     void.
+    **/
+    virtual  void
+    writeToRegister(
+            const   GuestMemoryAddress  ioAddr,
+            const   BtByte              regVal)  override;
+
 
 //========================================================================
 //

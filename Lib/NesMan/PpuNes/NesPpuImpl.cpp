@@ -71,6 +71,28 @@ NesPpuImpl::~NesPpuImpl()
 //    Public Member Functions (Implement Pure Virtual).
 //
 
+//----------------------------------------------------------------
+//    レジスタを読み出す。
+//
+
+BtByte
+NesPpuImpl::readFromRegister(
+        const   GuestMemoryAddress  ioAddr)
+{
+    return ( 0 );
+}
+
+//----------------------------------------------------------------
+//    レジスタに書き込む。
+//
+
+void
+NesPpuImpl::writeToRegister(
+        const   GuestMemoryAddress  ioAddr,
+        const   BtByte              regVal)
+{
+}
+
 //========================================================================
 //
 //    Public Member Functions (Overrides).
