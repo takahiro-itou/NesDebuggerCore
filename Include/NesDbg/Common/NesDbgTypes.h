@@ -171,7 +171,7 @@ DECLARE_STRICT_TYPE(int64_t,    ClockCount);
 **    座標型。
 **/
 
-struct  Point
+struct  NtPoint
 {
     int     x;
     int     y;
