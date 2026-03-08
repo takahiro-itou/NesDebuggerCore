@@ -142,6 +142,16 @@ public:
     executeCurrentInst();
 
     //----------------------------------------------------------------
+    /**   命令を纏めて実行する。
+    **
+    **  @param [in] maxInst   実行する最大数。
+    **/
+    virtual  InstExecResult
+    executeInstructions(
+            const   int         maxInsts,
+            const   ClockCount  maxCycle);
+
+    //----------------------------------------------------------------
     /**   現在のカウンタ情報を取得する。
     **
     **/

@@ -149,6 +149,33 @@ NesManager::executeCurrentInst()
 }
 
 //----------------------------------------------------------------
+//    命令を纏めて実行する。
+//
+
+InstExecResult
+NesManager::executeInstructions(
+        const   int         maxInsts,
+        const   ClockCount  maxCycle)
+{
+    NESDBG_UNUSED_ARG(maxCycle);
+    InstExecResult  ret = InstExecResult::SUCCESS_CONTINUE;
+
+    for ( int i = 0; i < maxInsts; ++ i ) {
+        //  命令を実行する。    //
+        ret = this->m_cpuCur->executeNextInst();
+
+        //  CPU が消費したサイクルを通知。  //
+        const  CounterInfo &ctrStep = this->m_cpuCur->getStepCounters();
+        const  PpuScanLine  ppuScan = this->m_ppuCur->updateScanLine(ctrStep);
+
+        //  状況に応じて VBLANK 割り込み等を処理する。  //
+        this->m_cpuCur->performVBlankInterupt(ppuScan);
+    }
+
+    return ( ret );
+}
+
+//----------------------------------------------------------------
 //    現在のカウンタ情報を取得する。
 //
 

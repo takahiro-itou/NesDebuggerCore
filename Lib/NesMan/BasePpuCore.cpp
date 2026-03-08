@@ -63,7 +63,8 @@ BasePpuCore::BasePpuCore(
         MemoryManager & manMem)
     : m_pImage(nullptr),
       m_memPPU(),
-      m_manMem(manMem)
+      m_manMem(manMem),
+      m_curScanPt({0, 0})
 {
 }
 
@@ -172,6 +173,16 @@ BasePpuCore::createInstance(
 //
 //    Accessors.
 //
+
+//----------------------------------------------------------------
+//    現在のスキャン位置を取得する。
+//
+
+const   NtPoint
+BasePpuCore::getCurrentScanPoint()  const
+{
+    return ( this->m_curScanPt );
+}
 
 //----------------------------------------------------------------
 //    描画先のイメージを取得する。

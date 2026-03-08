@@ -43,7 +43,11 @@ class  NesPpuImpl : public BasePpuCore
 //
 private:
 
-    typedef     BasePpuCore     Super;
+    /**   基底クラス。  **/
+    typedef     BasePpuCore             Super;
+
+    /**   アドレス型。  **/
+    typedef     GuestMemoryAddress      PpuAddress;
 
 
 //========================================================================
@@ -219,22 +223,17 @@ private:
     /**   パレット番号。    **/
     BtByte      m_palIdx[64][64];
 
-    /**   現在のスキャン位置。  **/
-    int         m_cScanX;
-    int         m_cScanY;
-
     /**   ステータスレジスタ。  **/
-    BtByte              m_regStat;
+    BtByte      m_regStat;
 
     /**   内部レジスタ。    **/
-    GuestMemoryAddress  m_regAddr;
+    PpuAddress  m_regAddr;
 
     /**   スクロールレジスタ。  **/
-    int                 m_scrollX;
-    int                 m_scrollY;
+    NtPoint     m_regScroll;
 
     /**   内部フラグレジスタ。  **/
-    int                 m_regWrt;
+    int         m_regWrt;
 
 //========================================================================
 //
