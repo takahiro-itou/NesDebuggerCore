@@ -271,7 +271,7 @@ NesPpuImpl::updateScanLine(
 {
     //  PPU カウンタを更新する。                //
     //  CPU の３倍のクロックが入力されている。  //
-    this->m_curScanPt.x += (static_cast<int>(ctrStep.totalCycles) * 3);
+    this->m_curScanPt.x += (static_cast<int>(ctrStep.lastCycles) * 3);
 
     while ( this->m_curScanPt.x >= 341 ) {
         this->m_curScanPt.x -= 341;
