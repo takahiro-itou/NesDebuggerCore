@@ -57,13 +57,11 @@ NesPpuImpl::NesPpuImpl(
         MemoryManager & manMem)
     : Super(manNes, manMem),
       m_palette(),
-      m_palIdx(),
-      m_cScanX(0),
-      m_cScanY(0),
+      m_palIdx (),
+      m_regStat(0),
       m_regAddr(0),
-      m_scrollX(0),
-      m_scrollY(0),
-      m_regWrt(0)
+      m_regScroll({0, 0}),
+      m_regWrt (0)
 {
 }
 
@@ -187,6 +185,7 @@ NesPpuImpl::writeRegister(
     case  3:    /*  スプライトアドレスレジスタ  */
     case  4:    /*  スプライトアクセスレジスタ  */
     case  5:    /*  スクロールレジスタ      */
+        break;
     case  6:    /*  VRAM  アドレスレジスタ  */
         if ( this->m_regWrt == 0 ) {
             //  PPU のメモリ空間は 14 ビット。  //
@@ -273,36 +272,38 @@ NesPpuImpl::updateScanLine(
 {
     //  PPU カウンタを更新する。                //
     //  CPU の３倍のクロックが入力されている。  //
-    this->m_cScanX  += (ctrStep.totalCycles * 3);
+    this->m_curScanPt.x += (static_cast<int>(ctrStep.lastCycles) * 3);
 
-    while ( this->m_cScanX >= 341 ) {
-        this->m_cScanX  -= 341;
+    while ( this->m_curScanPt.x >= 341 ) {
+        this->m_curScanPt.x -= 341;
 
-        if ( ++ this->m_cScanY == 241 ) {
+        if ( ++ this->m_curScanPt.y == 241 ) {
             //  Start V-BLANK.                  //
             //  ここで VBLANK フラグを立てる。  //
+            this->m_regStat |= 0x80;
             return ( PpuScanLine::START_VERTICAL_BLANK );
         }
     }
 
-    if ( this->m_cScanY >= 261 ) {
+    if ( this->m_curScanPt.y >= 261 ) {
         //  pre-render scanline.            //
         //  ここで VBLANK フラグを下ろす。  //
-        this->m_cScanY  -= 262;
+        this->m_regStat &= ~0x80;
+        this->m_curScanPt.y -= 262;
     }
 #if defined( _DEBUG )
-    std::cout   <<  "PPU : "    <<  this->m_cScanX
-                <<  ", "        <<  this->m_cScanY
+    std::cout   <<  "PPU : "    <<  this->m_curScanPt.x
+                <<  ", "        <<  this->m_curScanPt.y
                 <<  std::endl;
 #endif
 
-    if ( this->m_cScanY < 0 ) {
+    if ( this->m_curScanPt.y < 0 ) {
         return ( PpuScanLine::PRE_RENDER_SCANLINE );
     }
-    if ( this->m_cScanY >= 241 && this->m_cScanY <= 260 ) {
+    if ( this->m_curScanPt.y >= 241 && this->m_curScanPt.y <= 260 ) {
         return ( PpuScanLine::VERTICAL_BLANKING_LINE );
     }
-    if ( this->m_cScanY >= 240 ) {
+    if ( this->m_curScanPt.y >= 240 ) {
         return ( PpuScanLine::POST_RENDER_SCANLINE );
     }
 
