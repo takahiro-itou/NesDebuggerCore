@@ -288,7 +288,7 @@ NesPpuImpl::updateScanLine(
     if ( this->m_curScanPt.y >= 261 ) {
         //  pre-render scanline.            //
         //  ここで VBLANK フラグを下ろす。  //
-        this->m_regStat & ~0x80;
+        this->m_regStat &= ~0x80;
         this->m_curScanPt.y -= 262;
     }
 #if defined( _DEBUG )
