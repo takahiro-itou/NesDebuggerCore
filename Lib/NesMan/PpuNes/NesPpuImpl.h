@@ -223,9 +223,6 @@ private:
     /**   パレット番号。    **/
     BtByte      m_palIdx[64][64];
 
-    /**   現在のスキャン位置。  **/
-    NtPoint     m_curScanPt;
-
     /**   ステータスレジスタ。  **/
     BtByte      m_regStat;
 

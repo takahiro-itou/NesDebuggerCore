@@ -58,7 +58,6 @@ NesPpuImpl::NesPpuImpl(
     : Super(manNes, manMem),
       m_palette(),
       m_palIdx (),
-      m_curScanPt({0, 0}),
       m_regStat(0),
       m_regAddr(0),
       m_regScroll({0, 0}),
@@ -272,7 +271,7 @@ NesPpuImpl::updateScanLine(
 {
     //  PPU カウンタを更新する。                //
     //  CPU の３倍のクロックが入力されている。  //
-    this->m_curScanPt.x += (ctrStep.totalCycles * 3);
+    this->m_curScanPt.x += (static_cast<int>(ctrStep.totalCycles) * 3);
 
     while ( this->m_curScanPt.x >= 341 ) {
         this->m_curScanPt.x -= 341;
