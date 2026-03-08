@@ -185,6 +185,7 @@ NesPpuImpl::writeRegister(
     case  3:    /*  スプライトアドレスレジスタ  */
     case  4:    /*  スプライトアクセスレジスタ  */
     case  5:    /*  スクロールレジスタ      */
+        break;
     case  6:    /*  VRAM  アドレスレジスタ  */
         if ( this->m_regWrt == 0 ) {
             //  PPU のメモリ空間は 14 ビット。  //
@@ -279,6 +280,7 @@ NesPpuImpl::updateScanLine(
         if ( ++ this->m_curScanPt.y == 241 ) {
             //  Start V-BLANK.                  //
             //  ここで VBLANK フラグを立てる。  //
+            this->m_regStat |= 0x80;
             return ( PpuScanLine::START_VERTICAL_BLANK );
         }
     }
@@ -286,6 +288,7 @@ NesPpuImpl::updateScanLine(
     if ( this->m_curScanPt.y >= 261 ) {
         //  pre-render scanline.            //
         //  ここで VBLANK フラグを下ろす。  //
+        this->m_regStat & ~0x80;
         this->m_curScanPt.y -= 262;
     }
 #if defined( _DEBUG )
