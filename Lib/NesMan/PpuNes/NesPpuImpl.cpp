@@ -186,6 +186,7 @@ NesPpuImpl::writeRegister(
     case  2:    /*  PPU ステータスレジスタ  */
     case  3:    /*  スプライトアドレスレジスタ  */
     case  4:    /*  スプライトアクセスレジスタ  */
+        break;
     case  5:    /*  スクロールレジスタ      */
         break;
     case  6:    /*  VRAM  アドレスレジスタ  */
@@ -209,7 +210,7 @@ NesPpuImpl::writeRegister(
         }
         this->m_memPPU[this->m_regAddr] = regVal;
         this->m_regAddr = (this->m_regAddr + 1) & 0x00003FFF;
-        break;
+        return;
     }
 
     {
