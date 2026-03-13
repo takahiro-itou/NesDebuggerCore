@@ -486,8 +486,8 @@ Dis6502::writeRelative(
     }
 
     const   GuestMemoryAddress  gmOffs  = (opeCode >> 8) & 0x00FF;
-    const   GuestMemoryAddress  gmAddr  =
-        (regPC & 0xFF00) | ((regPC + gmOffs) & 0x00FF);
+    int32_t tmp = static_cast<int8_t>(gmOffs);
+    const   GuestMemoryAddress  gmAddr  = (regPC + tmp) & 0x0000FFFF;
     return  snprintf(dst, remLen, "$%04X  ; $%02X (%c)",
                     gmAddr, gmOffs, tbl[flg]
     );
