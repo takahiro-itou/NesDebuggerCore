@@ -207,6 +207,7 @@ NesPpuImpl::writeRegister(
             snprintf(buf, sizeof(buf),
                     "WARNING : Write to ROM : %04x < %02x\n",
                     this->m_regAddr, regVal);
+            std::cerr   <<  buf;
         }
         this->m_memPPU[this->m_regAddr] = regVal;
         this->m_regAddr = (this->m_regAddr + 1) & 0x00003FFF;
