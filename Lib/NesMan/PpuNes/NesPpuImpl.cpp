@@ -168,6 +168,8 @@ NesPpuImpl::writeRegister(
         const   GuestMemoryAddress  ioAddr,
         const   BtByte              regVal)
 {
+    char    buf[1024];
+
 #if defined( _DEBUG )
     if ( (ioAddr < 0x2000) || (0x3FFF < ioAddr) ) {
         //  範囲外のアドレス。  //
@@ -197,13 +199,20 @@ NesPpuImpl::writeRegister(
         }
         return;
     case  7:    /*  VRAM  アクセスレジスタ  */
+        snprintf(buf, sizeof(buf),
+                "Write PPU Memory %04x < %02x\n", this->m_regAddr, regVal);
+        std::cerr   <<  buf;
+        if ( this->m_regAddr <= 0x2000 ) {
+            snprintf(buf, sizeof(buf),
+                    "WARNING : Write to ROM : %04x < %02x\n",
+                    this->m_regAddr, regVal);
+        }
         this->m_memPPU[this->m_regAddr] = regVal;
         this->m_regAddr = (this->m_regAddr + 1) & 0x00003FFF;
         break;
     }
 
     {
-        char    buf[1024];
         snprintf(buf, sizeof(buf),
                 "Not Implemented PPU I/O (Write) : $%04X\n", ioAddr);
         std::cerr   <<  buf;
