@@ -204,6 +204,11 @@ public:
             return;
         }
 
+        if ( gmAddr >= 0x8000 ) {
+            //  ROM への書き込みは、一旦無視。  //
+            return;
+        }
+
         T * ptr = static_cast<T *>(getMemoryAddress(gmAddr));
         (* ptr) = wValue;
     }
