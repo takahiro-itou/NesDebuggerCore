@@ -446,7 +446,9 @@ Dis6502::writePostIndexIndirect(
 
     const   BtByte  cv  = this->m_pManMem->peekMemory<BtByte>(gmAddr);
 
-    return  snprintf(dst, remLen, "($%02X),%c", gmShow, regName);
+    return  snprintf(dst, remLen, "($%02X),%c @ $%04X = #$%02X",
+                    gmShow, regName, gmAddr, cv
+    );
 }
 
 //----------------------------------------------------------------
