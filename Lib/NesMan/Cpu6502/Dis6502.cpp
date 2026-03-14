@@ -468,7 +468,7 @@ Dis6502::writePreIndexIndirect(
     BtByte  tmp = adr;
     GuestMemoryAddress  gmAddr  = this->m_pManMem->peekMemory<BtByte>(tmp);
     ++ tmp;
-    gmAddr  |= this->m_pManMem->peekMemory<BtByte>(tmp);
+    gmAddr  |= this->m_pManMem->peekMemory<BtByte>(tmp) << 8;
 
     const   BtByte  cv  = this->m_pManMem->peekMemory<BtByte>(gmAddr);
 
