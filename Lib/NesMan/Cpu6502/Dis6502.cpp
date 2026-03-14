@@ -429,8 +429,26 @@ Dis6502::writePostIndexIndirect(
         const  char     regName,
         const  RegType  idxReg)  const
 {
+    GuestMemoryAddress  rt, gmAddr;
+
     const   GuestMemoryAddress  gmShow  = (opeCode >> 8) & 0x000000FF;
-    return  snprintf(dst, remLen, "($%02X),%c", gmShow, regName);
+
+    BtByte  tmp = (gmShow & 0x000000FF);
+    rt  =  this->m_pManMem->peekMemory<RegType>(tmp);
+    ++ tmp;
+    rt  |= this->m_pManMem->peekMemory<RegType>(tmp) << 8;
+    gmAddr  = (rt + idxReg);
+
+    //  ページクロスチェック。  //
+    if ( (gmAddr ^ rt) & 0x0100 ) {
+        gmAddr  ^= 0x0100;
+    }
+
+    const   BtByte  cv  = this->m_pManMem->peekMemory<BtByte>(gmAddr);
+
+    return  snprintf(dst, remLen, "($%02X),%c @ $%04X = #$%02X",
+                    gmShow, regName, gmAddr, cv
+    );
 }
 
 //----------------------------------------------------------------
@@ -446,7 +464,17 @@ Dis6502::writePreIndexIndirect(
         const  RegType  idxReg)  const
 {
     const   GuestMemoryAddress  gmShow  = (opeCode >> 8) & 0x000000FF;
-    return  snprintf(dst, remLen, "($%02X,%c)", gmShow, regName);
+    BtByte  adr = (gmShow + idxReg) & 0x000000FF;
+    BtByte  tmp = adr;
+    GuestMemoryAddress  gmAddr  = this->m_pManMem->peekMemory<BtByte>(tmp);
+    ++ tmp;
+    gmAddr  |= this->m_pManMem->peekMemory<BtByte>(tmp) << 8;
+
+    const   BtByte  cv  = this->m_pManMem->peekMemory<BtByte>(gmAddr);
+
+    return  snprintf(dst, remLen, "($%02X,%c) @ $%04X = #$%02X",
+                    gmShow, regName, gmAddr, cv
+    );
 }
 
 //----------------------------------------------------------------
