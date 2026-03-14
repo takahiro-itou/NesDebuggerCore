@@ -446,6 +446,14 @@ Dis6502::writePreIndexIndirect(
         const  RegType  idxReg)  const
 {
     const   GuestMemoryAddress  gmShow  = (opeCode >> 8) & 0x000000FF;
+    BtByte  adr = (gmShow + idxReg) & 0x000000FF;
+    BtByte  tmp = adr;
+    GuestMemoryAddress  gmAddr  = this->m_pManMem->peekMemory<BtByte>(tmp);
+    ++ tmp;
+    gmAddr  |= this->m_pManMem->peekMemory<BtByte>(tmp);
+
+    const   BtByte  cv  = this->m_pManMem->peekMemory<BtByte>(gmAddr);
+
     return  snprintf(dst, remLen, "($%02X,%c)", gmShow, regName);
 }
 
