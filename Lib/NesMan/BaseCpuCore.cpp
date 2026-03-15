@@ -156,10 +156,18 @@ BaseCpuCore::performResetInterrupt()
     mog_cpuRegs.rs0 = 0;
     mog_cpuRegs.rs1 = 0;
 
-    mog_cpuInfo.totalCycles = 7;
-    mog_cpuInfo.numOpeCodes = 1;
-    mog_cpuInfo.clockCycles = 7;
+    mog_cpuInfo.totalCycles = 0;
+    mog_cpuInfo.numOpeCodes = 0;
+    mog_cpuInfo.lastCycles  = 0;
+    mog_cpuInfo.clockCycles = 0;
     mog_cpuInfo.remainClock = 0;
+
+    //  リセット割り込みに掛かるサイクル数を設定。  //
+    mog_ctrStep.totalCycles = 7;
+    mog_ctrStep.numOpeCodes = 1;
+    mog_ctrStep.lastCycles  = 7;
+    mog_ctrStep.clockCycles = 0;
+    mog_ctrStep.remainClock = 0;
 
     return ( ErrCode::SUCCESS );
 }
@@ -173,10 +181,10 @@ BaseCpuCore::performVBlankInterrupt(
         const  PpuScanLine  ppuScan)
 {
     if ( ppuScan == PpuScanLine::PRE_RENDER_SCANLINE ) {
-        this->m_manMem.writeMemory(0x2002, 0x00);
+        //  this->m_manMem.writeMemory(0x2002, 0x00);
     }
     if ( ppuScan == PpuScanLine::START_VERTICAL_BLANK ) {
-        this->m_manMem.writeMemory(0x2002, 0x80);
+        //  this->m_manMem.writeMemory(0x2002, 0x80);
         execNmi(0xFFFA);
     }
 
