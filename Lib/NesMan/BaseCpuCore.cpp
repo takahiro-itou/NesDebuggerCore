@@ -181,10 +181,10 @@ BaseCpuCore::performVBlankInterrupt(
         const  PpuScanLine  ppuScan)
 {
     if ( ppuScan == PpuScanLine::PRE_RENDER_SCANLINE ) {
-        this->m_manMem.writeMemory(0x2002, 0x00);
+        //  this->m_manMem.writeMemory(0x2002, 0x00);
     }
     if ( ppuScan == PpuScanLine::START_VERTICAL_BLANK ) {
-        this->m_manMem.writeMemory(0x2002, 0x80);
+        //  this->m_manMem.writeMemory(0x2002, 0x80);
         execNmi(0xFFFA);
     }
 
