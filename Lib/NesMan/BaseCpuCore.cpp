@@ -99,7 +99,7 @@ BaseCpuCore::~BaseCpuCore()
 ErrCode
 BaseCpuCore::emulatePowerOn()
 {
-    return  emulatePowerOn();
+    return  emulateResetButton();
 }
 
 //----------------------------------------------------------------
