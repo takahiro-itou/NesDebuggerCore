@@ -292,6 +292,10 @@ NesPpuImpl::updateScanLine(
         if ( ++ this->m_curScanPt.y == 241 ) {
             //  Start V-BLANK.                  //
             //  ここで VBLANK フラグを立てる。  //
+            if ( this->m_ppuDead >0 ) {
+                -- this->m_ppuDead;
+                return ( PpuScanLine::VERTICAL_BLANKING_LINE );
+            }
             this->m_regStat |= 0x80;
             return ( PpuScanLine::START_VERTICAL_BLANK );
         }
@@ -303,6 +307,7 @@ NesPpuImpl::updateScanLine(
         this->m_regStat &= ~0x80;
         this->m_curScanPt.y -= 262;
     }
+
 #if defined( _DEBUG )
     std::cout   <<  "PPU : "    <<  this->m_curScanPt.x
                 <<  ", "        <<  this->m_curScanPt.y
