@@ -125,6 +125,12 @@ NesManager::emulatePowerOn()
     this->m_cpuCur->emulatePowerOn();
     this->m_ppuCur->emulatePowerOn();
 
+    //  電源投入時のリセット割り込みで  //
+    //  CPU が消費したサイクルを通知。  //
+    const  CounterInfo &ctrStep = this->m_cpuCur->getStepCounters();
+    const  PpuScanLine  ppuScan = this->m_ppuCur->updateScanLine(ctrStep);
+    NESDBG_UNUSED_VAR(ppuScan);
+
     return ( ErrCode::SUCCESS );
 }
 

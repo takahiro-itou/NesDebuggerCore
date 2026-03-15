@@ -123,7 +123,7 @@ BasePpuCore::drawScreen()
 ErrCode
 BasePpuCore::emulatePowerOn()
 {
-    this->m_curScanPt.x = 0;
+    this->m_curScanPt.x = 1;
     this->m_curScanPt.y = 241;
     this->m_ppuDead     = 1;
 
