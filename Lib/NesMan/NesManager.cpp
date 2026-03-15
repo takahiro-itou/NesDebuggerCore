@@ -113,11 +113,21 @@ NesManager::closeInstance()
 }
 
 //----------------------------------------------------------------
-//    リセットを行う。
+//    電源オンの処理を行う。
 //
 
 ErrCode
-NesManager::doHardReset()
+NesManager::emulatePowerOn()
+{
+    return  emulateResetButton();
+}
+
+//----------------------------------------------------------------
+//    リセットボタン押下の処理を行う。
+//
+
+ErrCode
+NesManager::emulateResetButton()
 {
     this->m_cpuCur  = getOrCreateCpuInstance();
     this->m_ppuCur  = getOrCreatePpuInstance();
