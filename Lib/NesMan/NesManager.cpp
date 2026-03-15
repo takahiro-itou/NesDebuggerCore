@@ -113,17 +113,33 @@ NesManager::closeInstance()
 }
 
 //----------------------------------------------------------------
-//    リセットを行う。
+//    電源オンの処理を行う。
 //
 
 ErrCode
-NesManager::doHardReset()
+NesManager::emulatePowerOn()
 {
     this->m_cpuCur  = getOrCreateCpuInstance();
     this->m_ppuCur  = getOrCreatePpuInstance();
 
-    this->m_cpuCur->doHardReset();
-    this->m_ppuCur->doHardReset();
+    this->m_cpuCur->emulatePowerOn();
+    this->m_ppuCur->emulatePowerOn();
+
+    return ( ErrCode::SUCCESS );
+}
+
+//----------------------------------------------------------------
+//    リセットボタン押下の処理を行う。
+//
+
+ErrCode
+NesManager::emulateResetButton()
+{
+    this->m_cpuCur  = getOrCreateCpuInstance();
+    this->m_ppuCur  = getOrCreatePpuInstance();
+
+    this->m_cpuCur->emulateResetButton();
+    this->m_ppuCur->emulateResetButton();
 
     return ( ErrCode::SUCCESS );
 }
@@ -143,7 +159,7 @@ NesManager::executeCurrentInst()
     const  PpuScanLine  ppuScan = this->m_ppuCur->updateScanLine(ctrStep);
 
     //  状況に応じて VBLANK 割り込み等を処理する。  //
-    this->m_cpuCur->performVBlankInterupt(ppuScan);
+    this->m_cpuCur->performVBlankInterrupt(ppuScan);
 
     return ( ret );
 }
@@ -169,7 +185,7 @@ NesManager::executeInstructions(
         const  PpuScanLine  ppuScan = this->m_ppuCur->updateScanLine(ctrStep);
 
         //  状況に応じて VBLANK 割り込み等を処理する。  //
-        this->m_cpuCur->performVBlankInterupt(ppuScan);
+        this->m_cpuCur->performVBlankInterrupt(ppuScan);
     }
 
     return ( ret );

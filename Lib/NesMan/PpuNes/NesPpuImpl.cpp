@@ -282,18 +282,34 @@ PpuScanLine
 NesPpuImpl::updateScanLine(
         const  CounterInfo  &ctrStep)
 {
+    PpuScanLine retVal  = PpuScanLine::VISIBLE_SCANLINE;
+
     //  PPU カウンタを更新する。                //
     //  CPU の３倍のクロックが入力されている。  //
-    this->m_curScanPt.x += (static_cast<int>(ctrStep.lastCycles) * 3);
+    const  int  cnt = static_cast<int>(ctrStep.lastCycles) * 3;
+    this->m_curScanPt.x += cnt;
+    this->m_totalCycles += cnt;
+    this->m_frameCycels += cnt;
 
     while ( this->m_curScanPt.x >= 341 ) {
         this->m_curScanPt.x -= 341;
 
-        if ( ++ this->m_curScanPt.y == 241 ) {
+        if ( ++ this->m_curScanPt.y == 240 ) {
+            //  ここをフレームの区切りとする。  //
+            this->m_totalCycles -= 262 * 341;
+            ++ this->m_frameNumber;
+        }
+
+        if ( this->m_curScanPt.y == 241 ) {
             //  Start V-BLANK.                  //
             //  ここで VBLANK フラグを立てる。  //
-            this->m_regStat |= 0x80;
-            return ( PpuScanLine::START_VERTICAL_BLANK );
+            if ( this->m_ppuDead >0 ) {
+                -- this->m_ppuDead;
+                retVal  = ( PpuScanLine::VERTICAL_BLANKING_LINE );
+            } else {
+                this->m_regStat |= 0x80;
+                retVal  = ( PpuScanLine::START_VERTICAL_BLANK );
+            }
         }
     }
 
@@ -302,12 +318,21 @@ NesPpuImpl::updateScanLine(
         //  ここで VBLANK フラグを下ろす。  //
         this->m_regStat &= ~0x80;
         this->m_curScanPt.y -= 262;
+        retVal  = ( PpuScanLine::PRE_RENDER_SCANLINE );
     }
+
 #if defined( _DEBUG )
     std::cout   <<  "PPU : "    <<  this->m_curScanPt.x
                 <<  ", "        <<  this->m_curScanPt.y
+                <<  ", F "      <<  this->m_frameNumber
+                <<  ", "        <<  this->m_frameCycels
+                <<  " / "       <<  this->m_totalCycles
                 <<  std::endl;
 #endif
+
+    if ( retVal != PpuScanLine::VISIBLE_SCANLINE ) {
+        return ( retVal );
+    }
 
     if ( this->m_curScanPt.y < 0 ) {
         return ( PpuScanLine::PRE_RENDER_SCANLINE );
