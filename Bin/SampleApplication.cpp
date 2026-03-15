@@ -51,8 +51,8 @@ int  main(int argc, char * argv[])
         return ( 1 );
     }
 
-    //  ハードリセットを行う。  //
-    manNes.doHardReset();
+    //  本体の電源を投入する。  //
+    manNes.emulatePowerOn();
 
     NesMan::InstExecResult  ret = NesMan::InstExecResult::SUCCESS_CONTINUE;
     NesMan::CounterInfo     ci;

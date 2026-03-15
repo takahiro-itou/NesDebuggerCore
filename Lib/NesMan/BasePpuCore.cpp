@@ -64,6 +64,10 @@ BasePpuCore::BasePpuCore(
     : m_pImage(nullptr),
       m_memPPU(),
       m_manMem(manMem),
+      m_ppuDead(1),
+      m_frameNumber(0),
+      m_frameCycels(0),
+      m_totalCycles(0),
       m_curScanPt({0, 0})
 {
 }
@@ -98,16 +102,6 @@ BasePpuCore::~BasePpuCore()
 //
 
 //----------------------------------------------------------------
-//    プロセッサをリセットする。
-//
-
-ErrCode
-BasePpuCore::doHardReset()
-{
-    return ( ErrCode::SUCCESS );
-}
-
-//----------------------------------------------------------------
 //    画面を描画する。
 //
 
@@ -119,6 +113,34 @@ BasePpuCore::drawScreen()
 
     this->m_pImage->fillRectangle(0, 0, iW, iH, 0x00FFFFFF);
 
+    return ( ErrCode::SUCCESS );
+}
+
+//----------------------------------------------------------------
+//    電源オンの処理を行う。
+//
+
+ErrCode
+BasePpuCore::emulatePowerOn()
+{
+    this->m_curScanPt.x = 0;
+    this->m_curScanPt.y = 241;
+    this->m_ppuDead     = 1;
+
+    this->m_frameNumber = 0;
+    this->m_frameCycels = 0;
+    this->m_totalCycles = 0;
+
+    return ( ErrCode::SUCCESS );
+}
+
+//----------------------------------------------------------------
+//    リセットボタン押下の処理を行う。
+//
+
+ErrCode
+BasePpuCore::emulateResetButton()
+{
     return ( ErrCode::SUCCESS );
 }
 
