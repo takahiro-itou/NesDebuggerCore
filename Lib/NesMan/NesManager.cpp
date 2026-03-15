@@ -123,7 +123,7 @@ NesManager::emulatePowerOn()
     this->m_ppuCur  = getOrCreatePpuInstance();
 
     this->m_cpuCur->emulatePowerOn();
-    this->m_ppuCur->doHardReset();
+    this->m_ppuCur->emulatePowerOn();
 
     return ( ErrCode::SUCCESS );
 }
@@ -139,7 +139,7 @@ NesManager::emulateResetButton()
     this->m_ppuCur  = getOrCreatePpuInstance();
 
     this->m_cpuCur->emulateResetButton();
-    this->m_ppuCur->doHardReset();
+    this->m_ppuCur->emulateResetButton();
 
     return ( ErrCode::SUCCESS );
 }

@@ -98,16 +98,6 @@ BasePpuCore::~BasePpuCore()
 //
 
 //----------------------------------------------------------------
-//    プロセッサをリセットする。
-//
-
-ErrCode
-BasePpuCore::doHardReset()
-{
-    return ( ErrCode::SUCCESS );
-}
-
-//----------------------------------------------------------------
 //    画面を描画する。
 //
 
@@ -119,6 +109,26 @@ BasePpuCore::drawScreen()
 
     this->m_pImage->fillRectangle(0, 0, iW, iH, 0x00FFFFFF);
 
+    return ( ErrCode::SUCCESS );
+}
+
+//----------------------------------------------------------------
+//    電源オンの処理を行う。
+//
+
+ErrCode
+BasePpuCore::emulatePowerOn()
+{
+    return ( ErrCode::SUCCESS );
+}
+
+//----------------------------------------------------------------
+//    リセットボタン押下の処理を行う。
+//
+
+ErrCode
+BasePpuCore::emulateResetButton()
+{
     return ( ErrCode::SUCCESS );
 }
 
