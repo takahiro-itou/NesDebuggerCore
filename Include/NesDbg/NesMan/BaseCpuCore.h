@@ -169,11 +169,18 @@ public:
             RegBank  &copyBuf)  const;
 
     //----------------------------------------------------------------
+    /**   RESET 割り込みを発生させる。
+    **
+    **/
+    virtual  ErrCode
+    performResetInterrupt();
+
+    //----------------------------------------------------------------
     /**   V-BLANK 割り込みを発生させる。
     **
     **/
     virtual  ErrCode
-    performVBlankInterupt(
+    performVBlankInterrupt(
             const  PpuScanLine  ppuScan);
 
     //----------------------------------------------------------------

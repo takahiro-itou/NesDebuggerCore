@@ -159,7 +159,7 @@ NesManager::executeCurrentInst()
     const  PpuScanLine  ppuScan = this->m_ppuCur->updateScanLine(ctrStep);
 
     //  状況に応じて VBLANK 割り込み等を処理する。  //
-    this->m_cpuCur->performVBlankInterupt(ppuScan);
+    this->m_cpuCur->performVBlankInterrupt(ppuScan);
 
     return ( ret );
 }
@@ -185,7 +185,7 @@ NesManager::executeInstructions(
         const  PpuScanLine  ppuScan = this->m_ppuCur->updateScanLine(ctrStep);
 
         //  状況に応じて VBLANK 割り込み等を処理する。  //
-        this->m_cpuCur->performVBlankInterupt(ppuScan);
+        this->m_cpuCur->performVBlankInterrupt(ppuScan);
     }
 
     return ( ret );

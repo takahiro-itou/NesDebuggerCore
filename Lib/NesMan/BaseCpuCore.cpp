@@ -124,7 +124,7 @@ BaseCpuCore::emulateResetButton()
     mog_cpuInfo.clockCycles = 0;
     mog_cpuInfo.remainClock = 0;
 
-    return ( ErrCode::SUCCESS );
+    return  performResetInterrupt();
 }
 
 //----------------------------------------------------------------
@@ -140,11 +140,36 @@ BaseCpuCore::getRegisters(
 }
 
 //----------------------------------------------------------------
+//    RESET 割り込みを発生させる。
+//
+
+ErrCode
+BaseCpuCore::performResetInterrupt()
+{
+    mog_cpuRegs.PC  = this->m_manMem.readMemory<BtWord>(0xFFFC);
+    mog_cpuRegs.Zr  = 0;
+    mog_cpuRegs.A   = 0;
+    mog_cpuRegs.X   = 0;
+    mog_cpuRegs.Y   = 0;
+    mog_cpuRegs.S   = 0xFF;
+    mog_cpuRegs.P   = FLAG_R;
+    mog_cpuRegs.rs0 = 0;
+    mog_cpuRegs.rs1 = 0;
+
+    mog_cpuInfo.totalCycles = 7;
+    mog_cpuInfo.numOpeCodes = 1;
+    mog_cpuInfo.clockCycles = 7;
+    mog_cpuInfo.remainClock = 0;
+
+    return ( ErrCode::SUCCESS );
+}
+
+//----------------------------------------------------------------
 //    V-BLANK 割り込みを発生させる。
 //
 
 ErrCode
-BaseCpuCore::performVBlankInterupt(
+BaseCpuCore::performVBlankInterrupt(
         const  PpuScanLine  ppuScan)
 {
     if ( ppuScan == PpuScanLine::PRE_RENDER_SCANLINE ) {
