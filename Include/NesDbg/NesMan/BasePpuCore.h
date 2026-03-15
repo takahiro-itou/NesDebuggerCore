@@ -231,9 +231,11 @@ protected:
     /**  メモリマネージャ。     **/
     MemoryManager  &            m_manMem;
 
-    /**   現在のスキャン位置。  **/
-    NtPoint     m_curScanPt;
+    /**   PPU の初期化期間。        **/
+    int                         m_ppuDead;
 
+    /**   現在のスキャン位置。  **/
+    NtPoint                     m_curScanPt;
 
 //========================================================================
 //

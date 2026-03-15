@@ -64,6 +64,7 @@ BasePpuCore::BasePpuCore(
     : m_pImage(nullptr),
       m_memPPU(),
       m_manMem(manMem),
+      m_ppuDead(2),
       m_curScanPt({0, 0})
 {
 }
@@ -119,6 +120,10 @@ BasePpuCore::drawScreen()
 ErrCode
 BasePpuCore::emulatePowerOn()
 {
+    this->m_curScanPt.x = 0;
+    this->m_curScanPt.y = 241;
+    this->m_ppuDead     = 2;
+
     return ( ErrCode::SUCCESS );
 }
 
