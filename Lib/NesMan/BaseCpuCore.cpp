@@ -109,9 +109,9 @@ BaseCpuCore::doHardReset()
     mog_cpuRegs.rs0 = 0;
     mog_cpuRegs.rs1 = 0;
 
-    mog_cpuInfo.totalCycles = 7;
+    mog_cpuInfo.totalCycles = 0;
     mog_cpuInfo.numOpeCodes = 0;
-    mog_cpuInfo.clockCycles = 7;
+    mog_cpuInfo.clockCycles = 0;
     mog_cpuInfo.remainClock = 0;
 
     return ( ErrCode::SUCCESS );
