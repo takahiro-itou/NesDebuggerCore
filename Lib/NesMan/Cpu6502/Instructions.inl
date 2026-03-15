@@ -119,6 +119,11 @@
 #define     CPY(or2)        \
     &Cpu6502::execArithLogic<or2, ALU::OpeCMP, ALU::OpeNopR, 0, REG_Y>
 
+#define     addCycles(cnt)              \
+{                                       \
+    mog_ctrStep.totalCycles += cnt;     \
+}
+
 NESDBG_NAMESPACE_BEGIN
 namespace  NesMan  {
 
@@ -180,7 +185,7 @@ Cpu6502::execBranch(
         //  条件が成立しなければ、何もしない。  //
         return ( InstExecResult::SUCCESS_CONTINUE );
     }
-    ++ mog_ctrStep.totalCycles;
+    addCycles(1);
     GuestMemoryAddress  tmp = mog_cpuRegs.PC;
     int32_t     dst;
 
@@ -189,7 +194,7 @@ Cpu6502::execBranch(
 
     //  Page-Cross Check..  //
     if ( (tmp ^ mog_cpuRegs.PC) & 0x0100 ) {
-        ++ mog_ctrStep.totalCycles;
+        addCycles(1);
     }
 
     return ( InstExecResult::SUCCESS_CONTINUE );
@@ -226,7 +231,7 @@ Cpu6502::execIncDec(
     setupNZFlags(val += VAL);
     operand.writeValue(val);
 
-    mog_ctrStep.totalCycles += cyc;
+    addCycles(cyc);
 
     return ( InstExecResult::SUCCESS_CONTINUE );
 }
@@ -311,7 +316,7 @@ Cpu6502::execLoad(
 
     //  追加サイクルがあれば加算する。  //
     //  アドレスがページを跨いだ時等。   //
-    mog_ctrStep.totalCycles += cyc;
+    addCycles(cyc);
 
     return ( InstExecResult::SUCCESS_CONTINUE );
 }
@@ -400,7 +405,7 @@ Cpu6502::execStore(
 
     //  追加サイクルがあれば加算する。  //
     //  アドレスがページを跨いだ時等。   //
-    mog_ctrStep.totalCycles += cyc;
+    addCycles(cyc);
 
     return ( InstExecResult::SUCCESS_CONTINUE );
 }
