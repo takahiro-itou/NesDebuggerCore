@@ -119,7 +119,13 @@ NesManager::closeInstance()
 ErrCode
 NesManager::emulatePowerOn()
 {
-    return  emulateResetButton();
+    this->m_cpuCur  = getOrCreateCpuInstance();
+    this->m_ppuCur  = getOrCreatePpuInstance();
+
+    this->m_cpuCur->emulatePowerOn();
+    this->m_ppuCur->doHardReset();
+
+    return ( ErrCode::SUCCESS );
 }
 
 //----------------------------------------------------------------
@@ -132,7 +138,7 @@ NesManager::emulateResetButton()
     this->m_cpuCur  = getOrCreateCpuInstance();
     this->m_ppuCur  = getOrCreatePpuInstance();
 
-    this->m_cpuCur->doHardReset();
+    this->m_cpuCur->emulateResetButton();
     this->m_ppuCur->doHardReset();
 
     return ( ErrCode::SUCCESS );

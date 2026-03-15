@@ -93,11 +93,21 @@ BaseCpuCore::~BaseCpuCore()
 //
 
 //----------------------------------------------------------------
-//    レジスタをリセットする。
+//    電源オンの処理を行う。
 //
 
 ErrCode
-BaseCpuCore::doHardReset()
+BaseCpuCore::emulatePowerOn()
+{
+    return  emulatePowerOn();
+}
+
+//----------------------------------------------------------------
+//    リセットボタン押下の処理を行う。
+//
+
+ErrCode
+BaseCpuCore::emulateResetButton()
 {
     mog_cpuRegs.PC  = this->m_manMem.readMemory<BtWord>(0xFFFC);
     mog_cpuRegs.Zr  = 0;
