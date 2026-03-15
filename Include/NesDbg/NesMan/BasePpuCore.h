@@ -232,10 +232,19 @@ protected:
     MemoryManager  &            m_manMem;
 
     /**   PPU の初期化期間。        **/
-    int                         m_ppuDead;
+    int             m_ppuDead;
+
+    /**   現在のフレーム番号。  **/
+    ClockCount      m_frameNumber;
+
+    /**   現在のフレームのサイクル数。  **/
+    ClockCount      m_frameCycels;
+
+    /**   現在の総サイクル数。  **/
+    ClockCount      m_totalCycles;
 
     /**   現在のスキャン位置。  **/
-    NtPoint                     m_curScanPt;
+    NtPoint         m_curScanPt;
 
 //========================================================================
 //

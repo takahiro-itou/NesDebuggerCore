@@ -65,6 +65,9 @@ BasePpuCore::BasePpuCore(
       m_memPPU(),
       m_manMem(manMem),
       m_ppuDead(2),
+      m_frameNumber(0),
+      m_frameCycels(0),
+      m_totalCycles(0),
       m_curScanPt({0, 0})
 {
 }
@@ -123,6 +126,11 @@ BasePpuCore::emulatePowerOn()
     this->m_curScanPt.x = 0;
     this->m_curScanPt.y = 241;
     this->m_ppuDead     = 2;
+
+    this->m_frameNumber = 0;
+    this->m_frameCycels = 0;
+    this->m_totalCycles = 0;
+
 
     return ( ErrCode::SUCCESS );
 }
