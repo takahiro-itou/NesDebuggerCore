@@ -122,6 +122,7 @@
 #define     addCycles(cnt)              \
 {                                       \
     mog_ctrStep.totalCycles += cnt;     \
+    mog_ctrStep.lastCycles  += cnt;     \
 }
 
 NESDBG_NAMESPACE_BEGIN

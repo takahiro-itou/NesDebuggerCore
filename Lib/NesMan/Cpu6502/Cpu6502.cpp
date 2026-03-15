@@ -136,7 +136,6 @@ Cpu6502::executeNextInst()
     const   ClockCount  cycles  = g_opeCodeCycles[ocInst];
     mog_ctrStep.lastCycles  =  0;
     addCycles(cycles);
-    mog_ctrStep.lastCycles  += cycles;
     ++ mog_ctrStep.numOpeCodes;
 
     FnInst  pfInst  = s_cpuInstTable[ocInst];
