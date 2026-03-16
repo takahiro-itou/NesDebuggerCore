@@ -65,6 +65,7 @@ BasePpuCore::BasePpuCore(
       m_memPPU(),
       m_manMem(manMem),
       m_ppuDead(1),
+      m_flgVbl(BOOL_FALSE),
       m_frameNumber(0),
       m_frameCycels(0),
       m_totalCycles(0),
