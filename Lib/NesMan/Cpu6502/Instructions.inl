@@ -354,11 +354,12 @@ Cpu6502::execPush(
 inline  InstExecResult
 Cpu6502::execRti(const  OpeCode  opeCode)
 {
+    mog_cpuRegs.P   = popValue();
+
     mog_cpuRegs.PC  = popValue();
     mog_cpuRegs.PC  |= (popValue() << 8);
     mog_cpuRegs.PC  &= 0x0000FFFF;
 
-    mog_cpuRegs.P   = popValue();
     return ( InstExecResult::SUCCESS_CONTINUE );
 }
 

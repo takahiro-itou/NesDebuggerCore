@@ -23,6 +23,8 @@
 #include    "Cpu6502.h"
 
 #include    "NesDbg/NesMan/MemoryManager.h"
+#include    "NesDbg/NesMan/NesManager.h"
+
 #include    "InstTable.h"
 #include    "AddressingMode.h"
 #include    "ArithmeticLogic.h"
@@ -83,7 +85,21 @@ InstExecResult
 Cpu6502::execBrk(
         const  OpeCode  opeCode)
 {
-    return ( InstExecResult::UNDEFINED_OPECODE );
+    pushValue((mog_cpuRegs.PC >> 8) & 0x000000FF);
+    pushValue((mog_cpuRegs.PC     ) & 0x000000FF);
+
+    pushValue( (mog_cpuRegs.P) | (FLAG_R | FLAG_B) );
+    mog_cpuRegs.P   |= FLAG_I;
+
+#if defined( _DEBUG )
+    std::cerr   <<  "INFO : Interrupt BRK\n";
+#endif
+
+    //  サイクル数の増加はテーブルを参照して既に実行した。  //
+    //  addCycles(7);
+    mog_cpuRegs.PC  = this->m_manMem.readMemory<BtWord>(0xFFFE);
+
+    return ( InstExecResult::SUCCESS_CONTINUE );
 }
 
 //----------------------------------------------------------------
@@ -94,7 +110,25 @@ InstExecResult
 Cpu6502::execIrq(
         const  OpeCode  opeCode)
 {
-    return ( InstExecResult::UNDEFINED_OPECODE );
+    if ( mog_cpuRegs.P & FLAG_I ) {
+        //  割り込みが禁止されている。  //
+        return ( InstExecResult::SUCCESS_CONTINUE );
+    }
+
+    pushValue((mog_cpuRegs.PC >> 8) & 0x000000FF);
+    pushValue((mog_cpuRegs.PC     ) & 0x000000FF);
+
+    pushValue( (mog_cpuRegs.P & ~FLAG_B) | (FLAG_R) );
+    mog_cpuRegs.P   |= FLAG_I;
+
+#if defined( _DEBUG )
+    std::cerr   <<  "INFO : Interrupt IRQ\n";
+#endif
+
+    addCycles(7);
+    mog_cpuRegs.PC  = this->m_manMem.readMemory<BtWord>(0xFFFE);
+
+    return ( InstExecResult::SUCCESS_CONTINUE );
 }
 
 //----------------------------------------------------------------
@@ -105,11 +139,19 @@ InstExecResult
 Cpu6502::execNmi(
         const  OpeCode  opeCode)
 {
-    pushValue(mog_cpuRegs.P);
     pushValue((mog_cpuRegs.PC >> 8) & 0x000000FF);
     pushValue((mog_cpuRegs.PC     ) & 0x000000FF);
 
+    pushValue( (mog_cpuRegs.P & ~FLAG_B) | (FLAG_R) );
+    mog_cpuRegs.P   |= FLAG_I;
+
+#if defined( _DEBUG )
+    std::cerr   <<  "INFO : Interrupt NMI\n";
+#endif
+
+    addCycles(7);
     mog_cpuRegs.PC  = this->m_manMem.readMemory<BtWord>(0xFFFA);
+    this->m_flagIrq &= ~IRQ::IRQ_NMI;
 
     return ( InstExecResult::SUCCESS_CONTINUE );
 }
@@ -123,6 +165,21 @@ Cpu6502::executeNextInst()
 {
     char    buf[128];
 
+#if defined( _DEBUG )
+    snprintf(buf, sizeof(buf), "IRQ : %02X\n", this->m_flagIrq);
+    std::cerr   <<  buf;
+#endif
+
+    //  割り込みフラグが立っていればそれを処理する。    //
+    if ( this->m_flagIrq & IRQ::IRQ_NMI ) {
+        return  execNmi(0xFFFA);
+    }
+    if ( this->m_flagIrq & IRQ::IRQ_NMI_DELAYED ) {
+        //  次のクロックで割り込みを発生させる。    //
+        this->m_flagIrq &= ~ IRQ::IRQ_NMI_DELAYED;
+        this->m_flagIrq |=   IRQ::IRQ_NMI;
+    }
+
     const  GuestMemoryAddress oldPC = mog_cpuRegs.PC;
     const  OpeCode  opeCode =
         this->m_manMem.readMemory<OpeCode>(oldPC);
@@ -132,9 +189,16 @@ Cpu6502::executeNextInst()
     //  プログラムカウンタを更新する。  //
     mog_cpuRegs.PC  += opSize;
 
+#if defined( _DEBUG )
+    snprintf(buf, sizeof(buf), "Try Execute : %02X:", ocInst);
+    std::cerr   <<   buf;
+    GuestMemoryAddress  pcWork  = oldPC;
+    this->m_manNes.writeMnemonic(std::cerr, oldPC, pcWork);
+    std::cerr   <<  "\n\n";
+#endif
+
     //  クロックサイクル数を更新する。  //
     const   ClockCount  cycles  = g_opeCodeCycles[ocInst];
-    mog_ctrStep.lastCycles  =  0;
     addCycles(cycles);
     ++ mog_ctrStep.numOpeCodes;
 

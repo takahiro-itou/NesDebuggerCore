@@ -162,6 +162,23 @@ enum class  PpuScanLine
     PRE_RENDER_SCANLINE     = 4,
 };
 
+//----------------------------------------------------------------
+/**
+**    IRQ フラグ。
+**/
+
+namespace  IRQ  {
+
+enum  IrqFlagValue
+{
+    IRQ_NONE        = 0x0000,
+    IRQ_RESET       = 0x0010,
+    IRQ_NMI_DELAYED = 0x0020,
+    IRQ_NMI         = 0x0040,
+};
+
+}   //  End of namespace  IRQ
+
 }   //  End of namespace  NesMan
 NESDBG_NAMESPACE_END
 
