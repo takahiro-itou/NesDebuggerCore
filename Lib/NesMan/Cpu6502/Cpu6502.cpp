@@ -141,6 +141,7 @@ Cpu6502::execNmi(
 
     addCycles(7);
     mog_cpuRegs.PC  = this->m_manMem.readMemory<BtWord>(0xFFFA);
+    this->m_flagIrq &= ~IRQ::IRQ_NMI;
 
     return ( InstExecResult::SUCCESS_CONTINUE );
 }
