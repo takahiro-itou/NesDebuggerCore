@@ -163,6 +163,7 @@ NesManager::executeCurrentInst()
     //  CPU が消費したサイクルを通知。  //
     const  CounterInfo &ctrStep = this->m_cpuCur->getStepCounters();
     const  PpuScanLine  ppuScan = this->m_ppuCur->updateScanLine(ctrStep);
+    this->m_cpuCur->resetLastCycles();
 
     //  状況に応じて VBLANK 割り込み等を処理する。  //
     this->m_cpuCur->performVBlankInterrupt(ppuScan);
