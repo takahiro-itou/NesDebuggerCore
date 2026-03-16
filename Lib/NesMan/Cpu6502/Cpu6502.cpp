@@ -83,7 +83,21 @@ InstExecResult
 Cpu6502::execBrk(
         const  OpeCode  opeCode)
 {
-    return ( InstExecResult::UNDEFINED_OPECODE );
+    pushValue((mog_cpuRegs.PC >> 8) & 0x000000FF);
+    pushValue((mog_cpuRegs.PC     ) & 0x000000FF);
+
+    pushValue( (mog_cpuRegs.P) | (FLAG_R | FLAG_B) );
+    mog_cpuRegs.P   |= FLAG_I;
+
+#if defined( _DEBUG )
+    std::cerr   <<  "INFO : BRK\n";
+#endif
+
+    //  サイクル数の増加はテーブルを参照して既に実行した。  //
+    //  addCycles(7);
+    mog_cpuRegs.PC  = this->m_manMem.readMemory<BtWord>(0xFFFE);
+
+    return ( InstExecResult::SUCCESS_CONTINUE );
 }
 
 //----------------------------------------------------------------
@@ -94,7 +108,21 @@ InstExecResult
 Cpu6502::execIrq(
         const  OpeCode  opeCode)
 {
-    return ( InstExecResult::UNDEFINED_OPECODE );
+    if ( mog_cpuRegs.P & FLAG_I ) {
+        //  割り込みが禁止されている。  //
+        return ( InstExecResult::SUCCESS_CONTINUE );
+    }
+
+    pushValue((mog_cpuRegs.PC >> 8) & 0x000000FF);
+    pushValue((mog_cpuRegs.PC     ) & 0x000000FF);
+
+    pushValue( (mog_cpuRegs.P & ~FLAG_B) | (FLAG_R) );
+    mog_cpuRegs.P   |= FLAG_I;
+
+    addCycles(7);
+    mog_cpuRegs.PC  = this->m_manMem.readMemory<BtWord>(0xFFFE);
+
+    return ( InstExecResult::SUCCESS_CONTINUE );
 }
 
 //----------------------------------------------------------------
