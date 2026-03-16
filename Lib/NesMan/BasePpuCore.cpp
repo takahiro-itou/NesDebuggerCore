@@ -127,6 +127,7 @@ BasePpuCore::emulatePowerOn()
     this->m_curScanPt.x = 1;
     this->m_curScanPt.y = 241;
     this->m_ppuDead     = 1;
+    this->m_flgVbl      = BOOL_FALSE;
 
     this->m_frameNumber = 0;
     this->m_frameCycels = 0;
