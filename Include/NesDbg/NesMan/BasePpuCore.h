@@ -234,6 +234,9 @@ protected:
     /**   PPU の初期化期間。        **/
     int             m_ppuDead;
 
+    /**   既に VBLANK 割り込みを発生させたか？  **/
+    Boolean         m_flgVbl;
+
     /**   現在のフレーム番号。  **/
     ClockCount      m_frameNumber;
 
