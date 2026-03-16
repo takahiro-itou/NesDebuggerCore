@@ -165,6 +165,11 @@ Cpu6502::executeNextInst()
 {
     char    buf[128];
 
+#if defined( _DEBUG )
+    snprintf(buf, sizeof(buf), "IRQ : %02X\n", this->m_flagIrq);
+    std::cerr   <<  buf;
+#endif
+
     //  割り込みフラグが立っていればそれを処理する。    //
     if ( this->m_flagIrq & IRQ::IRQ_NMI ) {
         return  execNmi(0xFFFA);
