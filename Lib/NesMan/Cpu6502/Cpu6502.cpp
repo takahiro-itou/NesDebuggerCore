@@ -90,7 +90,7 @@ Cpu6502::execBrk(
     mog_cpuRegs.P   |= FLAG_I;
 
 #if defined( _DEBUG )
-    std::cerr   <<  "INFO : BRK\n";
+    std::cerr   <<  "INFO : Interrupt BRK\n";
 #endif
 
     //  サイクル数の増加はテーブルを参照して既に実行した。  //
@@ -119,6 +119,10 @@ Cpu6502::execIrq(
     pushValue( (mog_cpuRegs.P & ~FLAG_B) | (FLAG_R) );
     mog_cpuRegs.P   |= FLAG_I;
 
+#if defined( _DEBUG )
+    std::cerr   <<  "INFO : Interrupt IRQ\n";
+#endif
+
     addCycles(7);
     mog_cpuRegs.PC  = this->m_manMem.readMemory<BtWord>(0xFFFE);
 
@@ -138,6 +142,10 @@ Cpu6502::execNmi(
 
     pushValue( (mog_cpuRegs.P & ~FLAG_B) | (FLAG_R) );
     mog_cpuRegs.P   |= FLAG_I;
+
+#if defined( _DEBUG )
+    std::cerr   <<  "INFO : Interrupt NMI\n";
+#endif
 
     addCycles(7);
     mog_cpuRegs.PC  = this->m_manMem.readMemory<BtWord>(0xFFFA);
