@@ -105,10 +105,13 @@ InstExecResult
 Cpu6502::execNmi(
         const  OpeCode  opeCode)
 {
-    pushValue(mog_cpuRegs.P);
     pushValue((mog_cpuRegs.PC >> 8) & 0x000000FF);
     pushValue((mog_cpuRegs.PC     ) & 0x000000FF);
 
+    pushValue( (mog_cpuRegs.P & ~FLAG_B) | (FLAG_R) );
+    mog_cpuRegs.P   |= FLAG_I;
+
+    addCycles(7);
     mog_cpuRegs.PC  = this->m_manMem.readMemory<BtWord>(0xFFFA);
 
     return ( InstExecResult::SUCCESS_CONTINUE );
@@ -122,6 +125,16 @@ InstExecResult
 Cpu6502::executeNextInst()
 {
     char    buf[128];
+
+    //  割り込みフラグが立っていればそれを処理する。    //
+    if ( this->m_flagIrq & IRQ::IRQ_NMI ) {
+        return  execNmi(0xFFFA);
+    }
+    if ( this->m_flagIrq & IRQ::IRQ_NMI_DELAYED ) {
+        //  次のクロックで割り込みを発生させる。    //
+        this->m_flagIrq &= ~ IRQ::IRQ_NMI_DELAYED;
+        this->m_flagIrq |=   IRQ::IRQ_NMI;
+    }
 
     const  GuestMemoryAddress oldPC = mog_cpuRegs.PC;
     const  OpeCode  opeCode =

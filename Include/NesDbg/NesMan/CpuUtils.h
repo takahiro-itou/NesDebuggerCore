@@ -171,6 +171,7 @@ namespace  IRQ  {
 
 enum  IrqFlagValue
 {
+    IRQ_NONE        = 0x0000,
     IRQ_RESET       = 0x0010,
     IRQ_NMI_DELAYED = 0x0020,
     IRQ_NMI         = 0x0040,

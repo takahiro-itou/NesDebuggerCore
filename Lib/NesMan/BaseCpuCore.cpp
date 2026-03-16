@@ -59,7 +59,8 @@ BaseCpuCore::BaseCpuCore(
       mog_cpuInfo(),
       mog_ctrStep(),
 #endif
-      m_manMem(manMem)
+      m_manMem(manMem),
+      m_flagIrq(IRQ::IRQ_NONE)
 {
 }
 
@@ -185,10 +186,11 @@ BaseCpuCore::performVBlankInterrupt(
     }
     if ( ppuScan == PpuScanLine::START_VERTICAL_BLANK ) {
         //  this->m_manMem.writeMemory(0x2002, 0x80);
-        mog_ctrStep.totalCycles += 7;
-        mog_ctrStep.lastCycles  += 7;
+        this->m_flagIrq = IRQ::IRQ_NMI_DELAYED;
+        //  mog_ctrStep.totalCycles += 7;
+        //  mog_ctrStep.lastCycles  += 7;
 
-        execNmi(0xFFFA);
+        //  execNmi(0xFFFA);
     }
 
     return ( ErrCode::SUCCESS );
