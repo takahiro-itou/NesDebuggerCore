@@ -306,8 +306,11 @@ protected:
     CounterInfo             mog_ctrStep;
 #endif
 
-    /**  メモリマネージャ。     **/
+    /**   メモリマネージャ。    **/
     MemoryManager  &        m_manMem;
+
+    /**   割り込み処理。    **/
+    int                     m_flagIrq;
 
 
 //========================================================================
