@@ -23,6 +23,8 @@
 #include    "Cpu6502.h"
 
 #include    "NesDbg/NesMan/MemoryManager.h"
+#include    "NesDbg/NesMan/NesManager.h"
+
 #include    "InstTable.h"
 #include    "AddressingMode.h"
 #include    "ArithmeticLogic.h"
@@ -181,6 +183,14 @@ Cpu6502::executeNextInst()
 
     //  プログラムカウンタを更新する。  //
     mog_cpuRegs.PC  += opSize;
+
+#if defined( _DEBUG )
+    snprintf(buf, sizeof(buf), "Try Execute : %02X:", ocInst);
+    std::cerr   <<   buf;
+    GuestMemoryAddress  pcWork  = oldPC;
+    this->m_manNes.writeMnemonic(std::cerr, oldPC, pcWork);
+    std::cerr   <<  "\n\n";
+#endif
 
     //  クロックサイクル数を更新する。  //
     const   ClockCount  cycles  = g_opeCodeCycles[ocInst];

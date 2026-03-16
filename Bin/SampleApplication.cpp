@@ -100,6 +100,7 @@ int  main(int argc, char * argv[])
             manNes.writeMnemonic(std::cout, pcNext, pcNext)
                     <<  std::endl;
         }
+        std::cout   <<  " --------------------------------\n\n";
         pcPrev  = pcWork;
 #endif
 
