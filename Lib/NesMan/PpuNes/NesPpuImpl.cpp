@@ -293,13 +293,12 @@ NesPpuImpl::updateScanLine(
 
     while ( this->m_curScanPt.x >= 341 ) {
         this->m_curScanPt.x -= 341;
-        ++ this->m_curScanPt.y;
-    }
 
-    if ( this->m_curScanPt.y == 240 ) {
-        //  ここをフレームの区切りとする。  //
-        this->m_totalCycles -= 262 * 341;
-        ++ this->m_frameNumber;
+        if ( ++ this->m_curScanPt.y == 240 ) {
+            //  ここをフレームの区切りとする。  //
+            this->m_totalCycles -= 262 * 341;
+            ++ this->m_frameNumber;
+        }
     }
 
     if ( this->m_curScanPt.y == 241 ) {
