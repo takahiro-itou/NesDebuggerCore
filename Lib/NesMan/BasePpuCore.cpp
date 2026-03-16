@@ -64,7 +64,7 @@ BasePpuCore::BasePpuCore(
     : m_pImage(nullptr),
       m_memPPU(),
       m_manMem(manMem),
-      m_ppuDead(1),
+      m_ppuDead(2),
       m_flgVbl(BOOL_FALSE),
       m_frameNumber(0),
       m_frameCycels(0),
@@ -126,7 +126,7 @@ BasePpuCore::emulatePowerOn()
 {
     this->m_curScanPt.x = 1;
     this->m_curScanPt.y = 241;
-    this->m_ppuDead     = 1;
+    this->m_ppuDead     = 2;
     this->m_flgVbl      = BOOL_FALSE;
 
     this->m_frameNumber = 0;
