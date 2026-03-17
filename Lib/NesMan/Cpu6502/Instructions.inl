@@ -416,7 +416,7 @@ Cpu6502::execStore(
 //    レジスタ間転送命令。
 //
 
-template  <TRegPtr SRCREG, TRegPtr TRGREG>
+template  <TRegPtr SRCREG, TRegPtr TRGREG, int NZFLAG>
 inline  InstExecResult
 Cpu6502::execTransfer(
         const  OpeCode  opeCode)
@@ -425,6 +425,10 @@ Cpu6502::execTransfer(
 
     rSrcVal = (mog_cpuRegs .* SRCREG);
     (mog_cpuRegs .* TRGREG) = rSrcVal;
+
+    if ( NZFLAG ) {
+        setupNZFlags(rSrcVal);
+    }
 
     return ( InstExecResult::SUCCESS_CONTINUE );
 }
@@ -589,7 +593,7 @@ Cpu6502::s_cpuInstTable[256] = {
     SAX(OPERAND_ZERPG),                             //  87  sax <$nn
     &Cpu6502::execIncDecReg<REG_Y, -1>,             //  88  DEY
     DOP(OPERAND_IMM),                               //  89  dop #imm
-    &Cpu6502::execTransfer<REG_X, REG_A>,           //  8A  TXA
+    &Cpu6502::execTransfer<REG_X, REG_A, 1>,        //  8A  TXA
     ANE(OPERAND_IMM),                               //  8B  ane #imm
     &Cpu6502::execStore<ADR_ABSOL, REG_Y>,          //  8C  STY $nnnn
     &Cpu6502::execStore<ADR_ABSOL, REG_A>,          //  8D  STA $nnnn
@@ -605,9 +609,9 @@ Cpu6502::s_cpuInstTable[256] = {
     &Cpu6502::execStore<ADR_ZEROX, REG_A>,          //  95  STA <$nn,X
     &Cpu6502::execStore<ADR_ZEROY, REG_X>,          //  96  STX <$nn,Y
     SAX(OPERAND_ZEROY),                             //  97  sax <$nn,Y
-    &Cpu6502::execTransfer<REG_Y, REG_A>,           //  98  TYA
+    &Cpu6502::execTransfer<REG_Y, REG_A, 1>,        //  98  TYA
     &Cpu6502::execStore<ADR_ABS_Y, REG_A>,          //  99  STA $nnnn,Y
-    &Cpu6502::execTransfer<REG_X, REG_S>,           //  9A  TXS
+    &Cpu6502::execTransfer<REG_X, REG_S, 0>,        //  9A  TXS
     SHS(OPERAND_ABS_Y),                             //  9B  shs $nnnn,Y
     SHY(OPERAND_ABS_X),                             //  9C  shy $nnnn,X
     &Cpu6502::execStore<ADR_ABS_X, REG_A>,          //  9D  STA $nnnn,X
@@ -623,9 +627,9 @@ Cpu6502::s_cpuInstTable[256] = {
     &Cpu6502::execLoad<ADR_ZERO, REG_A>,            //  A5  LDA <$nn
     &Cpu6502::execLoad<ADR_ZERO, REG_X>,            //  A6  LDX <$nn
     LAX(OPERAND_ZERPG),                             //  A7  lax <$nn
-    &Cpu6502::execTransfer<REG_A, REG_Y>,           //  A8  TAY
+    &Cpu6502::execTransfer<REG_A, REG_Y, 1>,        //  A8  TAY
     &Cpu6502::execLoad<ADR_IMM, REG_A>,             //  A9  LDA #imm
-    &Cpu6502::execTransfer<REG_A, REG_X>,           //  AA  TAX
+    &Cpu6502::execTransfer<REG_A, REG_X, 1>,        //  AA  TAX
     LAX(OPERAND_IMM),                               //  AB  lax #imm
     &Cpu6502::execLoad<ADR_ABSOL, REG_Y>,           //  AC  LDY $nnnn
     &Cpu6502::execLoad<ADR_ABSOL, REG_A>,           //  AD  LDA $nnnn
@@ -643,7 +647,7 @@ Cpu6502::s_cpuInstTable[256] = {
     LAX(OPERAND_ZEROY),                             //  B7  lax <$nn,Y
     &Cpu6502::execClearFlag<0x40>,                  //  B8  CLV
     &Cpu6502::execLoad<ADR_ABS_Y, REG_A>,           //  B9  LDA $nnnn,Y
-    &Cpu6502::execTransfer<REG_S, REG_X>,           //  BA  TSX
+    &Cpu6502::execTransfer<REG_S, REG_X, 1>,        //  BA  TSX
     LAS(OPERAND_ABS_Y),                             //  BB  las $nnnn,Y
     &Cpu6502::execLoad<ADR_ABS_X, REG_Y>,           //  BC  LDY $nnnn,X
     &Cpu6502::execLoad<ADR_ABS_X, REG_A>,           //  BD  LDA $nnnn,X

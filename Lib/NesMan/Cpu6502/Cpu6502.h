@@ -277,7 +277,7 @@ private:
     /**   レジスタ間転送命令。
     **
     **/
-    template  <TRegPtr SRCREG, TRegPtr TRGREG>
+    template  <TRegPtr SRCREG, TRegPtr TRGREG, int NZFLAG=1>
     inline  InstExecResult
     execTransfer(
             const  OpeCode  opeCode);
