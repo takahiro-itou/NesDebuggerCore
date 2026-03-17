@@ -149,12 +149,14 @@ NesPpuImpl::readRegister(
         return ( val );
     }
 
+#if defined( _DEBUG )
     {
         char    buf[1024];
         snprintf(buf, sizeof(buf),
                 "Not Implemented PPU I/O (Read) : $%04X\n", ioAddr);
         std::cerr   <<  buf;
     }
+#endif
 
     return ( val );
 }
@@ -200,14 +202,18 @@ NesPpuImpl::writeRegister(
         }
         return;
     case  7:    /*  VRAM  アクセスレジスタ  */
+#if defined( _DEBUG )
         snprintf(buf, sizeof(buf),
                 "Write PPU Memory %04x < %02x\n", this->m_regAddr, regVal);
         std::cerr   <<  buf;
+#endif
         if ( this->m_regAddr <= 0x2000 ) {
+#if defined( _DEBUG )
             snprintf(buf, sizeof(buf),
                     "WARNING : Write to ROM : %04x < %02x\n",
                     this->m_regAddr, regVal);
             std::cerr   <<  buf;
+#endif
             return;
         }
         this->m_memPPU[this->m_regAddr] = regVal;
@@ -215,11 +221,13 @@ NesPpuImpl::writeRegister(
         return;
     }
 
+#if defined( _DEBUG )
     {
         snprintf(buf, sizeof(buf),
                 "Not Implemented PPU I/O (Write) : $%04X\n", ioAddr);
         std::cerr   <<  buf;
     }
+#endif
 
     return;
 }
@@ -280,16 +288,15 @@ NesPpuImpl::drawScreen()
 
 PpuScanLine
 NesPpuImpl::updateScanLine(
-        const  CounterInfo  &ctrStep)
+        const  int  nCycles)
 {
     PpuScanLine retVal  = PpuScanLine::VISIBLE_SCANLINE;
 
     //  PPU カウンタを更新する。                //
     //  CPU の３倍のクロックが入力されている。  //
-    const  int  cnt = static_cast<int>(ctrStep.lastCycles) * 3;
-    this->m_curScanPt.x += cnt;
-    this->m_totalCycles += cnt;
-    this->m_frameCycels += cnt;
+    this->m_curScanPt.x += nCycles;
+    this->m_totalCycles += nCycles;
+    this->m_frameCycels += nCycles;
 
     while ( this->m_curScanPt.x >= 341 ) {
         this->m_curScanPt.x -= 341;
