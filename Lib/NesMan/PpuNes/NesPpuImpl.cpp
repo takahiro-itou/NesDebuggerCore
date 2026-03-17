@@ -378,6 +378,7 @@ NesPpuImpl::updateScanLine(
                 <<  ", "        <<  this->m_frameCycels
                 <<  " / "       <<  this->m_totalCycles
                 <<  buf
+                <<  ", PD="     <<  this->m_ppuDead
                 <<  std::endl;
 #endif
 
