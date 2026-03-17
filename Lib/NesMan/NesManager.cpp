@@ -161,16 +161,27 @@ NesManager::emulateResetButton()
 InstExecResult
 NesManager::executeCurrentInst()
 {
-    //  命令を実行する。    //
-    const   InstExecResult  ret = this->m_cpuCur->executeNextInst();
+    while ( this->m_nCycles <= 0 ) {
+        const  PpuScanLine  ppuScan = this->m_ppuCur->updateScanLine(1);
+        this->m_nCycles += 1;
 
-    //  CPU が消費したサイクルを通知。  //
-    const  CounterInfo &ctrStep = this->m_cpuCur->getStepCounters();
-    const  PpuScanLine  ppuScan = this->m_ppuCur->updateScanLine(ctrStep);
-    this->m_cpuCur->resetLastCycles();
+        //  状況に応じて VBLANK 割り込み等を処理する。  //
+        this->m_cpuCur->performVBlankInterrupt(ppuScan);
+    }
 
-    //  状況に応じて VBLANK 割り込み等を処理する。  //
-    this->m_cpuCur->performVBlankInterrupt(ppuScan);
+    InstExecResult  ret = InstExecResult::SUCCESS_CONTINUE;
+
+    while ( this->m_nCycles > 0 ) {
+        //  命令を実行する。    //
+        ret = this->m_cpuCur->executeNextInst();
+
+        //  CPU が消費したサイクルを取得。  //
+        const  CounterInfo &ctrStep = this->m_cpuCur->getStepCounters();
+        const  int  cnt = (static_cast<int>(ctrStep.lastCycles) * 3);
+
+        this->m_nCycles -= cnt;
+        this->m_cpuCur->resetLastCycles();
+    }
 
     return ( ret );
 }
