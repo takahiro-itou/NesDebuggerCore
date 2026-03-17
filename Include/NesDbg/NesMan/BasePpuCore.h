@@ -148,12 +148,23 @@ public:
     //----------------------------------------------------------------
     /**   スキャンライン情報を更新する。
     **
+    **  @param [in] nCycles   PPU サイクル数。
+    **  @return     スキャンラインに関する情報を返す。
+    **/
+    virtual  PpuScanLine
+    updateScanLine(
+            const  int  nCycles);
+
+    //----------------------------------------------------------------
+    /**   スキャンライン情報を更新する。
+    **
     **  @param [in] ctrStep   CPU 側のカウンタ情報。
     **  @return     スキャンラインに関する情報を返す。
     **/
     virtual  PpuScanLine
     updateScanLine(
             const  CounterInfo  &ctrStep);
+
 
 //========================================================================
 //

@@ -171,6 +171,17 @@ BasePpuCore::postprocessOpenRom()
 
 PpuScanLine
 BasePpuCore::updateScanLine(
+        const  int  nCycles)
+{
+    return ( PpuScanLine::VISIBLE_SCANLINE );
+}
+
+//----------------------------------------------------------------
+//    スキャンライン情報を更新する。
+//
+
+PpuScanLine
+BasePpuCore::updateScanLine(
         const  CounterInfo  &ctrStep)
 {
     return ( PpuScanLine::VISIBLE_SCANLINE );
