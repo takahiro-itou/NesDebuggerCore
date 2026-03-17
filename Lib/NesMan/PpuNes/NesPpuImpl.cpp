@@ -339,9 +339,7 @@ NesPpuImpl::updateScanLine(
         if ( this->m_curScanPt.x >= 1 && this->m_curScanPt.x - nCycles < 1 ) {
             //  Start V-BLANK.                  //
             //  ここで VBLANK フラグを立てる。  //
-            if ( this->m_ppuDead > 0 ) {
-                -- this->m_ppuDead;
-            } else {
+            if ( this->m_ppuDead <= 1 ) {
                 this->m_regStat |= 0x80;
             }
         }
@@ -350,6 +348,7 @@ NesPpuImpl::updateScanLine(
         ) {
             //  ここで割り込みを発生。  //
             if ( this->m_ppuDead > 0 ) {
+                -- this->m_ppuDead;
                 retVal  = ( PpuScanLine::VERTICAL_BLANKING_LINE );
             } else {
                 retVal  = ( PpuScanLine::START_VERTICAL_BLANK );
