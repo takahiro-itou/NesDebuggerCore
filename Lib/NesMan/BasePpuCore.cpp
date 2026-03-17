@@ -184,7 +184,7 @@ PpuScanLine
 BasePpuCore::updateScanLine(
         const  CounterInfo  &ctrStep)
 {
-    return ( PpuScanLine::VISIBLE_SCANLINE );
+    return  updateScanLine(static_cast<int>(ctrStep.lastCycles) * 3);
 }
 
 //========================================================================
