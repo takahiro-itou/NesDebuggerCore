@@ -64,7 +64,8 @@ NesManager::NesManager()
       m_ppuCur (nullptr),
       m_cpu6502(nullptr),
       m_ppuNes (nullptr),
-      m_disCur (&g_disCpu6502)
+      m_disCur (&g_disCpu6502),
+      m_nCycles(0)
 {
     this->m_cpuCur  = getOrCreateCpuInstance();
     this->m_ppuCur  = getOrCreatePpuInstance();
@@ -119,6 +120,8 @@ NesManager::closeInstance()
 ErrCode
 NesManager::emulatePowerOn()
 {
+    this->m_nCycles = 0;
+
     this->m_cpuCur  = getOrCreateCpuInstance();
     this->m_ppuCur  = getOrCreatePpuInstance();
 
