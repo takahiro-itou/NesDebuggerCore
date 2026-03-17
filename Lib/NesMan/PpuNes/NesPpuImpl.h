@@ -230,7 +230,7 @@ private:
 
     /**   ステータスレジスタ。  **/
     BtByte      m_regStat;
-    BtByte      m_regSprA;
+    BtByte      m_sprAddr;
 
     /**   内部レジスタ。    **/
     PpuAddress  m_regAddr;

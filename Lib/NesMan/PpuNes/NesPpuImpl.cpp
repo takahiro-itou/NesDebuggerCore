@@ -99,11 +99,13 @@ NesPpuImpl::peekRegister(
     const   GuestMemoryAddress  reg = (ioAddr & 0x0007);
     switch ( reg ) {
     case  0:    /*  PPU 制御レジスタ 1 .    */
+        return ( this->m_regCtl0 );
     case  1:    /*  PPU 制御レジスタ 2 .    */
-        break;
+        return ( this->m_regCtl1 );
     case  2:    /*  PPU ステータスレジスタ  */
         return ( this->m_regStat );
     case  3:    /*  スプライトアドレスレジスタ  */
+        return ( this->m_sprAddr );
         break;
     case  4:    /*  スプライトアクセスレジスタ  */
         break;
@@ -131,14 +133,17 @@ NesPpuImpl::readRegister(
     const   GuestMemoryAddress  reg = (ioAddr & 0x0007);
     switch ( reg ) {
     case  0:    /*  PPU 制御レジスタ 1 .    */
+        return ( val );
         break;      //  WRITE ONLY
     case  1:    /*  PPU 制御レジスタ 2 .    */
+        return ( val );
         break;      //  WRITE ONLY
     case  2:    /*  PPU ステータスレジスタ  */
         this->m_regStat &= 0x7F;
         this->m_regWrt  =  0;
         return ( val );
     case  3:    /*  スプライトアドレスレジスタ  */
+        return ( val );
         break;      //  WRITE ONLY
     case  4:    /*  スプライトアクセスレジスタ  */
         break;
@@ -186,9 +191,17 @@ NesPpuImpl::writeRegister(
     const   GuestMemoryAddress  reg = (ioAddr & 0x0007);
     switch ( reg ) {
     case  0:    /*  PPU 制御レジスタ 1 .    */
+        this->m_regCtl0 = regVal;
+        break;
     case  1:    /*  PPU 制御レジスタ 2 .    */
+        this->m_regCtl1 = regVal;
+        break;
     case  2:    /*  PPU ステータスレジスタ  */
+        this->m_regStat |= (regVal & 0x1F);
+        break;
     case  3:    /*  スプライトアドレスレジスタ  */
+        this->m_sprAddr = regVal;
+        break;
     case  4:    /*  スプライトアクセスレジスタ  */
         break;
     case  5:    /*  スクロールレジスタ      */
