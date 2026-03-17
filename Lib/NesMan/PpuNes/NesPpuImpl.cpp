@@ -280,16 +280,15 @@ NesPpuImpl::drawScreen()
 
 PpuScanLine
 NesPpuImpl::updateScanLine(
-        const  CounterInfo  &ctrStep)
+        const  int  nCycles)
 {
     PpuScanLine retVal  = PpuScanLine::VISIBLE_SCANLINE;
 
     //  PPU カウンタを更新する。                //
     //  CPU の３倍のクロックが入力されている。  //
-    const  int  cnt = static_cast<int>(ctrStep.lastCycles) * 3;
-    this->m_curScanPt.x += cnt;
-    this->m_totalCycles += cnt;
-    this->m_frameCycels += cnt;
+    this->m_curScanPt.x += nCycles;
+    this->m_totalCycles += nCycles;
+    this->m_frameCycels += nCycles;
 
     while ( this->m_curScanPt.x >= 341 ) {
         this->m_curScanPt.x -= 341;
