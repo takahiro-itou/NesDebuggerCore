@@ -371,8 +371,9 @@ NesPpuImpl::updateScanLine(
 #if defined( _DEBUG )
     char    buf[532];
     snprintf(buf, sizeof(buf), ", sta=%02X", this->m_regStat);
-    std::cout   <<  "PPU : "    <<  this->m_curScanPt.x
-                <<  ", "        <<  this->m_curScanPt.y
+    std::cout   <<  "PPU : S "  <<  this->m_curScanPt.y
+                <<  ", D "      <<  this->m_curScanPt.x
+                <<  " / "       <<  this->m_curEndCycle
                 <<  ", F "      <<  this->m_frameNumber
                 <<  ", "        <<  this->m_frameCycels
                 <<  " / "       <<  this->m_totalCycles

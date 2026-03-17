@@ -135,7 +135,7 @@ BasePpuCore::emulatePowerOn()
     this->m_frameCycels = 0;
     this->m_totalCycles = 0;
     this->m_flgOddFrame = 1;
-    this->m_curEndCycle = 1;
+    this->m_curEndCycle = 341;
 
     return ( ErrCode::SUCCESS );
 }
