@@ -300,13 +300,25 @@ NesPpuImpl::updateScanLine(
     this->m_totalCycles += nCycles;
     this->m_frameCycels += nCycles;
 
-    while ( this->m_curScanPt.x >= 341 ) {
-        this->m_curScanPt.x -= 341;
+    while ( this->m_curScanPt.x >= this->m_curEndCycle ) {
+        this->m_curScanPt.x -= this->m_curEndCycle;
 
         if ( ++ this->m_curScanPt.y == 240 ) {
             //  ここをフレームの区切りとする。  //
             this->m_totalCycles -= 262 * 341;
             ++ this->m_frameNumber;
+        }
+
+        if ( this->m_curScanPt.y == 261 ) {
+            if ( this->m_flgOddFrame && (this->m_regCtl1 & 0x18) ) {
+                //  ここだけ１サイクル少ない。  //
+                this->m_curEndCycle = 340;
+            } else {
+                this->m_curEndCycle = 341;
+            }
+            this->m_flgOddFrame ^= 1;
+        } else {
+            this->m_curEndCycle = 341;
         }
     }
 
@@ -338,6 +350,7 @@ NesPpuImpl::updateScanLine(
         this->m_regStat &= ~0x80;
         this->m_flgVbl  =  BOOL_FALSE;
         this->m_curScanPt.y -= 262;
+
         retVal  = ( PpuScanLine::PRE_RENDER_SCANLINE );
     }
 
