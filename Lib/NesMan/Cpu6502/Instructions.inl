@@ -330,7 +330,13 @@ template  <TRegPtr TRGREG>
 inline  InstExecResult
 Cpu6502::execPull(const  OpeCode  opeCode)
 {
-    (mog_cpuRegs .* TRGREG) = popValue();
+    if ( TRGREG == &RegBank::A ) {
+        //  代入先がアキュムレータの場合は NZ フラグ更新。  //
+        setupNZFlags((mog_cpuRegs .* TRGREG) = popValue());
+    } else {
+        (mog_cpuRegs .* TRGREG) = popValue();
+    }
+
     return ( InstExecResult::SUCCESS_CONTINUE );
 }
 
