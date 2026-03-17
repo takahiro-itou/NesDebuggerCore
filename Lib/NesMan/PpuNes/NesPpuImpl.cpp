@@ -135,6 +135,8 @@ NesPpuImpl::readRegister(
     case  1:    /*  PPU 制御レジスタ 2 .    */
         break;      //  WRITE ONLY
     case  2:    /*  PPU ステータスレジスタ  */
+        this->m_regStat &= 0x7F;
+        this->m_regWrt  =  0;
         return ( val );
     case  3:    /*  スプライトアドレスレジスタ  */
         break;      //  WRITE ONLY
