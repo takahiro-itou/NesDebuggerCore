@@ -192,10 +192,10 @@ NesPpuImpl::writeRegister(
     switch ( reg ) {
     case  0:    /*  PPU 制御レジスタ 1 .    */
         this->m_regCtl0 = regVal;
-        break;
+        return;
     case  1:    /*  PPU 制御レジスタ 2 .    */
         this->m_regCtl1 = regVal;
-        break;
+        return;
     case  2:    /*  PPU ステータスレジスタ  */
         this->m_regStat |= (regVal & 0x1F);
         break;
@@ -322,7 +322,7 @@ NesPpuImpl::updateScanLine(
             ++ this->m_frameNumber;
         }
 
-        if ( this->m_curScanPt.y == 261 ) {
+        if ( (this->m_curScanPt.y == 261) && (this->m_ppuDead == 0) ) {
             if ( this->m_flgOddFrame && (this->m_regCtl1 & 0x18) ) {
                 //  ここだけ１サイクル少ない。  //
                 this->m_curEndCycle = 340;
