@@ -309,14 +309,21 @@ NesPpuImpl::updateScanLine(
     }
 
     if ( this->m_curScanPt.y == 241 ) {
-        if ( !this->m_flgVbl && this->m_curScanPt.x >= 20 ) {
+        if ( this->m_curScanPt.x >= 1 && this->m_curScanPt.x - nCycles < 1 ) {
             //  Start V-BLANK.                  //
             //  ここで VBLANK フラグを立てる。  //
+            if ( this->m_ppuDead > 0 ) {
+                this->m_regStat |= 0x80;
+            }
+        }
+        if ( !this->m_flgVbl && this->m_curScanPt.x >= 20
+                && this->m_curScanPt.x - nCycles < 20
+        ) {
+            //  ここで割り込みを発生。  //
             if ( this->m_ppuDead > 0 ) {
                 -- this->m_ppuDead;
                 retVal  = ( PpuScanLine::VERTICAL_BLANKING_LINE );
             } else {
-                this->m_regStat |= 0x80;
                 retVal  = ( PpuScanLine::START_VERTICAL_BLANK );
             }
             this->m_flgVbl  = BOOL_TRUE;
@@ -326,8 +333,8 @@ NesPpuImpl::updateScanLine(
     if ( this->m_curScanPt.y >= 261 ) {
         //  pre-render scanline.            //
         //  ここで VBLANK フラグを下ろす。  //
-        this->m_flgVbl  = BOOL_FALSE;
         this->m_regStat &= ~0x80;
+        this->m_flgVbl  =  BOOL_FALSE;
         this->m_curScanPt.y -= 262;
         retVal  = ( PpuScanLine::PRE_RENDER_SCANLINE );
     }
