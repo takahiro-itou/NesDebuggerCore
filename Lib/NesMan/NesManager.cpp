@@ -192,6 +192,18 @@ NesManager::executeCurrentInst()
 #endif
     }
 
+    while ( this->m_nCycles < 0 ) {
+        const  PpuScanLine  ppuScan = this->m_ppuCur->updateScanLine(1);
+        this->m_nCycles += 1;
+
+#if defined( _DEBUG )
+        std::cerr   <<  "CYCLES: "  <<  this->m_nCycles <<  std::endl;
+#endif
+
+        //  状況に応じて VBLANK 割り込み等を処理する。  //
+        this->m_cpuCur->performVBlankInterrupt(ppuScan);
+    }
+
     return ( ret );
 }
 
