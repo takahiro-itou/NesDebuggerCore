@@ -192,7 +192,7 @@ NesManager::executeCurrentInst()
 #endif
     }
 
-    while ( this->m_nCycles < 0 ) {
+    while ( this->m_nCycles <= 0 ) {
         const  PpuScanLine  ppuScan = this->m_ppuCur->updateScanLine(1);
         this->m_nCycles += 1;
 
