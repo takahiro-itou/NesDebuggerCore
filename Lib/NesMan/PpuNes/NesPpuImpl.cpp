@@ -339,7 +339,7 @@ NesPpuImpl::updateScanLine(
         if ( this->m_curScanPt.x >= 1 && this->m_curScanPt.x - nCycles < 1 ) {
             //  Start V-BLANK.                  //
             //  ここで VBLANK フラグを立てる。  //
-            if ( this->m_ppuDead > 0 ) {
+            if ( this->m_ppuDead == 0 ) {
                 this->m_regStat |= 0x80;
             }
         }
