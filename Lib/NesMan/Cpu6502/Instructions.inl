@@ -344,12 +344,16 @@ Cpu6502::execPull(const  OpeCode  opeCode)
 //    プッシュ命令。
 //
 
-template  <TRegPtr SECREG>
+template  <TRegPtr SRCREG>
 inline  InstExecResult
 Cpu6502::execPush(
         const  OpeCode  opeCode)
 {
-    pushValue(mog_cpuRegs .* SECREG);
+    if ( SRCREG == &RegBank::P ) {
+        pushValue((mog_cpuRegs .* SRCREG) | FLAG_R | FLAG_B);
+    } else {
+        pushValue(mog_cpuRegs .* SRCREG);
+    }
     return ( InstExecResult::SUCCESS_CONTINUE );
 }
 
