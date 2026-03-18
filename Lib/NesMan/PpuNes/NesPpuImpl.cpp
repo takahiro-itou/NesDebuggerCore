@@ -58,7 +58,10 @@ NesPpuImpl::NesPpuImpl(
     : Super(manNes, manMem),
       m_palette(),
       m_palIdx (),
+      m_regCtl0(0),
+      m_regCtl1(0),
       m_regStat(0),
+      m_sprAddr(0),
       m_regAddr(0),
       m_regScroll({0, 0}),
       m_regWrt (0)
