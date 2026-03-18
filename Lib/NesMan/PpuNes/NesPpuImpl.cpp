@@ -297,7 +297,7 @@ NesPpuImpl::drawScreen()
     }
 
     initializeAttributeTable();
-    updateNameTable();
+    //  updateNameTable();
     updateAttributeTable(0);
     updateAttributeTable(1);
     updateAttributeTable(2);
