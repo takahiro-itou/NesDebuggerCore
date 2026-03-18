@@ -58,7 +58,10 @@ NesPpuImpl::NesPpuImpl(
     : Super(manNes, manMem),
       m_palette(),
       m_palIdx (),
+      m_regCtl0(0),
+      m_regCtl1(0),
       m_regStat(0),
+      m_sprAddr(0),
       m_regAddr(0),
       m_regScroll({0, 0}),
       m_regWrt (0)
@@ -99,11 +102,13 @@ NesPpuImpl::peekRegister(
     const   GuestMemoryAddress  reg = (ioAddr & 0x0007);
     switch ( reg ) {
     case  0:    /*  PPU 制御レジスタ 1 .    */
+        return ( this->m_regCtl0 );
     case  1:    /*  PPU 制御レジスタ 2 .    */
-        break;
+        return ( this->m_regCtl1 );
     case  2:    /*  PPU ステータスレジスタ  */
         return ( this->m_regStat );
     case  3:    /*  スプライトアドレスレジスタ  */
+        return ( this->m_sprAddr );
         break;
     case  4:    /*  スプライトアクセスレジスタ  */
         break;
@@ -131,12 +136,17 @@ NesPpuImpl::readRegister(
     const   GuestMemoryAddress  reg = (ioAddr & 0x0007);
     switch ( reg ) {
     case  0:    /*  PPU 制御レジスタ 1 .    */
+        return ( val );
         break;      //  WRITE ONLY
     case  1:    /*  PPU 制御レジスタ 2 .    */
+        return ( val );
         break;      //  WRITE ONLY
     case  2:    /*  PPU ステータスレジスタ  */
+        this->m_regStat &= 0x7F;
+        this->m_regWrt  =  0;
         return ( val );
     case  3:    /*  スプライトアドレスレジスタ  */
+        return ( val );
         break;      //  WRITE ONLY
     case  4:    /*  スプライトアクセスレジスタ  */
         break;
@@ -184,9 +194,17 @@ NesPpuImpl::writeRegister(
     const   GuestMemoryAddress  reg = (ioAddr & 0x0007);
     switch ( reg ) {
     case  0:    /*  PPU 制御レジスタ 1 .    */
+        this->m_regCtl0 = regVal;
+        return;
     case  1:    /*  PPU 制御レジスタ 2 .    */
+        this->m_regCtl1 = regVal;
+        return;
     case  2:    /*  PPU ステータスレジスタ  */
+        this->m_regStat |= (regVal & 0x1F);
+        break;
     case  3:    /*  スプライトアドレスレジスタ  */
+        this->m_sprAddr = regVal;
+        break;
     case  4:    /*  スプライトアクセスレジスタ  */
         break;
     case  5:    /*  スクロールレジスタ      */
@@ -298,25 +316,44 @@ NesPpuImpl::updateScanLine(
     this->m_totalCycles += nCycles;
     this->m_frameCycels += nCycles;
 
-    while ( this->m_curScanPt.x >= 341 ) {
-        this->m_curScanPt.x -= 341;
+    while ( this->m_curScanPt.x >= this->m_curEndCycle ) {
+        this->m_curScanPt.x -= this->m_curEndCycle;
 
         if ( ++ this->m_curScanPt.y == 240 ) {
             //  ここをフレームの区切りとする。  //
             this->m_totalCycles -= 262 * 341;
             ++ this->m_frameNumber;
         }
+
+        if ( (this->m_curScanPt.y == 261) && (this->m_ppuDead == 0) ) {
+            if ( this->m_flgOddFrame && (this->m_regCtl1 & 0x18) ) {
+                //  ここだけ１サイクル少ない。  //
+                this->m_curEndCycle = 340;
+            } else {
+                this->m_curEndCycle = 341;
+            }
+            this->m_flgOddFrame ^= 1;
+        } else {
+            this->m_curEndCycle = 341;
+        }
     }
 
     if ( this->m_curScanPt.y == 241 ) {
-        if ( !this->m_flgVbl && this->m_curScanPt.x >= 20 ) {
+        if ( this->m_curScanPt.x >= 1 && this->m_curScanPt.x - nCycles < 1 ) {
             //  Start V-BLANK.                  //
             //  ここで VBLANK フラグを立てる。  //
+            if ( this->m_ppuDead == 0 ) {
+                this->m_regStat |= 0x80;
+            }
+        }
+        if ( !this->m_flgVbl && this->m_curScanPt.x >= 20
+                && this->m_curScanPt.x - nCycles < 20
+        ) {
+            //  ここで割り込みを発生。  //
             if ( this->m_ppuDead > 0 ) {
                 -- this->m_ppuDead;
                 retVal  = ( PpuScanLine::VERTICAL_BLANKING_LINE );
             } else {
-                this->m_regStat |= 0x80;
                 retVal  = ( PpuScanLine::START_VERTICAL_BLANK );
             }
             this->m_flgVbl  = BOOL_TRUE;
@@ -326,21 +363,25 @@ NesPpuImpl::updateScanLine(
     if ( this->m_curScanPt.y >= 261 ) {
         //  pre-render scanline.            //
         //  ここで VBLANK フラグを下ろす。  //
-        this->m_flgVbl  = BOOL_FALSE;
         this->m_regStat &= ~0x80;
+        this->m_flgVbl  =  BOOL_FALSE;
         this->m_curScanPt.y -= 262;
+
         retVal  = ( PpuScanLine::PRE_RENDER_SCANLINE );
     }
 
 #if defined( _DEBUG )
     char    buf[532];
     snprintf(buf, sizeof(buf), ", sta=%02X", this->m_regStat);
-    std::cout   <<  "PPU : "    <<  this->m_curScanPt.x
-                <<  ", "        <<  this->m_curScanPt.y
+    std::cout   <<  "PPU : S "  <<  this->m_curScanPt.y
+                <<  ", D "      <<  this->m_curScanPt.x
+                <<  " / "       <<  this->m_curEndCycle
                 <<  ", F "      <<  this->m_frameNumber
                 <<  ", "        <<  this->m_frameCycels
                 <<  " / "       <<  this->m_totalCycles
                 <<  buf
+                <<  ", PD="     <<  this->m_ppuDead
+                <<  ", ODD="    <<  this->m_flgOddFrame
                 <<  std::endl;
 #endif
 

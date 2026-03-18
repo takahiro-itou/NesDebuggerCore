@@ -69,7 +69,9 @@ BasePpuCore::BasePpuCore(
       m_frameNumber(0),
       m_frameCycels(0),
       m_totalCycles(0),
-      m_curScanPt({0, 0})
+      m_curScanPt({0, 0}),
+      m_flgOddFrame(1),
+      m_curEndCycle(341)
 {
 }
 
@@ -124,7 +126,7 @@ BasePpuCore::drawScreen()
 ErrCode
 BasePpuCore::emulatePowerOn()
 {
-    this->m_curScanPt.x = 1;
+    this->m_curScanPt.x = 0;
     this->m_curScanPt.y = 241;
     this->m_ppuDead     = 2;
     this->m_flgVbl      = BOOL_FALSE;
@@ -132,6 +134,8 @@ BasePpuCore::emulatePowerOn()
     this->m_frameNumber = 0;
     this->m_frameCycels = 0;
     this->m_totalCycles = 0;
+    this->m_flgOddFrame = 1;
+    this->m_curEndCycle = 341;
 
     return ( ErrCode::SUCCESS );
 }

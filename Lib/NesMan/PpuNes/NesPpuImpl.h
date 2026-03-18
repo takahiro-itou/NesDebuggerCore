@@ -223,8 +223,14 @@ private:
     /**   パレット番号。    **/
     BtByte      m_palIdx[64][64];
 
+    /**   制御レジスタ。    **/
+    BtByte      m_regCtl0;
+
+    BtByte      m_regCtl1;
+
     /**   ステータスレジスタ。  **/
     BtByte      m_regStat;
+    BtByte      m_sprAddr;
 
     /**   内部レジスタ。    **/
     PpuAddress  m_regAddr;

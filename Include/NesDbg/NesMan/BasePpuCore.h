@@ -260,6 +260,11 @@ protected:
     /**   現在のスキャン位置。  **/
     NtPoint         m_curScanPt;
 
+    int             m_flgOddFrame;
+
+    /**   現在の行のサイクル数。    **/
+    int             m_curEndCycle;
+
 //========================================================================
 //
 //    Other Features.
