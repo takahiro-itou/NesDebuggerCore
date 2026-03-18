@@ -236,6 +236,12 @@ NesPpuImpl::writeRegister(
         }
         this->m_memPPU[this->m_regAddr] = regVal;
         this->m_regAddr = (this->m_regAddr + 1) & 0x00003FFF;
+
+        if ( this->m_regAddr <= 0x3000 ) {
+            std::cerr   <<  "Write Name/Attr\n";
+            dumpNameTable(0, std::cerr);
+        }
+
         return;
     }
 
@@ -323,6 +329,8 @@ NesPpuImpl::updateScanLine(
             //  ここをフレームの区切りとする。  //
             this->m_totalCycles -= 262 * 341;
             ++ this->m_frameNumber;
+            std::cerr   <<  "Frame : "  <<  this->m_frameNumber  <<  "\n";
+            dumpNameTable(0, std::cerr);
         }
 
         if ( (this->m_curScanPt.y == 261) && (this->m_ppuDead == 0) ) {
