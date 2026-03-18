@@ -481,6 +481,32 @@ NesPpuImpl::drawSprite()
 }
 
 //----------------------------------------------------------------
+//    ネームテーブルをダンプする。
+//
+
+std::ostream  &
+NesPpuImpl::dumpNameTable(
+        const   int     index,
+        std::ostream  & outStr)  const
+{
+    std::array<BtByte, 1024>    mem;
+    char    buf[1024];
+
+    copyNameAttributeTable(index, mem);
+
+    int pos = 0;
+    for ( int y = 0; y < 30; ++ y ) {
+        for ( int x = 0; x < 32; ++ x ) {
+            snprintf(buf, sizeof(buf), "%02X ", mem[pos ++]);
+            outStr  <<  buf;
+        }
+        outStr  <<  "\n";
+    }
+
+    return ( outStr );
+}
+
+//----------------------------------------------------------------
 //    属性テーブルを初期化する。
 //
 
