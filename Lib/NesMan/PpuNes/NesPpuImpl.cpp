@@ -240,6 +240,7 @@ NesPpuImpl::writeRegister(
         if ( this->m_regAddr <= 0x3000 ) {
             std::cerr   <<  "Write Name/Attr\n";
             dumpNameTable(0, std::cerr);
+            std::cerr   <<  "Dumpped Name Table.\n";
         }
 
         return;
@@ -331,6 +332,7 @@ NesPpuImpl::updateScanLine(
             ++ this->m_frameNumber;
             std::cerr   <<  "Frame : "  <<  this->m_frameNumber  <<  "\n";
             dumpNameTable(0, std::cerr);
+            std::cerr   <<  "Dumpped Name Table.\n";
         }
 
         if ( (this->m_curScanPt.y == 261) && (this->m_ppuDead == 0) ) {
