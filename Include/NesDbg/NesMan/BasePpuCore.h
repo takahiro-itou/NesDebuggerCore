@@ -29,6 +29,11 @@
 #    include    "CpuUtils.h"
 #endif
 
+#if !defined( NESDBG_SYS_STL_INCLUDED_ARRAY )
+#    include    <array>
+#    define   NESDBG_SYS_STL_INCLUDED_ARRAY
+#endif
+
 #if !defined( NESDBG_SYS_STL_INCLUDED_VECTOR )
 #    include    <vector>
 #    define   NESDBG_SYS_STL_INCLUDED_VECTOR
