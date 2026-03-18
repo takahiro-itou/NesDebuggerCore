@@ -186,7 +186,7 @@ BaseCpuCore::performVBlankInterrupt(
     }
     if ( ppuScan == PpuScanLine::START_VERTICAL_BLANK ) {
         //  this->m_manMem.writeMemory(0x2002, 0x80);
-        this->m_flagIrq = IRQ::IRQ_NMI_DELAYED;
+        this->m_flagIrq = IRQ::IRQ_NMI;
         //  mog_ctrStep.totalCycles += 7;
         //  mog_ctrStep.lastCycles  += 7;
 

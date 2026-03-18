@@ -127,12 +127,12 @@ public:
     //----------------------------------------------------------------
     /**   スキャンライン情報を更新する。
     **
-    **  @param [in] ctrStep   CPU 側のカウンタ情報。
+    **  @param [in] nCycles   PPU サイクル数。
     **  @return     スキャンラインに関する情報を返す。
     **/
     virtual  PpuScanLine
     updateScanLine(
-            const  CounterInfo  &ctrStep)  override;
+            const  int  nCycles)  override;
 
 //========================================================================
 //
@@ -223,8 +223,14 @@ private:
     /**   パレット番号。    **/
     BtByte      m_palIdx[64][64];
 
+    /**   制御レジスタ。    **/
+    BtByte      m_regCtl0;
+
+    BtByte      m_regCtl1;
+
     /**   ステータスレジスタ。  **/
     BtByte      m_regStat;
+    BtByte      m_sprAddr;
 
     /**   内部レジスタ。    **/
     PpuAddress  m_regAddr;
