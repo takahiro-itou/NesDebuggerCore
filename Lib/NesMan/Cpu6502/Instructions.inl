@@ -66,8 +66,11 @@
 #define     ASL(operand)    \
     &Cpu6502::execArithLogic<operand, ALU::OpeNopL, ALU::OpeASL, 1>
 
-#define     BIT(operand)    nullptr
+#define     BIT(operand)    \
+    &Cpu6502::execBitTest<operand>
+
 #define     BRK             nullptr
+
 #define     CMP(or2, reg)   \
     &Cpu6502::execArithLogic<or2, ALU::OpeCMP, ALU::OpeNopR, 0, reg>
 
@@ -172,6 +175,17 @@ Cpu6502::execArithLogic(
     return ( InstExecResult::SUCCESS_CONTINUE );
 }
 
+//----------------------------------------------------------------
+//    ビットテスト命令。
+//
+
+template  <typename OPERAND>
+inline  InstExecResult
+Cpu6502::execBitTest(
+        const  OpeCode  opeCode)
+{
+    return ( InstExecResult::UNDEFINED_OPECODE );
+}
 
 //----------------------------------------------------------------
 //    条件分岐命令。
