@@ -49,6 +49,7 @@ dist_noinst_header_files    +=  \
         Cpu6502/Instructions.inl        \
         Cpu6502/InstTable.h             \
         PpuNes/NesPpuImpl.h             \
+        PpuNes/Palette.h                \
         ${extra_noinst_header_files}
 
 inclib_header_files         +=  \

@@ -159,6 +159,15 @@ private:
             const  OpeCode  opeCode);
 
     //----------------------------------------------------------------
+    /**   ビットテスト命令。
+    **
+    **/
+    template  <typename OPERAND>
+    inline  InstExecResult
+    execBitTest(
+            const  OpeCode  opeCode);
+
+    //----------------------------------------------------------------
     /**   条件分岐命令。
     **
     **/

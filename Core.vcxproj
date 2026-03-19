@@ -115,6 +115,7 @@
     <ClInclude Include="Lib\NesDbg\NesMan\Cpu6502\Instructions.inl" />
     <ClInclude Include="Lib\NesDbg\NesMan\Cpu6502\InstTable.h" />
     <ClInclude Include="Lib\NesDbg\NesMan\PpuNes\NesPpuImpl.h" />
+    <ClInclude Include="Lib\NesDbg\NesMan\PpuNes\Palette.h" />
     <ClInclude Include="WinAPI\Images\BitmapRenderer.h" />
   </ItemGroup>
 

@@ -236,6 +236,13 @@ NesPpuImpl::writeRegister(
         }
         this->m_memPPU[this->m_regAddr] = regVal;
         this->m_regAddr = (this->m_regAddr + 1) & 0x00003FFF;
+
+        if ( this->m_regAddr <= 0x3000 ) {
+            std::cerr   <<  "Write Name/Attr\n";
+            dumpNameTable(0, std::cerr);
+            std::cerr   <<  "Dumpped Name Table.\n";
+        }
+
         return;
     }
 
@@ -290,7 +297,7 @@ NesPpuImpl::drawScreen()
     }
 
     initializeAttributeTable();
-    updateNameTable();
+    //  updateNameTable();
     updateAttributeTable(0);
     updateAttributeTable(1);
     updateAttributeTable(2);
@@ -323,6 +330,9 @@ NesPpuImpl::updateScanLine(
             //  ここをフレームの区切りとする。  //
             this->m_totalCycles -= 262 * 341;
             ++ this->m_frameNumber;
+            std::cerr   <<  "Frame : "  <<  this->m_frameNumber  <<  "\n";
+            dumpNameTable(0, std::cerr);
+            std::cerr   <<  "Dumpped Name Table.\n";
         }
 
         if ( (this->m_curScanPt.y == 261) && (this->m_ppuDead == 0) ) {
@@ -478,6 +488,32 @@ ErrCode
 NesPpuImpl::drawSprite()
 {
     return ( ErrCode::SUCCESS );
+}
+
+//----------------------------------------------------------------
+//    ネームテーブルをダンプする。
+//
+
+std::ostream  &
+NesPpuImpl::dumpNameTable(
+        const   int     index,
+        std::ostream  & outStr)  const
+{
+    std::array<BtByte, 1024>    mem;
+    char    buf[1024];
+
+    copyNameAttributeTable(index, mem);
+
+    int pos = 0;
+    for ( int y = 0; y < 30; ++ y ) {
+        for ( int x = 0; x < 32; ++ x ) {
+            snprintf(buf, sizeof(buf), "%02X ", mem[pos ++]);
+            outStr  <<  buf;
+        }
+        outStr  <<  "\n";
+    }
+
+    return ( outStr );
 }
 
 //----------------------------------------------------------------

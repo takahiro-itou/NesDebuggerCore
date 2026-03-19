@@ -29,6 +29,11 @@
 #    include    "CpuUtils.h"
 #endif
 
+#if !defined( NESDBG_SYS_STL_INCLUDED_ARRAY )
+#    include    <array>
+#    define   NESDBG_SYS_STL_INCLUDED_ARRAY
+#endif
+
 #if !defined( NESDBG_SYS_STL_INCLUDED_VECTOR )
 #    include    <vector>
 #    define   NESDBG_SYS_STL_INCLUDED_VECTOR
@@ -171,6 +176,15 @@ public:
 //    Public Member Functions.
 //
 public:
+
+    //----------------------------------------------------------------
+    /**   ネームテーブルを取得する。
+    **
+    **/
+    ErrCode
+    copyNameAttributeTable(
+            const  int  nIndex,
+            std::array<BtByte, 1024>  & buf)  const;
 
     //----------------------------------------------------------------
     /**   PPU インスタンスを生成する。
