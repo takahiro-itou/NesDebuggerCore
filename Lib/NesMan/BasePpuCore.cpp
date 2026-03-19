@@ -197,6 +197,19 @@ BasePpuCore::updateScanLine(
 //
 
 //----------------------------------------------------------------
+//    ネームテーブルを取得する。
+//
+
+ErrCode
+BasePpuCore::copyNameAttributeTable(
+        const  int  nIndex,
+        std::array<BtByte, 1024>  & buf)  const
+{
+    memcpy(&(buf[0]), m_memPPU + 0x2000 + (nIndex << 10), 1024);
+    return ( ErrCode::SUCCESS );
+}
+
+//----------------------------------------------------------------
 //    PPU インスタンスを生成する。
 //
 

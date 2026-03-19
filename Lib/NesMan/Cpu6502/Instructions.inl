@@ -66,8 +66,11 @@
 #define     ASL(operand)    \
     &Cpu6502::execArithLogic<operand, ALU::OpeNopL, ALU::OpeASL, 1>
 
-#define     BIT(operand)    nullptr
+#define     BIT(operand)    \
+    &Cpu6502::execBitTest<operand>
+
 #define     BRK             nullptr
+
 #define     CMP(or2, reg)   \
     &Cpu6502::execArithLogic<or2, ALU::OpeCMP, ALU::OpeNopR, 0, reg>
 
@@ -172,6 +175,25 @@ Cpu6502::execArithLogic(
     return ( InstExecResult::SUCCESS_CONTINUE );
 }
 
+//----------------------------------------------------------------
+//    ビットテスト命令。
+//
+
+template  <typename OPERAND>
+inline  InstExecResult
+Cpu6502::execBitTest(
+        const  OpeCode  opeCode)
+{
+    ClockCount      cyc = 0;
+    const  RegType  rOp = OPERAND().getOperandValue(
+                opeCode, mog_cpuRegs, this->m_manMem, cyc);
+
+    mog_cpuRegs.P   &= ~(FLAG_N | FLAG_V | FLAG_Z);
+    mog_cpuRegs.P   |= ((mog_cpuRegs.A & rOp) ? 0 : FLAG_Z)
+                            | (rOp & 0xC0);
+
+    return ( InstExecResult::SUCCESS_CONTINUE );
+}
 
 //----------------------------------------------------------------
 //    条件分岐命令。
@@ -489,7 +511,7 @@ Cpu6502::s_cpuInstTable[256] = {
     AND(OPERAND_IND_X),                             //  21  AND ($nn,X)
     UND_HLT,                                        //  22  hlt
     RLA(OPERAND_IND_X),                             //  23  rla ($nn,X)
-    BIT(OPERAND_ZERPG),                             //  24  BIT <$nn
+    BIT(ADR_ZERO),                                  //  24  BIT <$nn
     AND(OPERAND_ZERPG),                             //  25  AND <$nn
     ROL(OPERAND_ZERPG),                             //  26  ROL <$nn
     RLA(OPERAND_ZERPG),                             //  27  rla <$nn
@@ -497,7 +519,7 @@ Cpu6502::s_cpuInstTable[256] = {
     AND(OPERAND_IMM),                               //  29  AND $imm
     ROL(OPERAND_REG_A),                             //  2A  ROL A
     ANC(OPERAND_IMM),                               //  2B  anc #imm
-    BIT(OPERAND_ABSOL),                             //  2C  BIT $nnnn
+    BIT(ADR_ABSOL),                                 //  2C  BIT $nnnn
     AND(OPERAND_ABSOL),                             //  2D  AND $nnnn
     ROL(OPERAND_ABSOL),                             //  2E  ROL $nnnn
     RLA(OPERAND_ABSOL),                             //  2F  rla $nnnn
