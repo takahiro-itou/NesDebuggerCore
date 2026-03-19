@@ -511,7 +511,7 @@ Cpu6502::s_cpuInstTable[256] = {
     AND(OPERAND_IND_X),                             //  21  AND ($nn,X)
     UND_HLT,                                        //  22  hlt
     RLA(OPERAND_IND_X),                             //  23  rla ($nn,X)
-    BIT(OPERAND_ZERPG),                             //  24  BIT <$nn
+    BIT(ADR_ZERO),                                  //  24  BIT <$nn
     AND(OPERAND_ZERPG),                             //  25  AND <$nn
     ROL(OPERAND_ZERPG),                             //  26  ROL <$nn
     RLA(OPERAND_ZERPG),                             //  27  rla <$nn
@@ -519,7 +519,7 @@ Cpu6502::s_cpuInstTable[256] = {
     AND(OPERAND_IMM),                               //  29  AND $imm
     ROL(OPERAND_REG_A),                             //  2A  ROL A
     ANC(OPERAND_IMM),                               //  2B  anc #imm
-    BIT(OPERAND_ABSOL),                             //  2C  BIT $nnnn
+    BIT(ADR_ABSOL),                                 //  2C  BIT $nnnn
     AND(OPERAND_ABSOL),                             //  2D  AND $nnnn
     ROL(OPERAND_ABSOL),                             //  2E  ROL $nnnn
     RLA(OPERAND_ABSOL),                             //  2F  rla $nnnn
