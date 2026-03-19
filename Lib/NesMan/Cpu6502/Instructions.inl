@@ -184,7 +184,15 @@ inline  InstExecResult
 Cpu6502::execBitTest(
         const  OpeCode  opeCode)
 {
-    return ( InstExecResult::UNDEFINED_OPECODE );
+    ClockCount      cyc = 0;
+    const  RegType  rOp = OPERAND().getOperandValue(
+                opeCode, mog_cpuRegs, this->m_manMem, cyc);
+
+    mog_cpuRegs.P   &= ~(FLAG_N | FLAG_V | FLAG_Z);
+    mog_cpuRegs.P   |= ((mog_cpuRegs.A & rOp) ? 0 : FLAG_Z)
+                            | (rOp & 0xC0);
+
+    return ( InstExecResult::SUCCESS_CONTINUE );
 }
 
 //----------------------------------------------------------------
