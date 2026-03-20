@@ -543,15 +543,15 @@ NesPpuImpl::initializeAttributeTable()
     }
 
     for ( int i = 0; i < 64; ++ i ) {
-        this->m_memPPU[0 * 0x0400 + 0x23C0 + i] = i;
-        this->m_memPPU[1 * 0x0400 + 0x23C0 + i] = i;
-        this->m_memPPU[2 * 0x0400 + 0x23C0 + i] = i;
-        this->m_memPPU[3 * 0x0400 + 0x23C0 + i] = i;
+        this->m_memPPU[0 * 0x0400 + 0x23C0 + i] = 0;
+        this->m_memPPU[1 * 0x0400 + 0x23C0 + i] = 0;
+        this->m_memPPU[2 * 0x0400 + 0x23C0 + i] = 0;
+        this->m_memPPU[3 * 0x0400 + 0x23C0 + i] = 0;
 
-        writeAttribute(0, i, i);
-        writeAttribute(1, i, i);
-        writeAttribute(2, i, i);
-        writeAttribute(3, i, i);
+        writeAttribute(0, i, 0);
+        writeAttribute(1, i, 0);
+        writeAttribute(2, i, 0);
+        writeAttribute(3, i, 0);
     }
 
     return ( ErrCode::SUCCESS );
