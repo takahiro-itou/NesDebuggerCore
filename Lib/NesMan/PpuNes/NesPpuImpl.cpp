@@ -273,6 +273,24 @@ NesPpuImpl::drawScreen()
         return ( ErrCode::FAILURE );
     }
 
+    updateAttributeTable(0);
+    updateAttributeTable(1);
+    updateAttributeTable(2);
+    updateAttributeTable(3);
+    drawBackGroud();
+
+    return ( ErrCode::SUCCESS );
+}
+
+//----------------------------------------------------------------
+//    電源オンの処理を行う。
+//
+
+ErrCode
+NesPpuImpl::emulatePowerOn()
+{
+    Super::emulatePowerOn();
+
     //  パレットを適当に設定する。  //
     {
         this->m_palette[0]  = 0x00000000;
@@ -297,12 +315,6 @@ NesPpuImpl::drawScreen()
     }
 
     initializeAttributeTable();
-    //  updateNameTable();
-    updateAttributeTable(0);
-    updateAttributeTable(1);
-    updateAttributeTable(2);
-    updateAttributeTable(3);
-    drawBackGroud();
 
     return ( ErrCode::SUCCESS );
 }
