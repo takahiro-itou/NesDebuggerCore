@@ -180,9 +180,9 @@ NesPpuImpl::writeRegister(
         const   GuestMemoryAddress  ioAddr,
         const   BtByte              regVal)
 {
+#if defined( _DEBUG )
     char    buf[1024];
 
-#if defined( _DEBUG )
     if ( (ioAddr < 0x2000) || (0x3FFF < ioAddr) ) {
         //  範囲外のアドレス。  //
         std::cerr   <<  "Invalid I/O Address for PPU: "
@@ -273,6 +273,24 @@ NesPpuImpl::drawScreen()
         return ( ErrCode::FAILURE );
     }
 
+    updateAttributeTable(0);
+    updateAttributeTable(1);
+    updateAttributeTable(2);
+    updateAttributeTable(3);
+    drawBackGroud();
+
+    return ( ErrCode::SUCCESS );
+}
+
+//----------------------------------------------------------------
+//    電源オンの処理を行う。
+//
+
+ErrCode
+NesPpuImpl::emulatePowerOn()
+{
+    Super::emulatePowerOn();
+
     //  パレットを適当に設定する。  //
     {
         this->m_palette[0]  = 0x00000000;
@@ -297,12 +315,6 @@ NesPpuImpl::drawScreen()
     }
 
     initializeAttributeTable();
-    //  updateNameTable();
-    updateAttributeTable(0);
-    updateAttributeTable(1);
-    updateAttributeTable(2);
-    updateAttributeTable(3);
-    drawBackGroud();
 
     return ( ErrCode::SUCCESS );
 }
@@ -531,15 +543,15 @@ NesPpuImpl::initializeAttributeTable()
     }
 
     for ( int i = 0; i < 64; ++ i ) {
-        this->m_memPPU[0 * 0x0400 + 0x23C0 + i] = i;
-        this->m_memPPU[1 * 0x0400 + 0x23C0 + i] = i;
-        this->m_memPPU[2 * 0x0400 + 0x23C0 + i] = i;
-        this->m_memPPU[3 * 0x0400 + 0x23C0 + i] = i;
+        this->m_memPPU[0 * 0x0400 + 0x23C0 + i] = 0;
+        this->m_memPPU[1 * 0x0400 + 0x23C0 + i] = 0;
+        this->m_memPPU[2 * 0x0400 + 0x23C0 + i] = 0;
+        this->m_memPPU[3 * 0x0400 + 0x23C0 + i] = 0;
 
-        writeAttribute(0, i, i);
-        writeAttribute(1, i, i);
-        writeAttribute(2, i, i);
-        writeAttribute(3, i, i);
+        writeAttribute(0, i, 0);
+        writeAttribute(1, i, 0);
+        writeAttribute(2, i, 0);
+        writeAttribute(3, i, 0);
     }
 
     return ( ErrCode::SUCCESS );
