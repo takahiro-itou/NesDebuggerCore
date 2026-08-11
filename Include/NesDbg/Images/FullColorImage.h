@@ -41,6 +41,24 @@ class  FullColorImage
 //
 //    Internal Type Definitions.
 //
+public:
+
+    typedef     int             PosUnitType;
+
+    typedef     int             LenUnitType;
+
+    typedef     long            OffsetType;
+
+    typedef     int             ColorArgb32;
+
+    typedef     void  *         LpWriteBuf;
+
+    typedef     unsigned char   BtByte;
+
+    typedef     BtByte *        LpWritePixelBuf;
+
+    typedef     const BtByte *  LpcReadPixelBuf;
+
 
 //========================================================================
 //
@@ -94,11 +112,11 @@ public:
     **/
     virtual  void
     createImage(
-            const  int  nWidth,
-            const  int  nHeight,
-            const  int  cbPixel,
-            const  int  lStride,
-            void  *     lpBits);
+            const  PosUnitType  nWidth,
+            const  PosUnitType  nHeight,
+            const  LenUnitType  cbPixel,
+            const  LenUnitType  lStride,
+            LpWriteBuf   const  lpBits);
 
     //----------------------------------------------------------------
     /**   サンプル画像を描画する。
@@ -119,11 +137,11 @@ public:
     **/
     void
     fillRectangle(
-            const  int  x1,
-            const  int  y1,
-            const  int  x2,
-            const  int  y2,
-            const  int  color);
+            const  PosUnitType  x1,
+            const  PosUnitType  y1,
+            const  PosUnitType  x2,
+            const  PosUnitType  y2,
+            const  ColorArgb32  color);
 
     //----------------------------------------------------------------
     /**   指定したピクセルの色を設定する。
@@ -131,9 +149,9 @@ public:
     **/
     void
     setPixelColor(
-            const  int  x,
-            const  int  y,
-            const  int  color);
+            const  PosUnitType  x,
+            const  PosUnitType  y,
+            const  ColorArgb32  color);
 
 //========================================================================
 //
@@ -141,14 +159,14 @@ public:
 //
 public:
 
-    inline  const   unsigned  long
-    getOffset(
-            const  int  x,
-            const  int  y)  const
+    //----------------------------------------------------------------
+    /**   画像の高さを取得する。
+    **
+    **/
+    inline  PosUnitType
+    getHeight()  const
     {
-        return ( (this->m_iHeight - y - 1) * (this->m_lStride)
-                 + ((this->m_cbPixel) * x)
-        );
+        return ( this->m_iHeight );
     }
 
     inline  const   unsigned char  *
@@ -163,33 +181,42 @@ public:
         return ( this->m_lpBits );
     }
 
+    inline  const   OffsetType
+    getOffset(
+            const  PosUnitType  x,
+            const  PosUnitType  y)  const
+    {
+        return ( (this->m_iHeight - y - 1) * (this->m_lStride)
+                 + ((this->m_cbPixel) * x)
+        );
+    }
+
     inline  const   unsigned char *
     getPixel(
-            const  int  x,
-            const  int  y)  const
+            const  PosUnitType  x,
+            const  PosUnitType  y)  const
     {
         return ( this->m_lpBits + getOffset(x, y) );
     }
 
     inline  unsigned char *
     getPixel(
-            const  int  x,
-            const  int  y)
+            const  PosUnitType  x,
+            const  PosUnitType  y)
     {
         return ( this->m_lpBits + getOffset(x, y) );
     }
 
-    inline  int
+    //----------------------------------------------------------------
+    /**   画像の幅を取得する。
+    **
+    **/
+    inline  PosUnitType
     getWidth()  const
     {
         return ( this->m_iWidth );
     }
 
-    inline  int
-    getHeight()  const
-    {
-        return ( this->m_iHeight );
-    }
 
 //========================================================================
 //
@@ -207,12 +234,13 @@ public:
 //
 private:
 
-    int     m_iWidth;
-    int     m_iHeight;
-    int     m_cbPixel;
-    int     m_lStride;
+    PosUnitType         m_iWidth;
+    PosUnitType         m_iHeight;
+    LenUnitType         m_cbPixel;
+    LenUnitType         m_lStride;
 
-    unsigned char *     m_lpBits;
+    /**   画像バッファの先頭。      **/
+    LpWritePixelBuf     m_lpBits;
 
 //========================================================================
 //
