@@ -329,8 +329,17 @@ private:
     LenUnitType         m_cbPixel;
     LenUnitType         m_lStride;
 
+    /**   確保したメモリバッファ。  **/
+    LpWritePixelBuf     m_lpAlloc;
+
+    /**   現在確保しているサイズ。  **/
+    LenUnitType         m_cbAlloc;
+
     /**   画像バッファの先頭。      **/
     LpWritePixelBuf     m_lpBits;
+
+    /**   原点に対応するアドレス。  **/
+    LpWritePixelBuf     m_lpOrig;
 
 //========================================================================
 //
