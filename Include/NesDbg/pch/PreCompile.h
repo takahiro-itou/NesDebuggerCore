@@ -24,6 +24,7 @@
 
 #if defined( WIN32 )
 #    if !defined( NESDBG_SYS_INCLUDED_WINDOWS_H )
+#        define   NOMINMAX
 #        include    <windows.h>
 #        define   NESDBG_SYS_INCLUDED_WINDOWS_H
 #    endif
