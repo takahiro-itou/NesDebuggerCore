@@ -89,11 +89,11 @@ FullColorImage::~FullColorImage()
 
 void
 FullColorImage::createImage(
-        const  int  nWidth,
-        const  int  nHeight,
-        const  int  cbPixel,
-        const  int  lStride,
-        void  *     lpBits)
+        const  PosUnitType  nWidth,
+        const  PosUnitType  nHeight,
+        const  LenUnitType  cbPixel,
+        const  LenUnitType  lStride,
+        LpWriteBuf   const  lpBits)
 {
     this->m_iWidth  = nWidth;
     this->m_iHeight = nHeight;
@@ -134,19 +134,19 @@ FullColorImage::drawSample()
 
 void
 FullColorImage::fillRectangle(
-        const  int  x1,
-        const  int  y1,
-        const  int  x2,
-        const  int  y2,
-        const  int  color)
+        const  PosUnitType  x1,
+        const  PosUnitType  y1,
+        const  PosUnitType  x2,
+        const  PosUnitType  y2,
+        const  ColorArgb32  color)
 {
-    const   unsigned  char  cB  = ( color        & 0xFF);
-    const   unsigned  char  cG  = ((color >>  8) & 0xFF);
-    const   unsigned  char  cR  = ((color >> 16) & 0xFF);
+    const   BtByte  cB  = ( color        & 0xFF);
+    const   BtByte  cG  = ((color >>  8) & 0xFF);
+    const   BtByte  cR  = ((color >> 16) & 0xFF);
 
-    for ( int y = y1; y < y2; ++ y ) {
+    for ( PosUnitType y = y1; y < y2; ++ y ) {
         unsigned char * ptr = getPixel(x1, y);
-        for ( int x = x1; x < x2; ++ x ) {
+        for ( PosUnitType x = x1; x < x2; ++ x ) {
             *(ptr ++) = cB;
             *(ptr ++) = cG;
             *(ptr ++) = cR;
@@ -162,9 +162,9 @@ FullColorImage::fillRectangle(
 
 void
 FullColorImage::setPixelColor(
-        const  int  x,
-        const  int  y,
-        const  int  color)
+        const  PosUnitType  x,
+        const  PosUnitType  y,
+        const  ColorArgb32  color)
 {
     const   unsigned  char  cB  = ( color        & 0xFF);
     const   unsigned  char  cG  = ((color >>  8) & 0xFF);
