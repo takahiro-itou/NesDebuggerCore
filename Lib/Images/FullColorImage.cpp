@@ -312,13 +312,20 @@ FullColorImage::fillRectangle(
     const   BtByte  cB  = ( color        & 0xFF);
     const   BtByte  cG  = ((color >>  8) & 0xFF);
     const   BtByte  cR  = ((color >> 16) & 0xFF);
+    const   BtByte  cA  = ((color >> 24) & 0xFF);
+    const   LenUnitType     cbRems  = this->m_cbPixel - 3;
 
     for ( PosUnitType y = y1; y < y2; ++ y ) {
-        unsigned char * ptr = getPixel(x1, y);
+        LpWritePixelBuf ptr = getPixel(x1, y);
         for ( PosUnitType x = x1; x < x2; ++ x ) {
             *(ptr ++) = cB;
             *(ptr ++) = cG;
             *(ptr ++) = cR;
+            if ( cbRems == 1 ) {
+                *(ptr ++) = cA;
+            } else {
+                ptr += cbRems;
+            }
         }
     }
 
