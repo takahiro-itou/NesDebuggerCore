@@ -179,7 +179,12 @@ FullColorImage::createImage(
 //
 
 void
-FullColorImage::drawSample()
+FullColorImage::drawSample(
+        const  ColorArgb32  colBG,
+        const  ColorArgb32  colTL,
+        const  ColorArgb32  colTR,
+        const  ColorArgb32  colBL,
+        const  ColorArgb32  colBR)
 {
     const  int  iW  = this->m_iWidth;
     const  int  iH  = this->m_iHeight;
@@ -236,6 +241,20 @@ FullColorImage::fillRectangle(
     }
 
     return;
+}
+
+//----------------------------------------------------------------
+//    三角形を描画する。
+//
+
+void
+FullColorImage::fillTriangle(
+        const  PosUnitType  x1,
+        const  PosUnitType  y1,
+        const  PosUnitType  x2,
+        const  PosUnitType  y2,
+        const  ColorArgb32  color)
+{
 }
 
 //----------------------------------------------------------------

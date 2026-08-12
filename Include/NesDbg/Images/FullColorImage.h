@@ -174,7 +174,12 @@ public:
     **
     **/
     virtual  void
-    drawSample();
+    drawSample(
+            const  ColorArgb32  colBG   = 0xFFFFFFFF,
+            const  ColorArgb32  colTL   = 0xFF0000FF,
+            const  ColorArgb32  colTR   = 0xFF00FF00,
+            const  ColorArgb32  colBL   = 0xFF00FFFF,
+            const  ColorArgb32  colBR   = 0xFFFF0000);
 
     //----------------------------------------------------------------
     /**   確保したバッファを解放する。
@@ -196,6 +201,18 @@ public:
     **/
     void
     fillRectangle(
+            const  PosUnitType  x1,
+            const  PosUnitType  y1,
+            const  PosUnitType  x2,
+            const  PosUnitType  y2,
+            const  ColorArgb32  color);
+
+    //----------------------------------------------------------------
+    /**   三角形を描画する。
+    **
+    **/
+    void
+    fillTriangle(
             const  PosUnitType  x1,
             const  PosUnitType  y1,
             const  PosUnitType  x2,
