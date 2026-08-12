@@ -108,6 +108,57 @@ public:
     **  @param [in] nHeight   イメージの高さ
     **  @param [in] cbPixel   ピクセル当たりのバイト数。
     **  @param [in] lStride   行当たりのバイト数。
+    **/
+    virtual  LpWriteBuf
+    allocateImage(
+            const  PosUnitType  nWidth,
+            const  PosUnitType  nHeight,
+            const  LenUnitType  cbPixel,
+            const  LenUnitType  lStride = 0);
+
+    //----------------------------------------------------------------
+    /**   バッファの単純コピーができるか確認する。
+    **
+    **/
+    virtual  bool
+    canCopyBuffer(
+            const  FullColorImage  &imgSrc)  const;
+
+    //----------------------------------------------------------------
+    /**   イメージをコピーする。
+    **
+    **/
+    virtual  void
+    copyImage(
+            const  FullColorImage  &imgSrc);
+
+    //----------------------------------------------------------------
+    /**   イメージの指定範囲をコピーする。
+    **
+    **/
+    virtual  void
+    copyRectangle(
+            const  FullColorImage  &imgSrc,
+            const  PosUnitType      x1,
+            const  PosUnitType      y1,
+            const  PosUnitType      x2,
+            const  PosUnitType      y2);
+
+    //----------------------------------------------------------------
+    /**   バッファの内容を単純にコピーする。
+    **
+    **/
+    virtual  void
+    copyToBuffer(
+            LpWriteBuf  ptrDst)  const;
+
+    //----------------------------------------------------------------
+    /**   イメージを作成する。
+    **
+    **  @param [in] nWidth    イメージの幅
+    **  @param [in] nHeight   イメージの高さ
+    **  @param [in] cbPixel   ピクセル当たりのバイト数。
+    **  @param [in] lStride   行当たりのバイト数。
     **  @param [in] lpBits    イメージデータ。
     **/
     virtual  void
@@ -124,6 +175,14 @@ public:
     **/
     virtual  void
     drawSample();
+
+    //----------------------------------------------------------------
+    /**   確保したバッファを解放する。
+    **
+    **/
+    virtual  void
+    freeImageBuffer();
+
 
 //========================================================================
 //
