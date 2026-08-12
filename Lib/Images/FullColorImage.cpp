@@ -186,18 +186,18 @@ FullColorImage::drawSample(
         const  ColorArgb32  colBL,
         const  ColorArgb32  colBR)
 {
-    const  int  iW  = this->m_iWidth;
-    const  int  iH  = this->m_iHeight;
+    const  PosUnitType  iW  = this->m_iWidth;
+    const  PosUnitType  iH  = this->m_iHeight;
 
-    fillRectangle(0, 0, iW, iH, 0x00FFFFFF);
+    fillRectangle(0, 0, iW, iH, colBG);
 
-    const  int  rW  = iW / 4;
-    const  int  rH  = iH / 4;
+    const  PosUnitType  rW  = iW / 4;
+    const  PosUnitType  rH  = iH / 4;
 
-    fillRectangle(rW * 1, rH * 1, rW * 1 + rW, rH * 1 + rH, 0x000000FF);
-    fillRectangle(rW * 2, rH * 1, rW * 2 + rW, rH * 1 + rH, 0x0000FF00);
-    fillRectangle(rW * 1, rH * 2, rW * 1 + rW, rH * 2 + rH, 0x00FF0000);
-    fillRectangle(rW * 2, rH * 2, rW * 2 + rW, rH * 2 + rH, 0x0000FFFF);
+    fillTriangle(rW * 1, rH * 1, rW * 1 + rW, rH * 1 + rH, colTL);
+    fillTriangle(rW * 2, rH * 1, rW * 2 + rW, rH * 1 + rH, colTR);
+    fillTriangle(rW * 1, rH * 2, rW * 1 + rW, rH * 2 + rH, colBL);
+    fillTriangle(rW * 2, rH * 2, rW * 2 + rW, rH * 2 + rH, colBR);
 }
 
 //----------------------------------------------------------------
@@ -255,6 +255,31 @@ FullColorImage::fillTriangle(
         const  PosUnitType  y2,
         const  ColorArgb32  color)
 {
+    const   BtByte  cB  = ( color        & 0xFF);
+    const   BtByte  cG  = ((color >>  8) & 0xFF);
+    const   BtByte  cR  = ((color >> 16) & 0xFF);
+    const   BtByte  cA  = ((color >> 24) & 0xFF);
+    const   LenUnitType     cbRems  = this->m_cbPixel - 3;
+
+    PosUnitType tmp = 1;
+    for ( PosUnitType y = y1; y < y2; ++ y ) {
+        LpWritePixelBuf ptr = getPixel(x1, y);
+        PosUnitType  lastX  = (x1 + tmp);
+        if ( x2 < lastX ) { lastX = x2; }
+        for ( PosUnitType x = x1; x < lastX; ++ x ) {
+            *(ptr ++) = cB;
+            *(ptr ++) = cG;
+            *(ptr ++) = cR;
+            if ( cbRems == 1 ) {
+                *(ptr ++) = cA;
+            } else {
+                ptr += cbRems;
+            }
+        }
+        ++ tmp;
+    }
+
+    return;
 }
 
 //----------------------------------------------------------------
@@ -267,15 +292,20 @@ FullColorImage::setPixelColor(
         const  PosUnitType  y,
         const  ColorArgb32  color)
 {
-    const   unsigned  char  cB  = ( color        & 0xFF);
-    const   unsigned  char  cG  = ((color >>  8) & 0xFF);
-    const   unsigned  char  cR  = ((color >> 16) & 0xFF);
+    const   BtByte  cB  = ( color        & 0xFF);
+    const   BtByte  cG  = ((color >>  8) & 0xFF);
+    const   BtByte  cR  = ((color >> 16) & 0xFF);
+    const   BtByte  cA  = ((color >> 24) & 0xFF);
+    const   LenUnitType     cbRems  = this->m_cbPixel - 3;
 
-    unsigned char * ptr = getPixel(x, y);
+    LpWritePixelBuf ptr = getPixel(x, y);
 
     *(ptr ++) = cB;
     *(ptr ++) = cG;
     *(ptr ++) = cR;
+    if ( cbRems >= 1 ) {
+        *(ptr ++) = cA;
+    }
 
     return;
 }
