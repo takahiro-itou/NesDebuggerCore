@@ -87,6 +87,65 @@ FullColorImage::~FullColorImage()
 //    イメージを作成する。
 //
 
+FullColorImage::LpWriteBuf
+FullColorImage::allocateImage(
+        const  PosUnitType  nWidth,
+        const  PosUnitType  nHeight,
+        const  LenUnitType  cbPixel,
+        const  LenUnitType  lStride = 0)
+{
+    return ( nullptr );
+}
+
+//----------------------------------------------------------------
+//    バッファの単純コピーができるか確認する。
+//
+
+bool
+FullColorImage::canCopyBuffer(
+        const  FullColorImage  &imgSrc)  const
+{
+    return ( false );
+}
+
+//----------------------------------------------------------------
+//    イメージをコピーする。
+//
+
+void
+FullColorImage::copyImage(
+        const  FullColorImage  &imgSrc)
+{
+}
+
+//----------------------------------------------------------------
+//    イメージの指定範囲をコピーする。
+//
+
+void
+FullColorImage::copyRectangle(
+        const  FullColorImage  &imgSrc,
+        const  PosUnitType      x1,
+        const  PosUnitType      y1,
+        const  PosUnitType      x2,
+        const  PosUnitType      y2)
+{
+}
+
+//----------------------------------------------------------------
+//    バッファの内容を単純にコピーする。
+//
+
+void
+FullColorImage::copyToBuffer(
+        LpWriteBuf  ptrDst)  const
+{
+}
+
+//----------------------------------------------------------------
+//    イメージを作成する。
+//
+
 void
 FullColorImage::createImage(
         const  PosUnitType  nWidth,
@@ -122,6 +181,16 @@ FullColorImage::drawSample()
     fillRectangle(rW * 1, rH * 2, rW * 1 + rW, rH * 2 + rH, 0x00FF0000);
     fillRectangle(rW * 2, rH * 2, rW * 2 + rW, rH * 2 + rH, 0x0000FFFF);
 }
+
+//----------------------------------------------------------------
+//    確保したバッファを解放する。
+//
+
+void
+FullColorImage::freeImageBuffer()
+{
+}
+
 
 //========================================================================
 //
