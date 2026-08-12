@@ -22,6 +22,9 @@
 
 #include    "NesDbg/Images/FullColorImage.h"
 
+#include    <algorithm>
+#include    <cstring>
+
 
 NESDBG_NAMESPACE_BEGIN
 namespace  Images  {
@@ -50,7 +53,10 @@ FullColorImage::FullColorImage()
       m_iHeight(0),
       m_cbPixel(3),
       m_lStride(0),
-      m_lpBits(nullptr)
+      m_lpAlloc(nullptr),
+      m_cbAlloc(0),
+      m_lpBits(nullptr),
+      m_lpOrig(nullptr)
 {
 }
 
@@ -61,6 +67,7 @@ FullColorImage::FullColorImage()
 
 FullColorImage::~FullColorImage()
 {
+    freeImageBuffer();
 }
 
 //========================================================================
@@ -87,19 +94,155 @@ FullColorImage::~FullColorImage()
 //    イメージを作成する。
 //
 
+FullColorImage::LpWriteBuf
+FullColorImage::allocateImage(
+        const  PosUnitType  nWidth,
+        const  PosUnitType  nHeight,
+        const  LenUnitType  cbPixel,
+        const  LenUnitType  lStride)
+{
+    LpWritePixelBuf ptrBuf  = this->m_lpAlloc;
+    LenUnitType     cbSize  = 0;
+    LenUnitType     wStride = lStride;
+
+    //  イメージバッファに必要なサイズを計算する。  //
+    if ( wStride == 0 ) {
+        wStride = computeBytesPerPixel(nWidth, cbPixel);
+    }
+    cbSize  = (wStride >= 0 ? wStride : -wStride) * nHeight;
+
+    //  現在確保しているサイズが必要量以上なら再利用。  //
+    if ( this->m_cbAlloc < cbSize ) {
+        //  サイズが足りないので解放して再度確保する。  //
+        freeImageBuffer();
+        ptrBuf  = new BtByte [cbSize];
+        std::memset(ptrBuf, 0, cbSize);
+        this->m_cbAlloc = cbSize;
+    }
+
+    this->createImage(nWidth, nHeight, cbPixel, wStride, ptrBuf);
+    return ( this->m_lpAlloc = ptrBuf );
+}
+
+//----------------------------------------------------------------
+//    バッファの単純コピーができるか確認する。
+//
+
+bool
+FullColorImage::canCopyBuffer(
+        const  FullColorImage  &imgSrc)  const
+{
+    if ( this->m_lStride != imgSrc.m_lStride ) { return  false; }
+    if ( this->m_iWidth  != imgSrc.m_iWidth  ) { return  false; }
+    if ( this->m_iHeight != imgSrc.m_iHeight ) { return  false; }
+
+    return ( true );
+}
+
+//----------------------------------------------------------------
+//    イメージをコピーする。
+//
+
+void
+FullColorImage::copyImage(
+        const  FullColorImage  &imgSrc)
+{
+    if ( this->m_lpBits == imgSrc.m_lpBits ) {
+        //  コピー元とコピー先が同じなので何もしない。  //
+        return;
+    }
+
+    if ( canCopyBuffer(imgSrc) ) {
+        //  単純コピーが可能。  //
+        imgSrc.copyToBuffer(this->m_lpBits);
+        return;
+    }
+
+    //  画像の小さいほうに合わせて、矩形コピーを実行。  //
+    const  PosUnitType  x2  = std::min(this->m_iWidth,  imgSrc.m_iWidth );
+    const  PosUnitType  y2  = std::min(this->m_iHeight, imgSrc.m_iHeight);
+    this->copyRectangle(imgSrc, 0, 0, x2, y2);
+}
+
+//----------------------------------------------------------------
+//    イメージの指定範囲をコピーする。
+//
+
+void
+FullColorImage::copyRectangle(
+        const  FullColorImage  &imgSrc,
+        const  PosUnitType      x1,
+        const  PosUnitType      y1,
+        const  PosUnitType      x2,
+        const  PosUnitType      y2)
+{
+    const  LenUnitType  cbCopy  = std::min(this->m_cbPixel, imgSrc.m_cbPixel);
+    const  LenUnitType  remDst  = this->m_cbPixel - cbCopy;
+    const  LenUnitType  remSrc  = imgSrc.m_cbPixel - cbCopy;
+
+    for ( PosUnitType y = y1; y < y2; ++ y ) {
+        LpWritePixelBuf  ptrDst = getPixel(x1, y);
+        LpcReadPixelBuf  ptrSrc = getPixel(x1, y);
+        for ( PosUnitType x = x1; x < x2; ++ x ) {
+            switch ( cbCopy ) {
+            case  4:
+                *(ptrDst++) = *(ptrSrc++);
+                //  no break;
+            case  3:
+                *(ptrDst++) = *(ptrSrc++);
+                //  no break;
+            case  2:
+                *(ptrDst++) = *(ptrSrc++);
+                //  no break;
+            case  1:
+                *(ptrDst++) = *(ptrSrc++);
+                //  no break;
+            }
+            ptrDst  += remDst;
+            ptrSrc  += remSrc;
+        }
+    }
+}
+
+//----------------------------------------------------------------
+//    バッファの内容を単純にコピーする。
+//
+
+void
+FullColorImage::copyToBuffer(
+        LpWriteBuf  ptrDst)  const
+{
+    const  LenUnitType  cbCopy  = this->m_lStride * this->m_iHeight;
+    std::memcpy(ptrDst, this->m_lpBits, cbCopy);
+}
+
+//----------------------------------------------------------------
+//    イメージを作成する。
+//
+
 void
 FullColorImage::createImage(
-        const  int  nWidth,
-        const  int  nHeight,
-        const  int  cbPixel,
-        const  int  lStride,
-        void  *     lpBits)
+        const  PosUnitType  nWidth,
+        const  PosUnitType  nHeight,
+        const  LenUnitType  cbPixel,
+        const  LenUnitType  lStride,
+        LpWriteBuf   const  lpBits)
 {
+    //  バッファのアドレスと原点に対応するアドレスを保存。  //
+    this->m_lpBits  = static_cast<BtByte *>(lpBits);
+    if ( lStride < 0 ) {
+        //  ボトムアップ形式。  //
+        //  座標  (nHeight - 1, 0)  のアドレスを計算する。  //
+        this->m_lpOrig  = this->m_lpBits - ((nHeight - 1) * lStride);
+    } else {
+        //  トップダウン形式。  //
+        this->m_lpOrig  = this->m_lpBits;
+    }
+
     this->m_iWidth  = nWidth;
     this->m_iHeight = nHeight;
     this->m_cbPixel = cbPixel;
     this->m_lStride = lStride;
-    this->m_lpBits  = static_cast<unsigned char *>(lpBits);
 }
 
 //----------------------------------------------------------------
@@ -107,21 +250,47 @@ FullColorImage::createImage(
 //
 
 void
-FullColorImage::drawSample()
+FullColorImage::drawSample(
+        const  ColorArgb32  colBG,
+        const  ColorArgb32  colTL,
+        const  ColorArgb32  colTR,
+        const  ColorArgb32  colBL,
+        const  ColorArgb32  colBR)
 {
-    const  int  iW  = this->m_iWidth;
-    const  int  iH  = this->m_iHeight;
+    const  PosUnitType  iW  = this->m_iWidth;
+    const  PosUnitType  iH  = this->m_iHeight;
 
-    fillRectangle(0, 0, iW, iH, 0x00FFFFFF);
+    fillRectangle(0, 0, iW, iH, colBG);
 
-    const  int  rW  = iW / 4;
-    const  int  rH  = iH / 4;
+    const  PosUnitType  rW  = iW / 4;
+    const  PosUnitType  rH  = iH / 4;
 
-    fillRectangle(rW * 1, rH * 1, rW * 1 + rW, rH * 1 + rH, 0x000000FF);
-    fillRectangle(rW * 2, rH * 1, rW * 2 + rW, rH * 1 + rH, 0x0000FF00);
-    fillRectangle(rW * 1, rH * 2, rW * 1 + rW, rH * 2 + rH, 0x00FF0000);
-    fillRectangle(rW * 2, rH * 2, rW * 2 + rW, rH * 2 + rH, 0x0000FFFF);
+    fillTriangle(rW * 1, rH * 1, rW * 1 + rW, rH * 1 + rH, colTL);
+    fillTriangle(rW * 2, rH * 1, rW * 2 + rW, rH * 1 + rH, colTR);
+    fillTriangle(rW * 1, rH * 2, rW * 1 + rW, rH * 2 + rH, colBL);
+    fillTriangle(rW * 2, rH * 2, rW * 2 + rW, rH * 2 + rH, colBR);
 }
+
+//----------------------------------------------------------------
+//    確保したバッファを解放する。
+//
+
+void
+FullColorImage::freeImageBuffer()
+{
+    LpWritePixelBuf ptr = this->m_lpAlloc;
+    if ( ptr == nullptr ) {
+        return;
+    }
+
+    delete  [] ptr;
+    this->m_lpAlloc = nullptr;
+    this->m_cbAlloc = 0;
+
+    this->m_lpBits  = nullptr;
+    this->m_lpOrig  = nullptr;
+}
+
 
 //========================================================================
 //
@@ -134,23 +303,69 @@ FullColorImage::drawSample()
 
 void
 FullColorImage::fillRectangle(
-        const  int  x1,
-        const  int  y1,
-        const  int  x2,
-        const  int  y2,
-        const  int  color)
+        const  PosUnitType  x1,
+        const  PosUnitType  y1,
+        const  PosUnitType  x2,
+        const  PosUnitType  y2,
+        const  ColorArgb32  color)
 {
-    const   unsigned  char  cB  = ( color        & 0xFF);
-    const   unsigned  char  cG  = ((color >>  8) & 0xFF);
-    const   unsigned  char  cR  = ((color >> 16) & 0xFF);
+    const   BtByte  cB  = ( color        & 0xFF);
+    const   BtByte  cG  = ((color >>  8) & 0xFF);
+    const   BtByte  cR  = ((color >> 16) & 0xFF);
+    const   BtByte  cA  = ((color >> 24) & 0xFF);
+    const   LenUnitType     cbRems  = this->m_cbPixel - 3;
 
-    for ( int y = y1; y < y2; ++ y ) {
-        unsigned char * ptr = getPixel(x1, y);
-        for ( int x = x1; x < x2; ++ x ) {
+    for ( PosUnitType y = y1; y < y2; ++ y ) {
+        LpWritePixelBuf ptr = getPixel(x1, y);
+        for ( PosUnitType x = x1; x < x2; ++ x ) {
             *(ptr ++) = cB;
             *(ptr ++) = cG;
             *(ptr ++) = cR;
+            if ( cbRems == 1 ) {
+                *(ptr ++) = cA;
+            } else {
+                ptr += cbRems;
+            }
         }
+    }
+
+    return;
+}
+
+//----------------------------------------------------------------
+//    三角形を描画する。
+//
+
+void
+FullColorImage::fillTriangle(
+        const  PosUnitType  x1,
+        const  PosUnitType  y1,
+        const  PosUnitType  x2,
+        const  PosUnitType  y2,
+        const  ColorArgb32  color)
+{
+    const   BtByte  cB  = ( color        & 0xFF);
+    const   BtByte  cG  = ((color >>  8) & 0xFF);
+    const   BtByte  cR  = ((color >> 16) & 0xFF);
+    const   BtByte  cA  = ((color >> 24) & 0xFF);
+    const   LenUnitType     cbRems  = this->m_cbPixel - 3;
+
+    PosUnitType tmp = 1;
+    for ( PosUnitType y = y1; y < y2; ++ y ) {
+        LpWritePixelBuf ptr = getPixel(x1, y);
+        PosUnitType  lastX  = (x1 + tmp);
+        if ( x2 < lastX ) { lastX = x2; }
+        for ( PosUnitType x = x1; x < lastX; ++ x ) {
+            *(ptr ++) = cB;
+            *(ptr ++) = cG;
+            *(ptr ++) = cR;
+            if ( cbRems == 1 ) {
+                *(ptr ++) = cA;
+            } else {
+                ptr += cbRems;
+            }
+        }
+        ++ tmp;
     }
 
     return;
@@ -162,19 +377,24 @@ FullColorImage::fillRectangle(
 
 void
 FullColorImage::setPixelColor(
-        const  int  x,
-        const  int  y,
-        const  int  color)
+        const  PosUnitType  x,
+        const  PosUnitType  y,
+        const  ColorArgb32  color)
 {
-    const   unsigned  char  cB  = ( color        & 0xFF);
-    const   unsigned  char  cG  = ((color >>  8) & 0xFF);
-    const   unsigned  char  cR  = ((color >> 16) & 0xFF);
+    const   BtByte  cB  = ( color        & 0xFF);
+    const   BtByte  cG  = ((color >>  8) & 0xFF);
+    const   BtByte  cR  = ((color >> 16) & 0xFF);
+    const   BtByte  cA  = ((color >> 24) & 0xFF);
+    const   LenUnitType     cbRems  = this->m_cbPixel - 3;
 
-    unsigned char * ptr = getPixel(x, y);
+    LpWritePixelBuf ptr = getPixel(x, y);
 
     *(ptr ++) = cB;
     *(ptr ++) = cG;
     *(ptr ++) = cR;
+    if ( cbRems >= 1 ) {
+        *(ptr ++) = cA;
+    }
 
     return;
 }
