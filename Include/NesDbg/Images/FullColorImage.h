@@ -169,13 +169,13 @@ public:
         return ( this->m_iHeight );
     }
 
-    inline  const   unsigned char  *
+    inline  LpcReadPixelBuf
     getImage()  const
     {
         return ( this->m_lpBits );
     }
 
-    inline  unsigned char *
+    inline  LpWritePixelBuf
     getImage()
     {
         return ( this->m_lpBits );
@@ -191,7 +191,7 @@ public:
         );
     }
 
-    inline  const   unsigned char *
+    inline  LpcReadPixelBuf
     getPixel(
             const  PosUnitType  x,
             const  PosUnitType  y)  const
@@ -199,7 +199,7 @@ public:
         return ( this->m_lpBits + getOffset(x, y) );
     }
 
-    inline  unsigned char *
+    inline  LpWritePixelBuf
     getPixel(
             const  PosUnitType  x,
             const  PosUnitType  y)
