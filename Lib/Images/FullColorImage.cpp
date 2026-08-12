@@ -92,7 +92,7 @@ FullColorImage::allocateImage(
         const  PosUnitType  nWidth,
         const  PosUnitType  nHeight,
         const  LenUnitType  cbPixel,
-        const  LenUnitType  lStride = 0)
+        const  LenUnitType  lStride)
 {
     return ( nullptr );
 }
