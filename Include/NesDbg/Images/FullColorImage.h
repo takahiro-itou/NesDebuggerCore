@@ -212,6 +212,37 @@ public:
             const  PosUnitType  y,
             const  ColorArgb32  color);
 
+
+//========================================================================
+//
+//    Public Member Functions (Static).
+//
+public:
+
+    //----------------------------------------------------------------
+    /**   行当たりのバイト数を計算する。
+    **
+    **/
+    static  inline  LenUnitType
+    computeBytesPerPixel(
+            const  PosUnitType  nWidth,
+            const  LenUnitType  cbPixel)
+    {
+        return ( (nWidth * cbPixel + 3) & ~3 );
+    }
+
+    //----------------------------------------------------------------
+    /**   ピクセル当たりのバイト数を計算する。
+    **
+    **/
+    static  inline  LenUnitType
+    computeBytesPerPixel(
+            const  LenUnitType  nDepth)
+    {
+        return ( (nDepth + 7) >> 3 );
+    }
+
+
 //========================================================================
 //
 //    Accessors.
