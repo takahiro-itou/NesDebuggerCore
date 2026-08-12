@@ -22,6 +22,9 @@
 
 #include    "NesDbg/Images/FullColorImage.h"
 
+#include    <algorithm>
+#include    <cstring>
+
 
 NESDBG_NAMESPACE_BEGIN
 namespace  Images  {
