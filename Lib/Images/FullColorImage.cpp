@@ -50,7 +50,10 @@ FullColorImage::FullColorImage()
       m_iHeight(0),
       m_cbPixel(3),
       m_lStride(0),
-      m_lpBits(nullptr)
+      m_lpAlloc(nullptr),
+      m_cbAlloc(0),
+      m_lpBits(nullptr),
+      m_lpOrig(nullptr)
 {
 }
 
@@ -154,11 +157,21 @@ FullColorImage::createImage(
         const  LenUnitType  lStride,
         LpWriteBuf   const  lpBits)
 {
+    //  バッファのアドレスと原点に対応するアドレスを保存。  //
+    this->m_lpBits  = static_cast<BtByte *>(lpBits);
+    if ( lStride < 0 ) {
+        //  ボトムアップ形式。  //
+        //  座標  (nHeight - 1, 0)  のアドレスを計算する。  //
+        this->m_lpOrig  = this->m_lpBits - ((nHeight - 1) * lStride);
+    } else {
+        //  トップダウン形式。  //
+        this->m_lpOrig  = this->m_lpBits;
+    }
+
     this->m_iWidth  = nWidth;
     this->m_iHeight = nHeight;
     this->m_cbPixel = cbPixel;
     this->m_lStride = lStride;
-    this->m_lpBits  = static_cast<unsigned char *>(lpBits);
 }
 
 //----------------------------------------------------------------

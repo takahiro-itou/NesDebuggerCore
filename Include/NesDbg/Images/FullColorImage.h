@@ -286,9 +286,7 @@ public:
             const  PosUnitType  x,
             const  PosUnitType  y)  const
     {
-        return ( (this->m_iHeight - y - 1) * (this->m_lStride)
-                 + ((this->m_cbPixel) * x)
-        );
+        return ( (y) * (this->m_lStride) + ((this->m_cbPixel) * x) );
     }
 
     inline  LpcReadPixelBuf
@@ -308,7 +306,7 @@ public:
             const  PosUnitType  x,
             const  PosUnitType  y)  const
     {
-        return ( this->m_lpBits + getOffset(x, y) );
+        return ( this->m_lpOrig + getOffset(x, y) );
     }
 
     inline  LpWritePixelBuf
@@ -316,7 +314,7 @@ public:
             const  PosUnitType  x,
             const  PosUnitType  y)
     {
-        return ( this->m_lpBits + getOffset(x, y) );
+        return ( this->m_lpOrig + getOffset(x, y) );
     }
 
     //----------------------------------------------------------------
