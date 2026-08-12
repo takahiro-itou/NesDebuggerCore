@@ -282,6 +282,18 @@ public:
     }
 
     inline  LpcReadPixelBuf
+    getOrigin()  const
+    {
+        return ( this->m_lpOrig );
+    }
+
+    inline  LpWritePixelBuf
+    getOrigin()
+    {
+        return ( this->m_lpOrig );
+    }
+
+    inline  LpcReadPixelBuf
     getPixel(
             const  PosUnitType  x,
             const  PosUnitType  y)  const
