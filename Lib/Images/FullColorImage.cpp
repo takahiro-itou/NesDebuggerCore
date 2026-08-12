@@ -97,7 +97,27 @@ FullColorImage::allocateImage(
         const  LenUnitType  cbPixel,
         const  LenUnitType  lStride)
 {
-    return ( nullptr );
+    LpWritePixelBuf ptrBuf  = this->m_lpAlloc;
+    LenUnitType     cbSize  = 0;
+    LenUnitType     wStride = lStride;
+
+    //  イメージバッファに必要なサイズを計算する。  //
+    if ( wStride == 0 ) {
+        wStride = computeBytesPerPixel(nWidth, cbPixel);
+    }
+    cbSize  = (wStride >= 0 ? wStride : -wStride) * nHeight;
+
+    //  現在確保しているサイズが必要量以上なら再利用。  //
+    if ( this->m_cbAlloc < cbSize ) {
+        //  サイズが足りないので解放して再度確保する。  //
+        freeImageBuffer();
+        ptrBuf  = new BtByte [cbSize];
+        std::memset(ptrBuf, 0, cbSize);
+        this->m_cbAlloc = cbSize;
+    }
+
+    this->createImage(nWidth, nHeight, cbPixel, wStride, ptrBuf);
+    return ( this->m_lpAlloc = ptrBuf );
 }
 
 //----------------------------------------------------------------
@@ -207,6 +227,17 @@ FullColorImage::drawSample(
 void
 FullColorImage::freeImageBuffer()
 {
+    LpWritePixelBuf ptr = this->m_lpAlloc;
+    if ( ptr == nullptr ) {
+        return;
+    }
+
+    delete  [] ptr;
+    this->m_lpAlloc = nullptr;
+    this->m_cbAlloc = 0;
+
+    this->m_lpBits  = nullptr;
+    this->m_lpOrig  = nullptr;
 }
 
 
