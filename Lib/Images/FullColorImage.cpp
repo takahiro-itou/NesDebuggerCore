@@ -67,6 +67,7 @@ FullColorImage::FullColorImage()
 
 FullColorImage::~FullColorImage()
 {
+    freeImageBuffer();
 }
 
 //========================================================================
@@ -131,7 +132,11 @@ bool
 FullColorImage::canCopyBuffer(
         const  FullColorImage  &imgSrc)  const
 {
-    return ( false );
+    if ( this->m_lStride != imgSrc.m_lStride ) { return  false; }
+    if ( this->m_iWidth  != imgSrc.m_iWidth  ) { return  false; }
+    if ( this->m_iHeight != imgSrc.m_iHeight ) { return  false; }
+
+    return ( true );
 }
 
 //----------------------------------------------------------------
@@ -142,6 +147,21 @@ void
 FullColorImage::copyImage(
         const  FullColorImage  &imgSrc)
 {
+    if ( this->m_lpBits == imgSrc.m_lpBits ) {
+        //  コピー元とコピー先が同じなので何もしない。  //
+        return;
+    }
+
+    if ( canCopyBuffer(imgSrc) ) {
+        //  単純コピーが可能。  //
+        imgSrc.copyToBuffer(this->m_lpBits);
+        return;
+    }
+
+    //  画像の小さいほうに合わせて、矩形コピーを実行。  //
+    const  PosUnitType  x2  = std::min(this->m_iWidth,  imgSrc.m_iWidth );
+    const  PosUnitType  y2  = std::min(this->m_iHeight, imgSrc.m_iHeight);
+    this->copyRectangle(imgSrc, 0, 0, x2, y2);
 }
 
 //----------------------------------------------------------------
@@ -156,6 +176,32 @@ FullColorImage::copyRectangle(
         const  PosUnitType      x2,
         const  PosUnitType      y2)
 {
+    const  LenUnitType  cbCopy  = std::min(this->m_cbPixel, imgSrc.m_cbPixel);
+    const  LenUnitType  remDst  = this->m_cbPixel - cbCopy;
+    const  LenUnitType  remSrc  = imgSrc.m_cbPixel - cbCopy;
+
+    for ( PosUnitType y = y1; y < y2; ++ y ) {
+        LpWritePixelBuf  ptrDst = getPixel(x1, y);
+        LpcReadPixelBuf  ptrSrc = getPixel(x1, y);
+        for ( PosUnitType x = x1; x < x2; ++ x ) {
+            switch ( cbCopy ) {
+            case  4:
+                *(ptrDst++) = *(ptrSrc++);
+                //  no break;
+            case  3:
+                *(ptrDst++) = *(ptrSrc++);
+                //  no break;
+            case  2:
+                *(ptrDst++) = *(ptrSrc++);
+                //  no break;
+            case  1:
+                *(ptrDst++) = *(ptrSrc++);
+                //  no break;
+            }
+            ptrDst  += remDst;
+            ptrSrc  += remSrc;
+        }
+    }
 }
 
 //----------------------------------------------------------------
@@ -166,6 +212,8 @@ void
 FullColorImage::copyToBuffer(
         LpWriteBuf  ptrDst)  const
 {
+    const  LenUnitType  cbCopy  = this->m_lStride * this->m_iHeight;
+    std::memcpy(ptrDst, this->m_lpBits, cbCopy);
 }
 
 //----------------------------------------------------------------
