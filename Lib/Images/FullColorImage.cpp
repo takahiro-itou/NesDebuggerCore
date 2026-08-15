@@ -167,8 +167,7 @@ FullColorImage::copyImage(
 
     if ( canCopyBuffer(imgSrc) ) {
         //  単純コピーが可能。  //
-        imgSrc.copyToBuffer(this->m_lpBits);
-        return ( ErrCode::SUCCESS );;
+        return  imgSrc.copyToBuffer(this->m_lpBits);
     }
 
     //  画像の小さいほうに合わせて、矩形コピーを実行。  //
@@ -253,19 +252,20 @@ FullColorImage::copyRectangle(
 //    バッファの内容を単純にコピーする。
 //
 
-void
+ErrCode
 FullColorImage::copyToBuffer(
         LpWriteBuf  ptrDst)  const
 {
     const  LenUnitType  cbCopy  = this->m_lStride * this->m_iHeight;
     std::memcpy(ptrDst, this->m_lpBits, cbCopy);
+    return ( ErrCode::SUCCESS );
 }
 
 //----------------------------------------------------------------
 //    イメージを作成する。
 //
 
-void
+ErrCode
 FullColorImage::createImage(
         const  PosUnitType  nWidth,
         const  PosUnitType  nHeight,
@@ -288,13 +288,15 @@ FullColorImage::createImage(
     this->m_iHeight = nHeight;
     this->m_cbPixel = cbPixel;
     this->m_lStride = lStride;
+
+    return ( ErrCode::SUCCESS );
 }
 
 //----------------------------------------------------------------
 //    サンプル画像を描画する。
 //
 
-void
+ErrCode
 FullColorImage::drawSample(
         const  ColorArgb32  colBG,
         const  ColorArgb32  colTL,
@@ -314,18 +316,20 @@ FullColorImage::drawSample(
     fillTriangle(rW * 2, rH * 1, rW * 2 + rW, rH * 1 + rH, colTR);
     fillTriangle(rW * 1, rH * 2, rW * 1 + rW, rH * 2 + rH, colBL);
     fillTriangle(rW * 2, rH * 2, rW * 2 + rW, rH * 2 + rH, colBR);
+
+    return ( ErrCode::SUCCESS );
 }
 
 //----------------------------------------------------------------
 //    確保したバッファを解放する。
 //
 
-void
+ErrCode
 FullColorImage::freeImageBuffer()
 {
     LpWritePixelBuf ptr = this->m_lpAlloc;
     if ( ptr == nullptr ) {
-        return;
+        return ( ErrCode::SUCCESS );
     }
 
     delete  [] ptr;
@@ -334,6 +338,8 @@ FullColorImage::freeImageBuffer()
 
     this->m_lpBits  = nullptr;
     this->m_lpOrig  = nullptr;
+
+    return ( ErrCode::SUCCESS );
 }
 
 
@@ -346,7 +352,7 @@ FullColorImage::freeImageBuffer()
 //    矩形を描画する。
 //
 
-void
+ErrCode
 FullColorImage::fillRectangle(
         const  PosUnitType  x1,
         const  PosUnitType  y1,
@@ -374,14 +380,14 @@ FullColorImage::fillRectangle(
         }
     }
 
-    return;
+    return ( ErrCode::SUCCESS );
 }
 
 //----------------------------------------------------------------
 //    三角形を描画する。
 //
 
-void
+ErrCode
 FullColorImage::fillTriangle(
         const  PosUnitType  x1,
         const  PosUnitType  y1,
@@ -413,14 +419,14 @@ FullColorImage::fillTriangle(
         ++ tmp;
     }
 
-    return;
+    return ( ErrCode::SUCCESS );
 }
 
 //----------------------------------------------------------------
 //    指定したピクセルの色を設定する。
 //
 
-void
+ErrCode
 FullColorImage::setPixelColor(
         const  PosUnitType  x,
         const  PosUnitType  y,
@@ -441,7 +447,7 @@ FullColorImage::setPixelColor(
         *(ptr ++) = cA;
     }
 
-    return;
+    return ( ErrCode::SUCCESS );
 }
 
 //========================================================================

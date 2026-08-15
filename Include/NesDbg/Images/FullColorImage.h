@@ -200,7 +200,7 @@ public:
     /**   バッファの内容を単純にコピーする。
     **
     **/
-    virtual  void
+    virtual  ErrCode
     copyToBuffer(
             LpWriteBuf  ptrDst)  const;
 
@@ -213,7 +213,7 @@ public:
     **  @param [in] lStride   行当たりのバイト数。
     **  @param [in] lpBits    イメージデータ。
     **/
-    virtual  void
+    virtual  ErrCode
     createImage(
             const  PosUnitType  nWidth,
             const  PosUnitType  nHeight,
@@ -225,7 +225,7 @@ public:
     /**   サンプル画像を描画する。
     **
     **/
-    virtual  void
+    virtual  ErrCode
     drawSample(
             const  ColorArgb32  colBG   = 0xFFFFFFFF,
             const  ColorArgb32  colTL   = 0xFF0000FF,
@@ -237,7 +237,7 @@ public:
     /**   確保したバッファを解放する。
     **
     **/
-    virtual  void
+    virtual  ErrCode
     freeImageBuffer();
 
 
@@ -251,7 +251,7 @@ public:
     /**   矩形を描画する。
     **
     **/
-    void
+    ErrCode
     fillRectangle(
             const  PosUnitType  x1,
             const  PosUnitType  y1,
@@ -263,7 +263,7 @@ public:
     /**   三角形を描画する。
     **
     **/
-    void
+    ErrCode
     fillTriangle(
             const  PosUnitType  x1,
             const  PosUnitType  y1,
@@ -275,7 +275,7 @@ public:
     /**   指定したピクセルの色を設定する。
     **
     **/
-    void
+    ErrCode
     setPixelColor(
             const  PosUnitType  x,
             const  PosUnitType  y,
