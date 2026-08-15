@@ -224,10 +224,10 @@ FullColorImage::copyLines(
         const  PosUnitType      w,
         const  PosUnitType      h)
 {
-    if ( (this->m_iWidth <= dx + w) || (this->m_iHeight <= dy + h) ) {
+    if ( (this->m_iWidth < dx + w) || (this->m_iHeight < dy + h) ) {
         return ( ErrCode::INDEX_OUT_OF_RANGE );
     }
-    if ( (imgSrc.m_iWidth <= sx + w) || (imgSrc.m_iHeight <= sy + h) ) {
+    if ( (imgSrc.m_iWidth < sx + w) || (imgSrc.m_iHeight < sy + h) ) {
         return ( ErrCode::INDEX_OUT_OF_RANGE );
     }
 
