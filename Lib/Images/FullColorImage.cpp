@@ -249,12 +249,12 @@ FullColorImage::copyRectangle(
         const  PosUnitType      y2)
 {
     const  LenUnitType  cbCopy  = std::min(this->m_cbPixel, imgSrc.m_cbPixel);
-    const  LenUnitType  remDst  = this->m_cbPixel - cbCopy;
+    const  LenUnitType  remDst  = this-> m_cbPixel - cbCopy;
     const  LenUnitType  remSrc  = imgSrc.m_cbPixel - cbCopy;
 
     for ( PosUnitType y = y1; y < y2; ++ y ) {
-        LpWritePixelBuf  ptrDst = getPixel(x1, y);
-        LpcReadPixelBuf  ptrSrc = getPixel(x1, y);
+        LpWritePixelBuf  ptrDst = this-> getPixel(x1, y);
+        LpcReadPixelBuf  ptrSrc = imgSrc.getPixel(x1, y);
         for ( PosUnitType x = x1; x < x2; ++ x ) {
             switch ( cbCopy ) {
             case  4:
