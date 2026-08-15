@@ -293,25 +293,25 @@ NesPpuImpl::emulatePowerOn()
 
     //  パレットを適当に設定する。  //
     {
-        this->m_palette[0]  = 0x00000000;
-        this->m_palette[1]  = 0x00FFFFFF;
-        this->m_palette[2]  = 0x000000FF;
-        this->m_palette[3]  = 0x0000FF00;
+        this->m_palette[0]  = 0xFF000000;
+        this->m_palette[1]  = 0xFFFFFFFF;
+        this->m_palette[2]  = 0xFF0000FF;
+        this->m_palette[3]  = 0xFF00FF00;
 
-        this->m_palette[4]  = 0x00000000;
-        this->m_palette[5]  = 0x00FF0000;
-        this->m_palette[6]  = 0x0000FFFF;
-        this->m_palette[7]  = 0x00FFFFFF;
+        this->m_palette[4]  = 0xFF000000;
+        this->m_palette[5]  = 0xFFFF0000;
+        this->m_palette[6]  = 0xFF00FFFF;
+        this->m_palette[7]  = 0xFFFFFFFF;
 
-        this->m_palette[8]  = 0x00000000;
-        this->m_palette[9]  = 0x00FF0000;
-        this->m_palette[10] = 0x0000FF00;
-        this->m_palette[11] = 0x000000FF;
+        this->m_palette[8]  = 0xFF000000;
+        this->m_palette[9]  = 0xFFFF0000;
+        this->m_palette[10] = 0xFF00FF00;
+        this->m_palette[11] = 0xFF0000FF;
 
-        this->m_palette[12] = 0x00000000;
-        this->m_palette[13] = 0x0000FFFF;
-        this->m_palette[14] = 0x00FF00FF;
-        this->m_palette[15] = 0x00FFFF00;
+        this->m_palette[12] = 0xFF000000;
+        this->m_palette[13] = 0xFF00FFFF;
+        this->m_palette[14] = 0xFFFF00FF;
+        this->m_palette[15] = 0xFFFFFF00;
     }
 
     initializeAttributeTable();
