@@ -173,6 +173,11 @@ FullColorImage::copyImage(
     //  画像の小さいほうに合わせて、矩形コピーを実行。  //
     const  PosUnitType  x2  = std::min(this->m_iWidth,  imgSrc.m_iWidth );
     const  PosUnitType  y2  = std::min(this->m_iHeight, imgSrc.m_iHeight);
+
+    if ( canCopyLine(imgSrc) ) {
+        //  行単位の単純コピーが可能。  //
+        return  copyLines(0, 0, imgSrc, 0, 0, x2, y2);
+    }
     return  this->copyRectangle(imgSrc, 0, 0, x2, y2);
 }
 
@@ -199,7 +204,7 @@ FullColorImage::copyImage(
     const  PosUnitType  h = std::min(this->m_iHeight - sy, imgSrc.m_iHeight);
 
     if ( canCopyLine(imgSrc) ) {
-        //  単純コピーが可能。  //
+        //  行単位の単純コピーが可能。  //
         return  copyLines(0, 0, imgSrc, sx, sy, w, h);
     }
     return  this->copyRectangle(0, 0, imgSrc, sx, sy, w, h);
@@ -293,12 +298,12 @@ FullColorImage::copyRectangle(
         const  PosUnitType      h)
 {
     const  LenUnitType  cbCopy  = std::min(this->m_cbPixel, imgSrc.m_cbPixel);
-    const  LenUnitType  remDst  = this->m_cbPixel  - cbCopy;
+    const  LenUnitType  remDst  = this-> m_cbPixel - cbCopy;
     const  LenUnitType  remSrc  = imgSrc.m_cbPixel - cbCopy;
 
     for ( PosUnitType y = 0; y < h; ++ y ) {
-        LpWritePixelBuf  ptrDst = getPixel(dx, dy + y);
-        LpcReadPixelBuf  ptrSrc = getPixel(sx, sy + y);
+        LpWritePixelBuf  ptrDst = this-> getPixel(dx, dy + y);
+        LpcReadPixelBuf  ptrSrc = imgSrc.getPixel(sx, sy + y);
         for ( PosUnitType x = 0; x < w; ++ x ) {
             switch ( cbCopy ) {
             case  4:
