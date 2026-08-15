@@ -375,8 +375,8 @@ FullColorImage::drawSample(
 
     fillRectangle(0, 0, iW, iH, colBG);
 
-    const  PosUnitType  rW  = iW / 4;
-    const  PosUnitType  rH  = iH / 4;
+    const  PosUnitType  rW  = iW / 8;
+    const  PosUnitType  rH  = iH / 8;
 
     fillTriangle(rW * 1, rH * 1, rW * 1 + rW, rH * 1 + rH, colTL);
     fillTriangle(rW * 2, rH * 1, rW * 2 + rW, rH * 1 + rH, colTR);
