@@ -410,6 +410,33 @@ FullColorImage::freeImageBuffer()
 //
 
 //----------------------------------------------------------------
+//    バッファの内容を単純にコピーする。
+//
+
+ErrCode
+FullColorImage::copyToBuffer(
+        LpWriteBuf  ptrDst)  const
+{
+    const  LenUnitType  cbCopy  = this->m_lStride * this->m_iHeight;
+    std::memcpy(ptrDst, this->m_lpBits, cbCopy);
+    return ( ErrCode::SUCCESS );
+}
+
+//----------------------------------------------------------------
+//    バッファの内容を単純にコピーする。
+//
+
+ErrCode
+FullColorImage::copyToBuffer(
+        LpWriteBuf   const  ptrDst,
+        LpcReadBuf   const  ptrSrc,
+        const  LenUnitType  cbCopy)  const
+{
+    std::memcpy(ptrDst, ptrSrc, cbCopy);
+    return ( ErrCode::SUCCESS );
+}
+
+//----------------------------------------------------------------
 //    矩形を描画する。
 //
 
@@ -525,33 +552,6 @@ FullColorImage::setPixelColor(
 //
 //    For Internal Use Only.
 //
-
-//----------------------------------------------------------------
-//    バッファの内容を単純にコピーする。
-//
-
-inline  ErrCode
-FullColorImage::copyToBuffer(
-        LpWriteBuf  ptrDst)  const
-{
-    const  LenUnitType  cbCopy  = this->m_lStride * this->m_iHeight;
-    std::memcpy(ptrDst, this->m_lpBits, cbCopy);
-    return ( ErrCode::SUCCESS );
-}
-
-//----------------------------------------------------------------
-//    バッファの内容を単純にコピーする。
-//
-
-inline  ErrCode
-FullColorImage::copyToBuffer(
-        LpWriteBuf   const  ptrDst,
-        LpcReadBuf   const  ptrSrc,
-        const  LenUnitType  cbCopy)  const
-{
-    std::memcpy(ptrDst, ptrSrc, cbCopy);
-    return ( ErrCode::SUCCESS );
-}
 
 }   //  End of namespace  Images
 NESDBG_NAMESPACE_END
