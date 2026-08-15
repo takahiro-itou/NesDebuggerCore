@@ -194,14 +194,14 @@ FullColorImage::copyImage(
         return ( ErrCode::FAILURE );
     }
 
+    //  画像の小さいほうに合わせて、矩形コピーを実行。  //
+    const  PosUnitType  w = std::min(this->m_iWidth  - sx, imgSrc.m_iWidth) ;
+    const  PosUnitType  h = std::min(this->m_iHeight - sy, imgSrc.m_iHeight);
+
     if ( canCopyLine(imgSrc) ) {
         //  単純コピーが可能。  //
-        return  imgSrc.copyToBuffer(this->m_lpBits);
+        return  copyLines(0, 0, imgSrc, sx, sy, w, h);
     }
-
-    //  画像の小さいほうに合わせて、矩形コピーを実行。  //
-    const  PosUnitType  w = std::min(this->m_iWidth - sx,  imgSrc.m_iWidth) ;
-    const  PosUnitType  h = std::min(this->m_iHeight - sy, imgSrc.m_iHeight);
     return  this->copyRectangle(0, 0, imgSrc, sx, sy, w, h);
 }
 
