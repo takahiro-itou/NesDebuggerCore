@@ -140,6 +140,19 @@ FullColorImage::canCopyBuffer(
 }
 
 //----------------------------------------------------------------
+//    行単位の単純コピーができるか確認する。
+//
+
+virtual  bool
+FullColorImage::canCopyLine(
+        const  FullColorImage  &imgSrc)  const
+{
+    if ( this->m_cbPixel != imgSrc.m_cbPixel ) { return false; }
+
+    return ( true );
+}
+
+//----------------------------------------------------------------
 //    イメージをコピーする。
 //
 
