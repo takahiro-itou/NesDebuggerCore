@@ -163,6 +163,27 @@ public:
             const  PosUnitType      sy);
 
     //----------------------------------------------------------------
+    /**   イメージをコピーする。
+    **
+    **  @param [in] imgSrc    コピー元イメージ
+    **  @param [in] sx        コピー元座標
+    **  @param [in] sy        コピー元座標
+    **  @return     エラーコードを返す。
+    **      -   異常終了の場合は、
+    **          エラーの種類を示す非ゼロ値を返す。
+    **      -   正常終了の場合は、ゼロを返す。
+    **/
+    virtual  ErrCode
+    copyLines(
+            const  PosUnitType      dx,
+            const  PosUnitType      dy,
+            const  FullColorImage  &imgSrc,
+            const  PosUnitType      sx,
+            const  PosUnitType      sy,
+            const  PosUnitType      w,
+            const  PosUnitType      h);
+
+    //----------------------------------------------------------------
     /**   イメージの指定範囲をコピーする。
     **
     **  @return     エラーコードを返す。
@@ -191,18 +212,10 @@ public:
             const  PosUnitType      dx,
             const  PosUnitType      dy,
             const  FullColorImage  &imgSrc,
-            const  PosUnitType      x1,
-            const  PosUnitType      y1,
+            const  PosUnitType      sx,
+            const  PosUnitType      sy,
             const  PosUnitType      w,
             const  PosUnitType      h);
-
-    //----------------------------------------------------------------
-    /**   バッファの内容を単純にコピーする。
-    **
-    **/
-    virtual  ErrCode
-    copyToBuffer(
-            LpWriteBuf  ptrDst)  const;
 
     //----------------------------------------------------------------
     /**   イメージを作成する。
@@ -416,6 +429,33 @@ public:
 //
 //    For Internal Use Only.
 //
+private:
+
+    //----------------------------------------------------------------
+    /**   バッファの内容を単純にコピーする。
+    **
+    **  @return     エラーコードを返す。
+    **      -   異常終了の場合は、
+    **          エラーの種類を示す非ゼロ値を返す。
+    **      -   正常終了の場合は、ゼロを返す。
+    **/
+    inline  ErrCode
+    copyToBuffer(
+            LpWriteBuf  ptrDst)  const;
+
+    //----------------------------------------------------------------
+    /**   バッファの内容を単純にコピーする。
+    **
+    **  @return     エラーコードを返す。
+    **      -   異常終了の場合は、
+    **          エラーの種類を示す非ゼロ値を返す。
+    **      -   正常終了の場合は、ゼロを返す。
+    **/
+    inline  ErrCode
+    copyToBuffer(
+            LpWriteBuf   const  ptrDst,
+            LpcReadBuf   const  ptrSrc,
+            const  LenUnitType  cbCopy)  const;
 
 //========================================================================
 //

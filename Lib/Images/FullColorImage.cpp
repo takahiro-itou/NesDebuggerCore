@@ -186,7 +186,54 @@ FullColorImage::copyImage(
         const  PosUnitType      sx,
         const  PosUnitType      sy)
 {
-    return ( ErrCode::FAILURE );
+    if ( this->m_lpBits == imgSrc.m_lpBits ) {
+        //  コピー元とコピー先が同じなので何もしない。  //
+        if ( sx == 0 && sy == 0 ) {
+            return ( ErrCode::SUCCESS );
+        }
+        return ( ErrCode::FAILURE );
+    }
+
+    if ( canCopyLine(imgSrc) ) {
+        //  単純コピーが可能。  //
+        return  imgSrc.copyToBuffer(this->m_lpBits);
+    }
+
+    //  画像の小さいほうに合わせて、矩形コピーを実行。  //
+    const  PosUnitType  w = std::min(this->m_iWidth - sx,  imgSrc.m_iWidth) ;
+    const  PosUnitType  h = std::min(this->m_iHeight - sy, imgSrc.m_iHeight);
+    return  this->copyRectangle(0, 0, imgSrc, sx, sy, w, h);
+}
+
+//----------------------------------------------------------------
+//    イメージをコピーする。
+//
+
+ErrCode
+FullColorImage::copyLines(
+        const  PosUnitType      dx,
+        const  PosUnitType      dy,
+        const  FullColorImage  &imgSrc,
+        const  PosUnitType      sx,
+        const  PosUnitType      sy,
+        const  PosUnitType      w,
+        const  PosUnitType      h)
+{
+    if ( (this->m_iWidth <= dx + w) || (this->m_iHeight <= dy + h) ) {
+        return ( ErrCode::INDEX_OUT_OF_RANGE );
+    }
+    if ( (imgSrc.m_iWidth <= sx + w) || (imgSrc.m_iHeight <= sy + h) ) {
+        return ( ErrCode::INDEX_OUT_OF_RANGE );
+    }
+
+    const  LenUnitType  cbCopy  = (this->m_cbPixel) * w;
+    for ( PosUnitType y = 0; y < h; ++ y ) {
+        LpWritePixelBuf  ptrDst = getPixel(dx, dy + y);
+        LpcReadPixelBuf  ptrSrc = getPixel(sx, sy + y);
+        copyToBuffer(ptrDst, ptrSrc, cbCopy);
+    }
+
+    return ( ErrCode::SUCCESS );
 }
 
 //----------------------------------------------------------------
@@ -240,24 +287,38 @@ FullColorImage::copyRectangle(
         const  PosUnitType      dx,
         const  PosUnitType      dy,
         const  FullColorImage  &imgSrc,
-        const  PosUnitType      x1,
-        const  PosUnitType      y1,
+        const  PosUnitType      sx,
+        const  PosUnitType      sy,
         const  PosUnitType      w,
         const  PosUnitType      h)
 {
-    return ( ErrCode::FAILURE );
-}
+    const  LenUnitType  cbCopy  = std::min(this->m_cbPixel, imgSrc.m_cbPixel);
+    const  LenUnitType  remDst  = this->m_cbPixel  - cbCopy;
+    const  LenUnitType  remSrc  = imgSrc.m_cbPixel - cbCopy;
 
-//----------------------------------------------------------------
-//    バッファの内容を単純にコピーする。
-//
+    for ( PosUnitType y = 0; y < h; ++ y ) {
+        LpWritePixelBuf  ptrDst = getPixel(dx, dy + y);
+        LpcReadPixelBuf  ptrSrc = getPixel(sx, sy + y);
+        for ( PosUnitType x = 0; x < w; ++ x ) {
+            switch ( cbCopy ) {
+            case  4:
+                *(ptrDst++) = *(ptrSrc++);
+                //  no break;
+            case  3:
+                *(ptrDst++) = *(ptrSrc++);
+                //  no break;
+            case  2:
+                *(ptrDst++) = *(ptrSrc++);
+                //  no break;
+            case  1:
+                *(ptrDst++) = *(ptrSrc++);
+                //  no break;
+            }
+            ptrDst  += remDst;
+            ptrSrc  += remSrc;
+        }
+    }
 
-ErrCode
-FullColorImage::copyToBuffer(
-        LpWriteBuf  ptrDst)  const
-{
-    const  LenUnitType  cbCopy  = this->m_lStride * this->m_iHeight;
-    std::memcpy(ptrDst, this->m_lpBits, cbCopy);
     return ( ErrCode::SUCCESS );
 }
 
@@ -464,6 +525,33 @@ FullColorImage::setPixelColor(
 //
 //    For Internal Use Only.
 //
+
+//----------------------------------------------------------------
+//    バッファの内容を単純にコピーする。
+//
+
+inline  ErrCode
+FullColorImage::copyToBuffer(
+        LpWriteBuf  ptrDst)  const
+{
+    const  LenUnitType  cbCopy  = this->m_lStride * this->m_iHeight;
+    std::memcpy(ptrDst, this->m_lpBits, cbCopy);
+    return ( ErrCode::SUCCESS );
+}
+
+//----------------------------------------------------------------
+//    バッファの内容を単純にコピーする。
+//
+
+inline  ErrCode
+FullColorImage::copyToBuffer(
+        LpWriteBuf   const  ptrDst,
+        LpcReadBuf   const  ptrSrc,
+        const  LenUnitType  cbCopy)  const
+{
+    std::memcpy(ptrDst, ptrSrc, cbCopy);
+    return ( ErrCode::SUCCESS );
+}
 
 }   //  End of namespace  Images
 NESDBG_NAMESPACE_END
