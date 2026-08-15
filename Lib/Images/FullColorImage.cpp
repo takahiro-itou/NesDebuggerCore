@@ -233,8 +233,8 @@ FullColorImage::copyLines(
 
     const  LenUnitType  cbCopy  = (this->m_cbPixel) * w;
     for ( PosUnitType y = 0; y < h; ++ y ) {
-        LpWritePixelBuf  ptrDst = getPixel(dx, dy + y);
-        LpcReadPixelBuf  ptrSrc = getPixel(sx, sy + y);
+        LpWritePixelBuf  ptrDst = this-> getPixel(dx, dy + y);
+        LpcReadPixelBuf  ptrSrc = imgSrc.getPixel(sx, sy + y);
         copyToBuffer(ptrDst, ptrSrc, cbCopy);
     }
 
@@ -460,7 +460,7 @@ FullColorImage::fillRectangle(
     const   LenUnitType     cbRems  = this->m_cbPixel - 3;
 
     for ( PosUnitType y = y1; y < y2; ++ y ) {
-        LpWritePixelBuf ptr = getPixel(x1, y);
+        LpWritePixelBuf ptr = this->getPixel(x1, y);
         for ( PosUnitType x = x1; x < x2; ++ x ) {
             *(ptr ++) = cB;
             *(ptr ++) = cG;
@@ -496,7 +496,7 @@ FullColorImage::fillTriangle(
 
     PosUnitType tmp = 1;
     for ( PosUnitType y = y1; y < y2; ++ y ) {
-        LpWritePixelBuf ptr = getPixel(x1, y);
+        LpWritePixelBuf ptr = this->getPixel(x1, y);
         PosUnitType  lastX  = (x1 + tmp);
         if ( x2 < lastX ) { lastX = x2; }
         for ( PosUnitType x = x1; x < lastX; ++ x ) {
@@ -531,7 +531,7 @@ FullColorImage::setPixelColor(
     const   BtByte  cA  = ((color >> 24) & 0xFF);
     const   LenUnitType     cbRems  = this->m_cbPixel - 3;
 
-    LpWritePixelBuf ptr = getPixel(x, y);
+    LpWritePixelBuf ptr = this->getPixel(x, y);
 
     *(ptr ++) = cB;
     *(ptr ++) = cG;
