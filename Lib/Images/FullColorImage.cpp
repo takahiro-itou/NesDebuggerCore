@@ -140,35 +140,112 @@ FullColorImage::canCopyBuffer(
 }
 
 //----------------------------------------------------------------
+//    行単位の単純コピーができるか確認する。
+//
+
+bool
+FullColorImage::canCopyLine(
+        const  FullColorImage  &imgSrc)  const
+{
+    if ( this->m_cbPixel != imgSrc.m_cbPixel ) { return false; }
+
+    return ( true );
+}
+
+//----------------------------------------------------------------
 //    イメージをコピーする。
 //
 
-void
+ErrCode
 FullColorImage::copyImage(
         const  FullColorImage  &imgSrc)
 {
     if ( this->m_lpBits == imgSrc.m_lpBits ) {
         //  コピー元とコピー先が同じなので何もしない。  //
-        return;
+        return ( ErrCode::SUCCESS );
     }
 
     if ( canCopyBuffer(imgSrc) ) {
         //  単純コピーが可能。  //
-        imgSrc.copyToBuffer(this->m_lpBits);
-        return;
+        return  imgSrc.copyToBuffer(this->m_lpBits);
     }
 
     //  画像の小さいほうに合わせて、矩形コピーを実行。  //
     const  PosUnitType  x2  = std::min(this->m_iWidth,  imgSrc.m_iWidth );
     const  PosUnitType  y2  = std::min(this->m_iHeight, imgSrc.m_iHeight);
-    this->copyRectangle(imgSrc, 0, 0, x2, y2);
+
+    if ( canCopyLine(imgSrc) ) {
+        //  行単位の単純コピーが可能。  //
+        return  copyLines(0, 0, imgSrc, 0, 0, x2, y2);
+    }
+    return  this->copyRectangle(imgSrc, 0, 0, x2, y2);
+}
+
+//----------------------------------------------------------------
+//    イメージをコピーする。
+//
+
+ErrCode
+FullColorImage::copyImage(
+        const  FullColorImage  &imgSrc,
+        const  PosUnitType      sx,
+        const  PosUnitType      sy)
+{
+    if ( this->m_lpBits == imgSrc.m_lpBits ) {
+        //  コピー元とコピー先が同じなので何もしない。  //
+        if ( sx == 0 && sy == 0 ) {
+            return ( ErrCode::SUCCESS );
+        }
+        return ( ErrCode::FAILURE );
+    }
+
+    //  画像の小さいほうに合わせて、矩形コピーを実行。  //
+    const  PosUnitType  w = std::min(this->m_iWidth  - sx, imgSrc.m_iWidth) ;
+    const  PosUnitType  h = std::min(this->m_iHeight - sy, imgSrc.m_iHeight);
+
+    if ( canCopyLine(imgSrc) ) {
+        //  行単位の単純コピーが可能。  //
+        return  copyLines(0, 0, imgSrc, sx, sy, w, h);
+    }
+    return  this->copyRectangle(0, 0, imgSrc, sx, sy, w, h);
+}
+
+//----------------------------------------------------------------
+//    イメージをコピーする。
+//
+
+ErrCode
+FullColorImage::copyLines(
+        const  PosUnitType      dx,
+        const  PosUnitType      dy,
+        const  FullColorImage  &imgSrc,
+        const  PosUnitType      sx,
+        const  PosUnitType      sy,
+        const  PosUnitType      w,
+        const  PosUnitType      h)
+{
+    if ( (this->m_iWidth < dx + w) || (this->m_iHeight < dy + h) ) {
+        return ( ErrCode::INDEX_OUT_OF_RANGE );
+    }
+    if ( (imgSrc.m_iWidth < sx + w) || (imgSrc.m_iHeight < sy + h) ) {
+        return ( ErrCode::INDEX_OUT_OF_RANGE );
+    }
+
+    const  LenUnitType  cbCopy  = (this->m_cbPixel) * w;
+    for ( PosUnitType y = 0; y < h; ++ y ) {
+        LpWritePixelBuf  ptrDst = this-> getPixel(dx, dy + y);
+        LpcReadPixelBuf  ptrSrc = imgSrc.getPixel(sx, sy + y);
+        copyToBuffer(ptrDst, ptrSrc, cbCopy);
+    }
+
+    return ( ErrCode::SUCCESS );
 }
 
 //----------------------------------------------------------------
 //    イメージの指定範囲をコピーする。
 //
 
-void
+ErrCode
 FullColorImage::copyRectangle(
         const  FullColorImage  &imgSrc,
         const  PosUnitType      x1,
@@ -177,12 +254,12 @@ FullColorImage::copyRectangle(
         const  PosUnitType      y2)
 {
     const  LenUnitType  cbCopy  = std::min(this->m_cbPixel, imgSrc.m_cbPixel);
-    const  LenUnitType  remDst  = this->m_cbPixel - cbCopy;
+    const  LenUnitType  remDst  = this-> m_cbPixel - cbCopy;
     const  LenUnitType  remSrc  = imgSrc.m_cbPixel - cbCopy;
 
     for ( PosUnitType y = y1; y < y2; ++ y ) {
-        LpWritePixelBuf  ptrDst = getPixel(x1, y);
-        LpcReadPixelBuf  ptrSrc = getPixel(x1, y);
+        LpWritePixelBuf  ptrDst = this-> getPixel(x1, y);
+        LpcReadPixelBuf  ptrSrc = imgSrc.getPixel(x1, y);
         for ( PosUnitType x = x1; x < x2; ++ x ) {
             switch ( cbCopy ) {
             case  4:
@@ -202,25 +279,59 @@ FullColorImage::copyRectangle(
             ptrSrc  += remSrc;
         }
     }
+
+    return ( ErrCode::SUCCESS );
 }
 
 //----------------------------------------------------------------
-//    バッファの内容を単純にコピーする。
+//    イメージの指定範囲をコピーする。
 //
 
-void
-FullColorImage::copyToBuffer(
-        LpWriteBuf  ptrDst)  const
+ErrCode
+FullColorImage::copyRectangle(
+        const  PosUnitType      dx,
+        const  PosUnitType      dy,
+        const  FullColorImage  &imgSrc,
+        const  PosUnitType      sx,
+        const  PosUnitType      sy,
+        const  PosUnitType      w,
+        const  PosUnitType      h)
 {
-    const  LenUnitType  cbCopy  = this->m_lStride * this->m_iHeight;
-    std::memcpy(ptrDst, this->m_lpBits, cbCopy);
+    const  LenUnitType  cbCopy  = std::min(this->m_cbPixel, imgSrc.m_cbPixel);
+    const  LenUnitType  remDst  = this-> m_cbPixel - cbCopy;
+    const  LenUnitType  remSrc  = imgSrc.m_cbPixel - cbCopy;
+
+    for ( PosUnitType y = 0; y < h; ++ y ) {
+        LpWritePixelBuf  ptrDst = this-> getPixel(dx, dy + y);
+        LpcReadPixelBuf  ptrSrc = imgSrc.getPixel(sx, sy + y);
+        for ( PosUnitType x = 0; x < w; ++ x ) {
+            switch ( cbCopy ) {
+            case  4:
+                *(ptrDst++) = *(ptrSrc++);
+                //  no break;
+            case  3:
+                *(ptrDst++) = *(ptrSrc++);
+                //  no break;
+            case  2:
+                *(ptrDst++) = *(ptrSrc++);
+                //  no break;
+            case  1:
+                *(ptrDst++) = *(ptrSrc++);
+                //  no break;
+            }
+            ptrDst  += remDst;
+            ptrSrc  += remSrc;
+        }
+    }
+
+    return ( ErrCode::SUCCESS );
 }
 
 //----------------------------------------------------------------
 //    イメージを作成する。
 //
 
-void
+ErrCode
 FullColorImage::createImage(
         const  PosUnitType  nWidth,
         const  PosUnitType  nHeight,
@@ -243,13 +354,15 @@ FullColorImage::createImage(
     this->m_iHeight = nHeight;
     this->m_cbPixel = cbPixel;
     this->m_lStride = lStride;
+
+    return ( ErrCode::SUCCESS );
 }
 
 //----------------------------------------------------------------
 //    サンプル画像を描画する。
 //
 
-void
+ErrCode
 FullColorImage::drawSample(
         const  ColorArgb32  colBG,
         const  ColorArgb32  colTL,
@@ -262,25 +375,27 @@ FullColorImage::drawSample(
 
     fillRectangle(0, 0, iW, iH, colBG);
 
-    const  PosUnitType  rW  = iW / 4;
-    const  PosUnitType  rH  = iH / 4;
+    const  PosUnitType  rW  = iW / 8;
+    const  PosUnitType  rH  = iH / 8;
 
     fillTriangle(rW * 1, rH * 1, rW * 1 + rW, rH * 1 + rH, colTL);
     fillTriangle(rW * 2, rH * 1, rW * 2 + rW, rH * 1 + rH, colTR);
     fillTriangle(rW * 1, rH * 2, rW * 1 + rW, rH * 2 + rH, colBL);
     fillTriangle(rW * 2, rH * 2, rW * 2 + rW, rH * 2 + rH, colBR);
+
+    return ( ErrCode::SUCCESS );
 }
 
 //----------------------------------------------------------------
 //    確保したバッファを解放する。
 //
 
-void
+ErrCode
 FullColorImage::freeImageBuffer()
 {
     LpWritePixelBuf ptr = this->m_lpAlloc;
     if ( ptr == nullptr ) {
-        return;
+        return ( ErrCode::SUCCESS );
     }
 
     delete  [] ptr;
@@ -289,6 +404,8 @@ FullColorImage::freeImageBuffer()
 
     this->m_lpBits  = nullptr;
     this->m_lpOrig  = nullptr;
+
+    return ( ErrCode::SUCCESS );
 }
 
 
@@ -298,10 +415,37 @@ FullColorImage::freeImageBuffer()
 //
 
 //----------------------------------------------------------------
+//    バッファの内容を単純にコピーする。
+//
+
+ErrCode
+FullColorImage::copyToBuffer(
+        LpWriteBuf  ptrDst)  const
+{
+    const  LenUnitType  cbCopy  = this->m_lStride * this->m_iHeight;
+    std::memcpy(ptrDst, this->m_lpBits, cbCopy);
+    return ( ErrCode::SUCCESS );
+}
+
+//----------------------------------------------------------------
+//    バッファの内容を単純にコピーする。
+//
+
+ErrCode
+FullColorImage::copyToBuffer(
+        LpWriteBuf   const  ptrDst,
+        LpcReadBuf   const  ptrSrc,
+        const  LenUnitType  cbCopy)  const
+{
+    std::memcpy(ptrDst, ptrSrc, cbCopy);
+    return ( ErrCode::SUCCESS );
+}
+
+//----------------------------------------------------------------
 //    矩形を描画する。
 //
 
-void
+ErrCode
 FullColorImage::fillRectangle(
         const  PosUnitType  x1,
         const  PosUnitType  y1,
@@ -316,7 +460,7 @@ FullColorImage::fillRectangle(
     const   LenUnitType     cbRems  = this->m_cbPixel - 3;
 
     for ( PosUnitType y = y1; y < y2; ++ y ) {
-        LpWritePixelBuf ptr = getPixel(x1, y);
+        LpWritePixelBuf ptr = this->getPixel(x1, y);
         for ( PosUnitType x = x1; x < x2; ++ x ) {
             *(ptr ++) = cB;
             *(ptr ++) = cG;
@@ -329,14 +473,14 @@ FullColorImage::fillRectangle(
         }
     }
 
-    return;
+    return ( ErrCode::SUCCESS );
 }
 
 //----------------------------------------------------------------
 //    三角形を描画する。
 //
 
-void
+ErrCode
 FullColorImage::fillTriangle(
         const  PosUnitType  x1,
         const  PosUnitType  y1,
@@ -352,7 +496,7 @@ FullColorImage::fillTriangle(
 
     PosUnitType tmp = 1;
     for ( PosUnitType y = y1; y < y2; ++ y ) {
-        LpWritePixelBuf ptr = getPixel(x1, y);
+        LpWritePixelBuf ptr = this->getPixel(x1, y);
         PosUnitType  lastX  = (x1 + tmp);
         if ( x2 < lastX ) { lastX = x2; }
         for ( PosUnitType x = x1; x < lastX; ++ x ) {
@@ -368,14 +512,14 @@ FullColorImage::fillTriangle(
         ++ tmp;
     }
 
-    return;
+    return ( ErrCode::SUCCESS );
 }
 
 //----------------------------------------------------------------
 //    指定したピクセルの色を設定する。
 //
 
-void
+ErrCode
 FullColorImage::setPixelColor(
         const  PosUnitType  x,
         const  PosUnitType  y,
@@ -387,7 +531,7 @@ FullColorImage::setPixelColor(
     const   BtByte  cA  = ((color >> 24) & 0xFF);
     const   LenUnitType     cbRems  = this->m_cbPixel - 3;
 
-    LpWritePixelBuf ptr = getPixel(x, y);
+    LpWritePixelBuf ptr = this->getPixel(x, y);
 
     *(ptr ++) = cB;
     *(ptr ++) = cG;
@@ -396,7 +540,7 @@ FullColorImage::setPixelColor(
         *(ptr ++) = cA;
     }
 
-    return;
+    return ( ErrCode::SUCCESS );
 }
 
 //========================================================================

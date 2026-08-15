@@ -125,18 +125,73 @@ public:
             const  FullColorImage  &imgSrc)  const;
 
     //----------------------------------------------------------------
-    /**   イメージをコピーする。
+    /**   行単位の単純コピーができるか確認する。
     **
     **/
-    virtual  void
+    virtual  bool
+    canCopyLine(
+            const  FullColorImage  &imgSrc)  const;
+
+    //----------------------------------------------------------------
+    /**   イメージをコピーする。
+    **
+    **  @param [in] imgSrc    コピー元イメージ。
+    **  @return     エラーコードを返す。
+    **      -   異常終了の場合は、
+    **          エラーの種類を示す非ゼロ値を返す。
+    **      -   正常終了の場合は、ゼロを返す。
+    **/
+    virtual  ErrCode
     copyImage(
             const  FullColorImage  &imgSrc);
 
     //----------------------------------------------------------------
+    /**   イメージをコピーする。
+    **
+    **  @param [in] imgSrc    コピー元イメージ
+    **  @param [in] sx        コピー元座標
+    **  @param [in] sy        コピー元座標
+    **  @return     エラーコードを返す。
+    **      -   異常終了の場合は、
+    **          エラーの種類を示す非ゼロ値を返す。
+    **      -   正常終了の場合は、ゼロを返す。
+    **/
+    virtual  ErrCode
+    copyImage(
+            const  FullColorImage  &imgSrc,
+            const  PosUnitType      sx,
+            const  PosUnitType      sy);
+
+    //----------------------------------------------------------------
+    /**   イメージをコピーする。
+    **
+    **  @param [in] imgSrc    コピー元イメージ
+    **  @param [in] sx        コピー元座標
+    **  @param [in] sy        コピー元座標
+    **  @return     エラーコードを返す。
+    **      -   異常終了の場合は、
+    **          エラーの種類を示す非ゼロ値を返す。
+    **      -   正常終了の場合は、ゼロを返す。
+    **/
+    virtual  ErrCode
+    copyLines(
+            const  PosUnitType      dx,
+            const  PosUnitType      dy,
+            const  FullColorImage  &imgSrc,
+            const  PosUnitType      sx,
+            const  PosUnitType      sy,
+            const  PosUnitType      w,
+            const  PosUnitType      h);
+
+    //----------------------------------------------------------------
     /**   イメージの指定範囲をコピーする。
     **
+    **  @return     エラーコードを返す。
+    **      -   異常終了の場合は、
+    **          エラーの種類を示す非ゼロ値を返す。
+    **      -   正常終了の場合は、ゼロを返す。
     **/
-    virtual  void
+    virtual  ErrCode
     copyRectangle(
             const  FullColorImage  &imgSrc,
             const  PosUnitType      x1,
@@ -145,12 +200,22 @@ public:
             const  PosUnitType      y2);
 
     //----------------------------------------------------------------
-    /**   バッファの内容を単純にコピーする。
+    /**   イメージの指定範囲をコピーする。
     **
+    **  @return     エラーコードを返す。
+    **      -   異常終了の場合は、
+    **          エラーの種類を示す非ゼロ値を返す。
+    **      -   正常終了の場合は、ゼロを返す。
     **/
-    virtual  void
-    copyToBuffer(
-            LpWriteBuf  ptrDst)  const;
+    virtual  ErrCode
+    copyRectangle(
+            const  PosUnitType      dx,
+            const  PosUnitType      dy,
+            const  FullColorImage  &imgSrc,
+            const  PosUnitType      sx,
+            const  PosUnitType      sy,
+            const  PosUnitType      w,
+            const  PosUnitType      h);
 
     //----------------------------------------------------------------
     /**   イメージを作成する。
@@ -161,7 +226,7 @@ public:
     **  @param [in] lStride   行当たりのバイト数。
     **  @param [in] lpBits    イメージデータ。
     **/
-    virtual  void
+    virtual  ErrCode
     createImage(
             const  PosUnitType  nWidth,
             const  PosUnitType  nHeight,
@@ -173,7 +238,7 @@ public:
     /**   サンプル画像を描画する。
     **
     **/
-    virtual  void
+    virtual  ErrCode
     drawSample(
             const  ColorArgb32  colBG   = 0xFFFFFFFF,
             const  ColorArgb32  colTL   = 0xFF0000FF,
@@ -185,7 +250,7 @@ public:
     /**   確保したバッファを解放する。
     **
     **/
-    virtual  void
+    virtual  ErrCode
     freeImageBuffer();
 
 
@@ -196,10 +261,36 @@ public:
 public:
 
     //----------------------------------------------------------------
+    /**   バッファの内容を単純にコピーする。
+    **
+    **  @return     エラーコードを返す。
+    **      -   異常終了の場合は、
+    **          エラーの種類を示す非ゼロ値を返す。
+    **      -   正常終了の場合は、ゼロを返す。
+    **/
+    ErrCode
+    copyToBuffer(
+            LpWriteBuf  ptrDst)  const;
+
+    //----------------------------------------------------------------
+    /**   バッファの内容を単純にコピーする。
+    **
+    **  @return     エラーコードを返す。
+    **      -   異常終了の場合は、
+    **          エラーの種類を示す非ゼロ値を返す。
+    **      -   正常終了の場合は、ゼロを返す。
+    **/
+    ErrCode
+    copyToBuffer(
+            LpWriteBuf   const  ptrDst,
+            LpcReadBuf   const  ptrSrc,
+            const  LenUnitType  cbCopy)  const;
+
+    //----------------------------------------------------------------
     /**   矩形を描画する。
     **
     **/
-    void
+    ErrCode
     fillRectangle(
             const  PosUnitType  x1,
             const  PosUnitType  y1,
@@ -211,7 +302,7 @@ public:
     /**   三角形を描画する。
     **
     **/
-    void
+    ErrCode
     fillTriangle(
             const  PosUnitType  x1,
             const  PosUnitType  y1,
@@ -223,7 +314,7 @@ public:
     /**   指定したピクセルの色を設定する。
     **
     **/
-    void
+    ErrCode
     setPixelColor(
             const  PosUnitType  x,
             const  PosUnitType  y,
