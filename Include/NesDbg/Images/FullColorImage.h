@@ -135,22 +135,66 @@ public:
     //----------------------------------------------------------------
     /**   イメージをコピーする。
     **
+    **  @param [in] imgSrc    コピー元イメージ。
+    **  @return     エラーコードを返す。
+    **      -   異常終了の場合は、
+    **          エラーの種類を示す非ゼロ値を返す。
+    **      -   正常終了の場合は、ゼロを返す。
     **/
-    virtual  void
+    virtual  ErrCode
     copyImage(
             const  FullColorImage  &imgSrc);
 
     //----------------------------------------------------------------
+    /**   イメージをコピーする。
+    **
+    **  @param [in] imgSrc    コピー元イメージ
+    **  @param [in] sx        コピー元座標
+    **  @param [in] sy        コピー元座標
+    **  @return     エラーコードを返す。
+    **      -   異常終了の場合は、
+    **          エラーの種類を示す非ゼロ値を返す。
+    **      -   正常終了の場合は、ゼロを返す。
+    **/
+    virtual  ErrCode
+    copyImage(
+            const  FullColorImage  &imgSrc,
+            const  PosUnitType      sx,
+            const  PosUnitType      sy);
+
+    //----------------------------------------------------------------
     /**   イメージの指定範囲をコピーする。
     **
+    **  @return     エラーコードを返す。
+    **      -   異常終了の場合は、
+    **          エラーの種類を示す非ゼロ値を返す。
+    **      -   正常終了の場合は、ゼロを返す。
     **/
-    virtual  void
+    virtual  ErrCode
     copyRectangle(
             const  FullColorImage  &imgSrc,
             const  PosUnitType      x1,
             const  PosUnitType      y1,
             const  PosUnitType      x2,
             const  PosUnitType      y2);
+
+    //----------------------------------------------------------------
+    /**   イメージの指定範囲をコピーする。
+    **
+    **  @return     エラーコードを返す。
+    **      -   異常終了の場合は、
+    **          エラーの種類を示す非ゼロ値を返す。
+    **      -   正常終了の場合は、ゼロを返す。
+    **/
+    virtual  ErrCode
+    copyRectangle(
+            const  PosUnitType      dx,
+            const  PosUnitType      dy,
+            const  FullColorImage  &imgSrc,
+            const  PosUnitType      x1,
+            const  PosUnitType      y1,
+            const  PosUnitType      w,
+            const  PosUnitType      h);
 
     //----------------------------------------------------------------
     /**   バッファの内容を単純にコピーする。

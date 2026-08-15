@@ -143,7 +143,7 @@ FullColorImage::canCopyBuffer(
 //    行単位の単純コピーができるか確認する。
 //
 
-virtual  bool
+bool
 FullColorImage::canCopyLine(
         const  FullColorImage  &imgSrc)  const
 {
@@ -156,32 +156,45 @@ FullColorImage::canCopyLine(
 //    イメージをコピーする。
 //
 
-void
+ErrCode
 FullColorImage::copyImage(
         const  FullColorImage  &imgSrc)
 {
     if ( this->m_lpBits == imgSrc.m_lpBits ) {
         //  コピー元とコピー先が同じなので何もしない。  //
-        return;
+        return ( ErrCode::SUCCESS );
     }
 
     if ( canCopyBuffer(imgSrc) ) {
         //  単純コピーが可能。  //
         imgSrc.copyToBuffer(this->m_lpBits);
-        return;
+        return ( ErrCode::SUCCESS );;
     }
 
     //  画像の小さいほうに合わせて、矩形コピーを実行。  //
     const  PosUnitType  x2  = std::min(this->m_iWidth,  imgSrc.m_iWidth );
     const  PosUnitType  y2  = std::min(this->m_iHeight, imgSrc.m_iHeight);
-    this->copyRectangle(imgSrc, 0, 0, x2, y2);
+    return  this->copyRectangle(imgSrc, 0, 0, x2, y2);
+}
+
+//----------------------------------------------------------------
+//    イメージをコピーする。
+//
+
+ErrCode
+FullColorImage::copyImage(
+        const  FullColorImage  &imgSrc,
+        const  PosUnitType      sx,
+        const  PosUnitType      sy)
+{
+    return ( ErrCode::FAILURE );
 }
 
 //----------------------------------------------------------------
 //    イメージの指定範囲をコピーする。
 //
 
-void
+ErrCode
 FullColorImage::copyRectangle(
         const  FullColorImage  &imgSrc,
         const  PosUnitType      x1,
@@ -215,6 +228,25 @@ FullColorImage::copyRectangle(
             ptrSrc  += remSrc;
         }
     }
+
+    return ( ErrCode::SUCCESS );
+}
+
+//----------------------------------------------------------------
+//    イメージの指定範囲をコピーする。
+//
+
+ErrCode
+FullColorImage::copyRectangle(
+        const  PosUnitType      dx,
+        const  PosUnitType      dy,
+        const  FullColorImage  &imgSrc,
+        const  PosUnitType      x1,
+        const  PosUnitType      y1,
+        const  PosUnitType      w,
+        const  PosUnitType      h)
+{
+    return ( ErrCode::FAILURE );
 }
 
 //----------------------------------------------------------------
